@@ -1,0 +1,82 @@
+# Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+/build/
+/ios/.generated/
+/flutter-plugins
+
+# Android
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+/android/app/src/main/java/io/flutter/plugins/
+/android/app/src/main/kotlin/io/flutter/plugins/
+/android/app/src/profile/
+/android/app/src/debug/
+
+# iOS
+/ios/Flutter/.last_build_id
+/ios/Flutter/App.framework/
+/ios/Flutter/Flutter.framework/
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/app.flx
+/ios/Flutter/app.zip
+/ios/Flutter/flutter_assets/
+/ios/ServiceDefinitions.json
+/ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+/web/
+
+# Desktop
+/macos/
+/linux/
+/windows/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Fichiers Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.package_config.json
+
+# Fichiers de build
+*.apk
+*.ipa
+*.app
+*.aab
+
+# Fichiers temporaires
+*.log
+/temp/
+/logs/
+
+# Fichiers d'environnement (optionnel selon votre workflow)
+.env
+.env.local
+*.env.*
+
+# Clés et certificats (toujours ignorer)
+*.keystore
+*.jks
+*.p12
+*.key
+*.cer
+*.crt

@@ -1,0 +1,143 @@
+Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            (Text(
+              "Le choix",
+              style: TextStyle(fontSize: 42, fontFamily: 'PoiretOne'),
+            )),
+            (Text(
+              "Tout va bien se passer, tu vas y arriver!",
+              style: TextStyle(
+                fontSize: 25,
+                color: Color.fromARGB(255, 87, 242, 180),
+              ),
+              textAlign: TextAlign.center,
+            )),
+            Image.asset('assets/images/Json.png', width: 100, height: 100),
+            Padding(padding: EdgeInsets.all(20)),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.primary ),
+               
+                ),
+             
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(pageBuilder: (_,__, ___) => EventPage()),
+                ),
+              },
+              child: Text("Afficher les infos",
+              style: TextStyle(
+                color:  Color.fromARGB(255, 0, 0, 0),
+                
+          
+              ),
+              
+              ),
+            ),
+          ],
+        ),
+
+
+
+        crossAxisCount: 2,
+        children: [
+          Card(
+            child: Padding(
+              padding: EdgeInsetsGeometry.fromLTRB(15, 20, 15, 0),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/Json.png',
+                    height: 100,
+                    width: 100,
+                  ),
+                  Text("Choix des activités"),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => EventPage(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.play_arrow),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            child: Padding(
+              padding: EdgeInsetsGeometry.fromLTRB(15, 20, 15, 0),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/streamer.png',
+                    height: 100,
+                    width: 100,
+                  ),
+                  Text("J'ai peur"),
+                  IconButton(onPressed: () {}, icon: Icon(Icons.play_arrow)),
+                ],
+              ),
+            ),
+          ),
+        ],
+      
+
+
+      ElevatedButton(
+                     onPressed: () {
+                  
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const BingoGamePreview(titleMoment: 'Matin'),
+                      ),
+                    );
+                  } 
+                   child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      HugeIconsSolid.sun02,
+
+                      color: const Color.fromARGB(255, 230, 120, 50),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Matin",
+                      style: TextStyle(
+                        fontSize: 50,
+                        color: const Color.fromARGB(255, 31, 74, 61),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(
+                      HugeIconsSolid.sun02,
+
+                      color: const Color.fromARGB(255, 230, 120, 50),
+                    ),
+                  ],
+                ),
+
+
+
+
+
+
+                   validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Champs incorrect: il est nécessaire";
+                  }
+                  return null;
+                },
+
+
+ child: ClipRRect(
+                  borderRadius: BorderRadius.circular(75),
+                  child: ImageSet(),)
