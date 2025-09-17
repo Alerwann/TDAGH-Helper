@@ -1,4 +1,4 @@
-import 'schema/bingo_card_schema.dart';
+import '../schema/bingo_card_schema.dart';
 
 class BingoDataMorning {
   static final List<BingoCard> _defaultCards = [

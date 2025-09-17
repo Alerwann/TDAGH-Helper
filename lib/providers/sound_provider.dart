@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/audio/audio_controller.dart';
+import 'package:flutter_application_1/services/audio_controller.dart';
 
 class SoundProvider extends ChangeNotifier {
   AudioController? _audioController;

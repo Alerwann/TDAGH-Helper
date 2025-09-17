@@ -1,0 +1,91 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/list/taches_list.dart';
+import 'package:flutter_application_1/data/schema/taches_shema.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class TachesProvider extends ChangeNotifier {
+  List<TachesSchema> _taches = [];
+  static const String _storageKey = 'user_taches';
+
+  List<TachesSchema> get taches => List.unmodifiable(_taches);
+
+  int _nombreT = 3;
+  int get nombreT => _nombreT;
+
+  TachesProvider() {
+    _loadTaches();
+  }
+
+  // Charger depuis local storage
+  Future<void> _loadTaches() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? tachesJson = prefs.getString(_storageKey);
+
+    if (tachesJson != null) {
+      // Charger depuis le storage
+      final List<dynamic> tachesList = json.decode(tachesJson);
+      _taches = tachesList.map((json) => TachesSchema.fromJson(json)).toList();
+    } else {
+      // Premier lancement : charger les tâches par défaut
+      _taches = TachesList.getDefaultCards();
+      await _saveTaches(); // Sauvegarder immédiatement
+    }
+    notifyListeners();
+  }
+
+  // Sauvegarder dans local storage
+  Future<void> _saveTaches() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String tachesJson = json.encode(
+      _taches.map((tache) => tache.toJson()).toList(),
+    );
+    await prefs.setString(_storageKey, tachesJson);
+  }
+
+  // Ajouter une tâche
+  Future<void> ajouterTache(TachesSchema tache) async {
+    _taches.insert(0, tache);
+    await _saveTaches();
+    notifyListeners();
+  }
+
+  // Supprimer une tâche par nom
+  Future<void> supprimerTache(String nomTache) async {
+    _taches.removeWhere((tache) => tache.tacheName == nomTache);
+    await _saveTaches();
+    notifyListeners();
+  }
+
+  // Modifier une tâche existante
+  Future<void> modifierTache(
+    String ancienNom,
+    TachesSchema nouvelleTache,
+  ) async {
+    final index = _taches.indexWhere((tache) => tache.tacheName == ancienNom);
+    if (index != -1) {
+      _taches[index] = nouvelleTache;
+      await _saveTaches();
+      notifyListeners();
+    }
+  }
+
+  Future<void> modifierNombreTahce(int newnombreT) async {
+    _nombreT = newnombreT;
+    notifyListeners();
+  }
+
+  // Méthodes utilitaires
+  TachesSchema? trouverTache(String nom) {
+    try {
+      return _taches.firstWhere((tache) => tache.tacheName == nom);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  bool tacheExiste(String nom) {
+    return _taches.any((tache) => tache.tacheName == nom);
+  }
+}

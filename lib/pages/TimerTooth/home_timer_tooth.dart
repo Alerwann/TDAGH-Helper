@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:custom_timer/custom_timer.dart';
-import 'package:flutter_application_1/audio/audio_controller.dart';
-import 'package:flutter_application_1/data/music_list.dart';
+import 'package:flutter_application_1/services/audio_controller.dart';
+import 'package:flutter_application_1/data/list/music_list.dart';
 import 'package:flutter_application_1/data/schema/music_schema.dart';
 
 import 'package:flutter_application_1/providers/sound_provider.dart';
@@ -17,7 +17,7 @@ class HomeTimertooth extends StatefulWidget {
 
 class _HomeTimertoothState extends State<HomeTimertooth>
     with TickerProviderStateMixin {
-  final Duration _washDuration = Duration(seconds: 1);
+  final Duration _washDuration = Duration(milliseconds: 750);
 
   final AudioController soundController = AudioController();
   // ignore: unused_field
@@ -98,6 +98,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                   controller: controllerTimer,
 
                   builder: (state, time) {
+                    
                     return Text(
                       "${time.minutes}:${time.seconds}",
                       style: TextStyle(
@@ -193,3 +194,5 @@ class _HomeTimertoothState extends State<HomeTimertooth>
     );
   }
 }
+
+// Modifier le son pour qu'il s'arrete à la fin du timer

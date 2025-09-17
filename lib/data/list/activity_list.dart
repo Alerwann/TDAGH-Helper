@@ -2,11 +2,12 @@ import 'dart:ui';
 import 'package:flutter_application_1/data/schema/activity_card_schema.dart';
 import 'package:flutter_application_1/pages/Bingo/homepage.dart';
 import 'package:flutter_application_1/pages/DefouleToi/defoule_toi.dart';
-import 'package:flutter_application_1/pages/TacheHazard/home_tache_hazard.dart';
+import 'package:flutter_application_1/pages/TacheHazard/tache_liste_affichage.dart';
+
 import 'package:flutter_application_1/pages/TimerTooth/home_timer_tooth.dart';
 
 class ActivityList {
- static final List<ActivityCard> _defaultCards = [
+  static final List<ActivityCard> _defaultCards = [
     ActivityCard(
       activityName: 'Bingo',
       imagePath: 'assets/images/bingo_images/bingoLogo.png',
@@ -24,7 +25,7 @@ class ActivityList {
     ActivityCard(
       activityName: 'Tache au hasard',
       imagePath: 'assets/images/Tacheslogo.png',
-      destination: HomeTacheHazard(),
+      destination: TacheListeAffichage(),
       firstColor: Color.fromARGB(255, 241, 203, 145),
       secondColor: Color.fromARGB(255, 17, 220, 156),
     ),
@@ -35,9 +36,6 @@ class ActivityList {
       firstColor: Color.fromARGB(255, 255, 214, 118),
       secondColor: Color.fromARGB(255, 248, 7, 28),
     ),
-    
-    
-
   ];
   static List<ActivityCard> getDefaultCards() {
     return List.from(_defaultCards);

@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/bingocard_list.dart';
+import 'package:flutter_application_1/data/list/bingocard_list.dart';
 import 'package:flutter_application_1/providers/bingo_provider.dart';
 import 'package:flutter_application_1/services/Bingo_storage_service.dart';
 import 'package:flutter_application_1/widget/simpleflipcard.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/activity_list.dart';
+import 'package:flutter_application_1/data/list/activity_list.dart';
 import 'package:flutter_application_1/data/schema/activity_card_schema.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
@@ -25,7 +25,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
       appBar: AppBar(
         title: Consumer<ProfilProvider>(
           builder: (context, profil, child) {
-            return Text("Bienvenu ${profil.pseudo}");
+            return Text("Bienvenue ${profil.pseudo}");
           },
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:flutter_application_1/providers/bingo_provider.dart';
 import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
+import 'package:flutter_application_1/providers/taches_provider.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
@@ -20,10 +21,12 @@ void main() {
         ChangeNotifierProvider(
           create: (_) {
             final soundProvider = SoundProvider();
-            soundProvider .initialize(); // Lance l'initialisation dès la création
+            soundProvider
+                .initialize(); // Lance l'initialisation dès la création
             return soundProvider;
           },
         ),
+        ChangeNotifierProvider(create: (context)=> TachesProvider()),
       ],
       child: MyApp(),
     ),
@@ -55,7 +58,7 @@ class _MyBingoProvider extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Color.fromARGB(181, 212, 149, 216),
-          primary: Color.fromARGB(195, 0, 0, 0),
+
           secondary: const Color.fromARGB(255, 6, 110, 75),
           primaryContainer: const Color.fromARGB(155, 193, 187, 187),
         ),
@@ -74,10 +77,7 @@ class _MyBingoProvider extends State<MyApp> {
         ),
       ),
       home: Scaffold(
-        
-        body: 
-        
-        [HomeGlobalPage(), HomeBingoPage(), ProfilPage()][_currentindex],
+        body: [HomeGlobalPage(), HomeBingoPage(), ProfilPage()][_currentindex],
         bottomNavigationBar: DotCurvedBottomNav(
           scrollController: _scrollController,
           hideOnScroll: true,
