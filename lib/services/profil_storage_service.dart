@@ -19,8 +19,8 @@ class ProfilStorageService {
   static Future<String> getPseudo() async {
     final prefs = await SharedPreferences.getInstance();
 
-    final psuedo = prefs.getString(_pseudo) ?? 'personne';
-    return psuedo;
+    final pseudo = prefs.getString(_pseudo) ?? 'personne';
+    return pseudo;
   }
 
   static Future<String> getImagePath() async {

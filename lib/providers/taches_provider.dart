@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/list/taches_list.dart';
 import 'package:flutter_application_1/data/schema/taches_shema.dart';
+import 'package:flutter_application_1/services/taches_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class TachesProvider extends ChangeNotifier {
   List<TachesSchema> _taches = [];
+  List<String> _choixTaches = [];
   static const String _storageKey = 'user_taches';
+
+  List<String> get choixTaches => List.unmodifiable(_choixTaches);
 
   List<TachesSchema> get taches => List.unmodifiable(_taches);
 
@@ -22,6 +25,9 @@ class TachesProvider extends ChangeNotifier {
   Future<void> _loadTaches() async {
     final prefs = await SharedPreferences.getInstance();
     final String? tachesJson = prefs.getString(_storageKey);
+
+    _nombreT = await TachesStorageService.getNombreT();
+    _choixTaches = await TachesStorageService.getChoixTaches();
 
     if (tachesJson != null) {
       // Charger depuis le storage
@@ -71,8 +77,15 @@ class TachesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> modifierNombreTahce(int newnombreT) async {
+  Future<void> modifierNombreTache(int newnombreT) async {
     _nombreT = newnombreT;
+    await TachesStorageService.saveNombreTaches(_nombreT);
+    notifyListeners();
+  }
+
+  Future<void> saveListeTache(List<String> listeTache) async {
+    _choixTaches = listeTache;
+    await TachesStorageService.saveListeChoix(_choixTaches);
     notifyListeners();
   }
 

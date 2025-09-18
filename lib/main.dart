@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/ProfilsPages/profil.dart';
 import 'package:flutter_application_1/pages/Bingo/homepage.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
-import 'package:flutter_application_1/providers/bingo_provider.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
@@ -15,7 +15,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => BingoProvider()),
+        ChangeNotifierProvider(create: (context) => ScoreProvider()),
         ChangeNotifierProvider(create: (context) => HeureProfilProvider()),
         ChangeNotifierProvider(create: (context) => ProfilProvider()),
         ChangeNotifierProvider(
@@ -26,7 +26,7 @@ void main() {
             return soundProvider;
           },
         ),
-        ChangeNotifierProvider(create: (context)=> TachesProvider()),
+        ChangeNotifierProvider(create: (context) => TachesProvider()),
       ],
       child: MyApp(),
     ),
@@ -37,10 +37,10 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyBingoProvider();
+  State<MyApp> createState() => _MyScoreProvider();
 }
 
-class _MyBingoProvider extends State<MyApp> {
+class _MyScoreProvider extends State<MyApp> {
   int _currentindex = 0;
 
   final ScrollController _scrollController = ScrollController();

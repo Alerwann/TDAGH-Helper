@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/list/bingocard_list.dart';
-import 'package:flutter_application_1/providers/bingo_provider.dart';
-import 'package:flutter_application_1/services/Bingo_storage_service.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
+import 'package:flutter_application_1/services/score_storage_service.dart';
 import 'package:flutter_application_1/widget/simpleflipcard.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:lottie/lottie.dart';
@@ -54,7 +54,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     }
 
     // Charger l'état sauvegardé des cartes
-    final savedStates = await BingoStorageService.getCardsState(
+    final savedStates = await ScoreStorageService.getCardsState(
       widget.titleMoment,
       bingoCards.length,
     );
@@ -86,12 +86,12 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     for (var card in bingoCards) {
       states.add(card.isFlipped);
     }
-    await BingoStorageService.saveCardsState(widget.titleMoment, states);
+    await ScoreStorageService.saveCardsState(widget.titleMoment, states);
   }
 
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<BingoProvider>(context);
+    final appState = Provider.of<ScoreProvider>(context);
 
     // Récupérer le bon score selon le moment
     switch (widget.titleMoment) {
@@ -171,7 +171,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
                           setState(() {
                             if (bingoCards[index].isFlipped) {
                               // La carte était retournée, on la remet
-                              Provider.of<BingoProvider>(
+                              Provider.of<ScoreProvider>(
                                 context,
                                 listen: false,
                               ).decrementglobal(
@@ -179,7 +179,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
                               );
                             } else {
                               // La carte n'était pas retournée, on la retourne
-                              Provider.of<BingoProvider>(
+                              Provider.of<ScoreProvider>(
                                 context,
                                 listen: false,
                               ).incrementglobal(

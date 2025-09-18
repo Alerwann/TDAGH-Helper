@@ -4,6 +4,7 @@ class TachesStorageService {
   static const String _nameTaches = 'nameTaches';
   static const String _durationTaches = "durationTaches";
   static const String _nombreTaches = "nombreTaches";
+  static const String _listChoix = "listeChoix";
 
   static Future<void> saveNombreTaches(int nombreT) async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,16 +24,21 @@ class TachesStorageService {
     await prefs.setString(key, durationT);
   }
 
+  static Future<void> saveListeChoix(List<String> listTotalChoix) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _listChoix;
+    await prefs.setStringList(key, listTotalChoix);
+  }
+
   static Future<int> getNombreT() async {
     final prefs = await SharedPreferences.getInstance();
     final nombreT = prefs.getInt(_nombreTaches) ?? 3;
     return nombreT;
   }
 
-  static Future<String> getNameT() async {
+  static Future<List<String>> getChoixTaches() async {
     final prefs = await SharedPreferences.getInstance();
-
-    final nameT = prefs.getString(_nameTaches) ?? 'defaut';
-    return nameT;
+    final listeChoix = prefs.getStringList(_listChoix) ?? ["repos"];
+    return listeChoix;
   }
 }

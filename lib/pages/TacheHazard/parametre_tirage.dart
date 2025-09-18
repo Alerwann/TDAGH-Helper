@@ -177,7 +177,7 @@ class _ParametretirageState extends State<Parametretirage> {
                                   );
 
                                   setState(() {
-                                    tachesTime.modifierNombreTahce(nbTaches);
+                                    tachesTime.modifierNombreTache(nbTaches);
                                     _numberController.clear();
                                     choiceConvient = 0;
                                     Navigator.push(

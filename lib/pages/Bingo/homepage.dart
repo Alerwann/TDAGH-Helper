@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/Bingo/general_bingo_card.dart';
-import 'package:flutter_application_1/providers/bingo_provider.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +32,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
         now.isBefore(couche.add(Duration(minutes: 1)));
     bool isCoucheActive = now.isAfter(couche);
 
-     final colorizeColors = [
+    final colorizeColors = [
       Colors.purple,
       Colors.blue,
       const Color.fromARGB(255, 1, 236, 87),
@@ -42,7 +42,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
     final colorizeTextStyle = TextStyle(fontSize: 50.0, fontFamily: 'Horizon');
 
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 100,
 
@@ -88,7 +88,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-              Consumer<BingoProvider>(
+              Consumer<ScoreProvider>(
                 builder: (context, appState, child) {
                   return Text(
                     "${appState.globalScore} / 16",

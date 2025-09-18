@@ -15,6 +15,11 @@ class TirageFinal extends StatefulWidget {
 
 class _TirageFinalState extends State<TirageFinal>
     with TickerProviderStateMixin {
+
+
+
+
+      
   final gradient = LinearGradient(
     colors: [
       const Color.fromARGB(255, 237, 85, 2),
@@ -43,7 +48,8 @@ class _TirageFinalState extends State<TirageFinal>
   int currentCycle = 0;
   int indexChooseText = 0;
   int indfinal = 0;
-  List listFinale = [];
+  List<String> listFinale = [];
+  int nbCycles = 0;
 
   @override
   void initState() {
@@ -72,13 +78,13 @@ class _TirageFinalState extends State<TirageFinal>
 
     _slideScaleController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (currentCycle < 3) {
+        if (currentCycle < nbCycles) {
           controllerAnimation.forward();
         } else {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Quetesfinales(listTaches: listFinale),
+              builder: (context) => Quetesfinales(),
             ),
           );
         }
@@ -176,12 +182,14 @@ class _TirageFinalState extends State<TirageFinal>
                       tacheP.nombreT,
                       tacheP.taches.length - 1,
                     );
+                    nbCycles = tacheP.nombreT;
 
                     for (int i = 0; i < tacheP.nombreT; i++) {
                       int convertInt = (listIndex[i]);
 
                       listFinale.add(tacheP.taches[convertInt].tacheName);
                     }
+                    tacheP.saveListeTache(listFinale);
 
                     setState(() {
                       controllerAnimation.forward();
