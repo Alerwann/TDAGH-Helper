@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/TacheHazard/tirage_final.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
+import 'package:flutter_application_1/services/taches_storage_service.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -11,77 +14,48 @@ class Quetesfinales extends StatefulWidget {
 }
 
 class _QuetesfinalesState extends State<Quetesfinales> {
-  int currentStep = 0;
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 237, 85, 2),
-      const Color.fromARGB(255, 244, 176, 4),
-      const Color.fromARGB(255, 255, 85, 59),
-    ],
-  );
-
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
-  List<bool> isChecked = [];
+  bool afficheButton = false;
 
   @override
   void initState() {
     super.initState();
-    // Initialise après que le widget soit créé
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final tacheProvider = Provider.of<TachesProvider>(context, listen: false);
-      setState(() {
-        isChecked = List<bool>.generate(
-          tacheProvider.choixTaches.length,
-          (index) => false,
-        );
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      List<String> tache = await TachesStorageService.getChoixTaches();
+      if (tache[0] == "0") {
+        afficheButton = true;
+      } else {
+        afficheButton = false;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text(
-            "Liste d'activités du jour",
-            style: textStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-      body: Center(
-        child: Consumer<TachesProvider>(
-          builder: (context, tacheP, child) {
-            if (isChecked.length != tacheP.choixTaches.length) {
-              isChecked = List<bool>.generate(
-                tacheP.choixTaches.length,
-                (index) => false,
-              );
-            }
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Center(
+      child: Consumer2<TachesProvider, ScoreProvider>(
+        builder: (context, tacheP, scoreP, child) {
+          return Container(
+            margin: EdgeInsets.all(40),
+            child: Column(
               children: [
                 Text(
                   "Liste finale:",
                   style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(
+                SizedBox(height: 50),
+                Text(
+                  'Fais toutes les taches pour ajouter 1 point à ton score quotidien',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                Container(
+                  margin: EdgeInsets.only(bottom: 50),
                   width: 300,
                   child: LinearProgressBar(
                     maxSteps: tacheP.choixTaches.length,
                     progressType: LinearProgressBar.progressTypeLinear,
-                    currentStep: currentStep,
+                    currentStep: scoreP.currentStep,
                     progressColor: const Color.fromARGB(255, 255, 1, 242),
                     backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                     valueColor: AlwaysStoppedAnimation<Color>(
@@ -94,32 +68,69 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                   ),
                 ),
 
-                for (int i = 0; i < tacheP.choixTaches.length; i++)
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: isChecked[i],
-                        onChanged: (bool? value) {
-                          print(isChecked[i]);
-                          setState(() {
-                            isChecked[i] = value!;
-                            if (isChecked[i] == true) {
-                              currentStep += 1;
-                            } else {
-                              currentStep -= 1;
-                            }
-
-                            print(isChecked[i]);
-                          });
-                        },
+                afficheButton == true
+                    ? Expanded(
+                        child: Column(
+                          children: [
+                            Text('Il faut faire le Tirage'),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TirageFinal(),
+                                  ),
+                                );
+                                setState(() {
+                                  afficheButton =
+                                      false; 
+                                });
+                              },
+                              child: Text('Faire le tirage'),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            for (int i = 0; i < tacheP.choixTaches.length; i++)
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: scoreP.isChecked[i],
+                                    onChanged: (bool? value) {
+                                      scoreP.updateTacheCheck(
+                                        i,
+                                        value ?? false,
+                                      );
+                                    },
+                                  ),
+                                  Text(
+                                    tacheP.choixTaches[i],
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
                       ),
-                      Text(tacheP.choixTaches[i]),
-                    ],
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      tacheP.reinitTAche();
+                      afficheButton = true;
+                    });
+                  },
+                  child: Text("Reset"),
+                ),
               ],
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

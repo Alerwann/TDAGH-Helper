@@ -2,8 +2,7 @@ import 'dart:ui';
 import 'package:flutter_application_1/data/schema/activity_card_schema.dart';
 import 'package:flutter_application_1/pages/Bingo/homepage.dart';
 import 'package:flutter_application_1/pages/DefouleToi/defoule_toi.dart';
-import 'package:flutter_application_1/pages/TacheHazard/tache_liste_affichage.dart';
-
+import 'package:flutter_application_1/pages/TacheHazard/accueil_taches.dart';
 import 'package:flutter_application_1/pages/TimerTooth/home_timer_tooth.dart';
 
 class ActivityList {
@@ -25,7 +24,7 @@ class ActivityList {
     ActivityCard(
       activityName: 'Tache au hasard',
       imagePath: 'assets/images/Tacheslogo.png',
-      destination: TacheListeAffichage(),
+      destination: AccueilTaches(),
       firstColor: Color.fromARGB(255, 241, 203, 145),
       secondColor: Color.fromARGB(255, 17, 220, 156),
     ),

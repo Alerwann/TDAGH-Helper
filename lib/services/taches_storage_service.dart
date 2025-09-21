@@ -38,7 +38,7 @@ class TachesStorageService {
 
   static Future<List<String>> getChoixTaches() async {
     final prefs = await SharedPreferences.getInstance();
-    final listeChoix = prefs.getStringList(_listChoix) ?? ["repos"];
+    final listeChoix = prefs.getStringList(_listChoix) ?? ['0'];
     return listeChoix;
   }
 }

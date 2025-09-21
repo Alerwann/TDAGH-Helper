@@ -57,6 +57,10 @@ class TachesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> reinitTAche() async {
+    _choixTaches = ['0'];
+  }
+
   // Supprimer une tâche par nom
   Future<void> supprimerTache(String nomTache) async {
     _taches.removeWhere((tache) => tache.tacheName == nomTache);

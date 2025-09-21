@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/ProfilsPages/profil.dart';
 import 'package:flutter_application_1/pages/Bingo/homepage.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
+import 'package:flutter_application_1/providers/defoule_provider.dart';
 import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
@@ -27,6 +28,7 @@ void main() {
           },
         ),
         ChangeNotifierProvider(create: (context) => TachesProvider()),
+        ChangeNotifierProvider(create: (contex) => DefouleProvider()),
       ],
       child: MyApp(),
     ),

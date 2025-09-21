@@ -87,19 +87,19 @@ class HeureProfilProvider extends ChangeNotifier {
     switch (moment.toLowerCase()) {
       case 'réveil':
         _reveilMinutes = minutes;
-        await HoraireStorageService.saveHours('réveil', _reveilMinutes);
+        await HoraireStorageService.saveMinutes('réveil', _reveilMinutes);
         break;
       case 'midi':
         _midiMinutes = minutes;
-        await HoraireStorageService.saveHours('midi', _midiMinutes);
+        await HoraireStorageService.saveMinutes('midi', _midiMinutes);
         break;
       case 'soir':
         _soirMinutes = minutes;
-        await HoraireStorageService.saveHours("soir", _soirMinutes);
+        await HoraireStorageService.saveMinutes("soir", _soirMinutes);
         break;
       case 'couché':
         _coucheMinutes = minutes;
-        await HoraireStorageService.saveHours("couché", _coucheMinutes);
+        await HoraireStorageService.saveMinutes("couché", _coucheMinutes);
         break;
     }
 

@@ -7,13 +7,20 @@ class ScoreProvider extends ChangeNotifier {
   int _afternoonScore = 0;
   int _eveningScore = 0;
   int _tacheScore = 0;
+  // int _tirageFait = 0;
   DateTime? _lastResetDate;
+  List<bool> _isChecked = List.generate(3, (index) => false);
+  int _currentStep =0;
 
   int get morningScore => _morningScore;
   int get midiScore => _midiScore;
   int get afternoonScore => _afternoonScore;
   int get eveningScore => _eveningScore;
   int get tacheScore => _tacheScore;
+  List<bool> get isChecked => _isChecked;
+  int get currentStep => _currentStep;
+
+  // int get tirageFait => _tirageFait;
 
   int get globalScore =>
       _morningScore +
@@ -33,6 +40,7 @@ class ScoreProvider extends ChangeNotifier {
     _eveningScore = await ScoreStorageService.getScore('couché');
     _tacheScore = await ScoreStorageService.getScore('taches');
     _lastResetDate = await ScoreStorageService.getLastResetDate();
+    _isChecked = await ScoreStorageService.getTacheState();
 
     await _checkAndReset();
 
@@ -87,7 +95,7 @@ class ScoreProvider extends ChangeNotifier {
         break;
       case 'taches':
         _tacheScore += 1;
-        await ScoreStorageService.saveScore('couché', _tacheScore);
+        await ScoreStorageService.saveScore('taches', _tacheScore);
         break;
     }
     notifyListeners();
@@ -131,6 +139,31 @@ class ScoreProvider extends ChangeNotifier {
     await ScoreStorageService.saveScore('soir', 0);
     await ScoreStorageService.saveScore('couché', 0);
     await ScoreStorageService.saveScore('tache', 0);
+
+    notifyListeners();
+  }
+
+  void incrementTacheScore() {
+    for (var value in _isChecked) {
+      if(value==true){
+        _currentStep +=1;
+      }
+    }
+    
+  }
+  Future<void> updateTacheCheck(int index, bool value) async {
+    _isChecked[index] = value;
+
+ 
+    _currentStep = _isChecked.where((checked) => checked).length;
+
+
+    if (_currentStep == _isChecked.length && _currentStep > 0) {
+      await incrementglobal('taches');
+    }
+
+
+    await ScoreStorageService.saveTacheState(_isChecked);
 
     notifyListeners();
   }

@@ -50,22 +50,30 @@ class _HomeTimertoothState extends State<HomeTimertooth>
 
     _animation =
         Tween<Offset>(
-          begin: const Offset(-0.3, 0), // Commence hors écran à gauche
-          end: const Offset(-0.1, 0), // Termine hors écran à droite
+          begin: const Offset(-0.3, 0),
+          end: const Offset(-0.1, 0), //
         ).animate(
           CurvedAnimation(parent: controllerAnimation, curve: Curves.linear),
         );
+    controllerTimer.addListener(() {
+      if (controllerTimer.state.value == CustomTimerState.finished &&
+          _timerIsActive) {
+        setState(() {
+          _timerIsActive = false;
+          controllerAnimation.stop();
+        });
+        soundController.stopMusic();
+      }
+    });
   }
 
   @override
   void dispose() async {
-     soundController.stopMusic().then((_) {
+    soundController.stopMusic().then((_) {
       soundController.dispose;
     });
     controllerTimer.dispose();
     controllerAnimation.dispose();
-
-   
 
     super.dispose();
   }
@@ -98,7 +106,6 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                   controller: controllerTimer,
 
                   builder: (state, time) {
-                    
                     return Text(
                       "${time.minutes}:${time.seconds}",
                       style: TextStyle(
@@ -115,6 +122,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                     ElevatedButton(
                       onPressed: () {
                         controllerTimer.start();
+
                         _timerIsActive = true;
                         if (selectedMusic != null) {
                           soundController.playSound(selectedMusic!.musicPath);
@@ -142,28 +150,33 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                   ],
                 ),
                 SizedBox(height: 40),
-                DropdownButton<MusicSchema>(
-                  value: selectedMusic,
-                  hint: const Text('Sélectionner une musique'),
-                  items: musicList.map<DropdownMenuItem<MusicSchema>>((
-                    MusicSchema music,
-                  ) {
-                    return DropdownMenuItem<MusicSchema>(
-                      value: music,
-                      child: Text(music.musicTitle),
-                    );
-                  }).toList(),
+                SizedBox(
+                  height: 50,
+                  child: DropdownButton<MusicSchema>(
+                    value: selectedMusic,
+                    hint: const Text('Sélectionner une musique'),
+                    items: musicList.map<DropdownMenuItem<MusicSchema>>((
+                      MusicSchema music,
+                    ) {
+                      return DropdownMenuItem<MusicSchema>(
+                        value: music,
+                        child: Text(music.musicTitle),
+                      );
+                    }).toList(),
 
-                  onChanged: (MusicSchema? newValue) {
-                    setState(() {
-                      selectedMusic = newValue;
-                    });
-                    if (_timerIsActive == true) {
-                      soundController.playSound(selectedMusic!.musicPath);
-                    }
-                  },
+                    onChanged: (MusicSchema? newValue) {
+                      setState(() {
+                        selectedMusic = newValue;
+                      });
+                      if (_timerIsActive == true) {
+                        soundController.playSound(selectedMusic!.musicPath);
+                      }
+                    },
+                  ),
                 ),
-                Center(
+                SizedBox(height: 20),
+                SizedBox(
+                  height: 300,
                   child: Stack(
                     alignment: AlignmentDirectional.center,
 

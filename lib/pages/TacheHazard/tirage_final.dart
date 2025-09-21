@@ -1,7 +1,6 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/TacheHazard/quetesfinales.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
 
 import 'package:provider/provider.dart';
@@ -15,24 +14,6 @@ class TirageFinal extends StatefulWidget {
 
 class _TirageFinalState extends State<TirageFinal>
     with TickerProviderStateMixin {
-
-
-
-
-      
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 237, 85, 2),
-      const Color.fromARGB(255, 244, 176, 4),
-      const Color.fromARGB(255, 255, 85, 59),
-    ],
-  );
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
-
   final List listTAche = [Text('a'), Text('b'), Text('c')];
 
   late AnimationController controllerAnimation;
@@ -81,12 +62,7 @@ class _TirageFinalState extends State<TirageFinal>
         if (currentCycle < nbCycles) {
           controllerAnimation.forward();
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Quetesfinales(),
-            ),
-          );
+          Navigator.pop(context);
         }
       }
     });
@@ -120,23 +96,9 @@ class _TirageFinalState extends State<TirageFinal>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text(
-            "Liste d'activités",
-            style: textStyle,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
       body: Center(
-        child: Consumer<TachesProvider>(
-          builder: (context, tacheP, child) {
+        child: Consumer2<TachesProvider, ScoreProvider>(
+          builder: (context, tacheP, scoreP, child) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
