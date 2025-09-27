@@ -59,6 +59,8 @@ class TachesProvider extends ChangeNotifier {
 
   Future<void> reinitTAche() async {
     _choixTaches = ['0'];
+    saveListeTache(_choixTaches);
+    notifyListeners();
   }
 
   // Supprimer une tâche par nom

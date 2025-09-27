@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/services/taches_storage_service.dart';
 import '../services/score_storage_service.dart'; // Import du service qu'on vient de créer
 
 class ScoreProvider extends ChangeNotifier {
@@ -10,7 +11,7 @@ class ScoreProvider extends ChangeNotifier {
   // int _tirageFait = 0;
   DateTime? _lastResetDate;
   List<bool> _isChecked = List.generate(3, (index) => false);
-  int _currentStep =0;
+  int _currentStep = 0;
 
   int get morningScore => _morningScore;
   int get midiScore => _midiScore;
@@ -28,7 +29,7 @@ class ScoreProvider extends ChangeNotifier {
       _afternoonScore +
       _eveningScore +
       _tacheScore;
-
+  int nombreTirage = 0;
   ScoreProvider() {
     _loadData();
   }
@@ -49,7 +50,7 @@ class ScoreProvider extends ChangeNotifier {
 
   Future<void> _checkAndReset() async {
     final now = DateTime.now();
-    final today6AM = DateTime(now.year, now.month, now.day, 6);
+    final today6AM = DateTime(now.year, now.month, now.day, 15, 21);
 
     if (_lastResetDate == null || _lastResetDate!.isBefore(today6AM)) {
       if (now.isAfter(today6AM)) {
@@ -59,11 +60,16 @@ class ScoreProvider extends ChangeNotifier {
         _eveningScore = 0;
         _tacheScore = 0;
 
+        nombreTirage = await TachesStorageService.getNombreT();
+        _isChecked = List.generate(nombreTirage, (index) => false);
+
         await ScoreStorageService.saveScore('matin', 0);
         await ScoreStorageService.saveScore('midi', 0);
         await ScoreStorageService.saveScore('soir', 0);
         await ScoreStorageService.saveScore('couché', 0);
         await ScoreStorageService.saveScore('taches', 0);
+
+        await ScoreStorageService.saveTacheState(_isChecked);
 
         await ScoreStorageService.resetAllCardsState();
 
@@ -145,26 +151,30 @@ class ScoreProvider extends ChangeNotifier {
 
   void incrementTacheScore() {
     for (var value in _isChecked) {
-      if(value==true){
-        _currentStep +=1;
+      if (value == true) {
+        _currentStep += 1;
       }
     }
-    
   }
+
   Future<void> updateTacheCheck(int index, bool value) async {
     _isChecked[index] = value;
 
- 
     _currentStep = _isChecked.where((checked) => checked).length;
-
 
     if (_currentStep == _isChecked.length && _currentStep > 0) {
       await incrementglobal('taches');
     }
 
-
     await ScoreStorageService.saveTacheState(_isChecked);
 
+    notifyListeners();
+  }
+
+  Future<void> createIsChecke(int lengthList) async {
+    List<bool> initList = List.generate(lengthList, (index) => false);
+
+    await ScoreStorageService.saveTacheState(initList);
     notifyListeners();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/TacheHazard/action_choice.dart';
-import 'package:flutter_application_1/pages/TacheHazard/quetesfinales.dart';
+import 'package:flutter_application_1/pages/TacheHazard/quetes_finales.dart';
 import 'package:flutter_application_1/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
@@ -47,12 +47,11 @@ class _AccueilTachesState extends State<AccueilTaches> {
       ),
       body: [
         ActionChoice(),
-        TacheListeAffichage(),
-
         Quetesfinales(),
+        TacheListeAffichage(),
       ][_currentindex],
       bottomNavigationBar: ConvexAppBar(
-        // Augmenter la hauteur pour accommoder le texte
+    
         style: TabStyle.react,
         backgroundColor: Colors.deepPurple,
         color: Colors.white,
@@ -61,11 +60,11 @@ class _AccueilTachesState extends State<AccueilTaches> {
         items: [
           TabItem(icon: Icons.home, title: 'Choix'),
           TabItem(
-            icon: Icons.settings,
-            title: 'Paramètres', // Texte plus court
+            icon: Icons.play_arrow_sharp,
+            title: 'Tirage', // Texte plus court
           ),
 
-          TabItem(icon: Icons.list_rounded, title: 'Liste'),
+          TabItem(icon: Icons.settings, title: 'Paramètre'),
         ],
         onTap: (int i) => setCurrentIndex(i),
       ),

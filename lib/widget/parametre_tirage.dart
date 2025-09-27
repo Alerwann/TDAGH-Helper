@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
 
 class Parametretirage extends StatefulWidget {
-    final VoidCallback? onNavigateToQuetes;
+  final VoidCallback? onNavigateToQuetes;
   const Parametretirage({super.key, this.onNavigateToQuetes});
 
   @override
@@ -12,6 +13,20 @@ class Parametretirage extends StatefulWidget {
 }
 
 class _ParametretirageState extends State<Parametretirage> {
+  final gradient = LinearGradient(
+    colors: [
+      const Color.fromARGB(255, 0, 0, 0),
+      const Color.fromARGB(255, 0, 135, 101),
+      const Color.fromARGB(255, 2, 169, 175),
+    ],
+  );
+
+  final textStyle = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+
   int choiceConvient = 0;
   List value = [0, 1];
 
@@ -20,89 +35,59 @@ class _ParametretirageState extends State<Parametretirage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Consumer<TachesProvider>(
-        builder: (context, tachesTime, child) {
-          return Column(
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(50, 10, 50, 5),
-                child: Column(
-                  children: [
-                    Text(
-                      "Étape 2 :",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 30,
-                      ),
-                    ),
-                    Text(
-                      "Valide le nombre de tache qui va être tiré",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 50),
-              Text(
-                "Actuellement je vais piocher ${tachesTime.nombreT} tâches.",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 30),
-              Text(
-                "Cela te convient?",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 50),
-
-              SizedBox(
-                height: 200,
-                width: 200,
-                child: RadioGroup(
-                  groupValue: choiceConvient,
-                  onChanged: (index) {
-                    setState(() {
-                      choiceConvient = value[index!];
-                    });
-                  },
-
-                  child: SizedBox(
-                    height: 200,
-                    child: Column(
-                      children: [
-                        Card(
-                          child: RadioListTile(title: Text('OUI'), value: 0),
+    return Scaffold(
+      appBar: AppBar(
+        title: ShaderMask(
+          shaderCallback: (bounds) {
+            return gradient.createShader(
+              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+            );
+          },
+          child: Text(
+            "Ajout d' activités",
+            style: textStyle,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      body: Center(
+        child: Consumer2<TachesProvider, ScoreProvider>(
+          builder: (context, tachesTime, scoreP, child) {
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(50, 10, 50, 5),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Valide le nombre de tache qui va être tiré",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.w700,
+                          decoration: TextDecoration.underline,
                         ),
-                        SizedBox(height: 20),
-
-                        Card(
-                          child: RadioListTile(title: Text('NON'), value: 1),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              if (choiceConvient == 0)
-                ElevatedButton(
-                  onPressed: () {
-                   
-                  },
-                  child: Text("Tirer au sort"),
+                SizedBox(height: 50),
+                Text(
+                  "Actuellement je vais piocher ${tachesTime.nombreT} tâches.",
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
                 ),
-              if (choiceConvient == 1)
+                SizedBox(height: 30),
+                Text(
+                  "Combien de Tâches tu veux piocher?",
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 50),
+
                 Column(
                   children: [
-                    Text("Combien de carte tu veux piocher?"),
                     Form(
                       key: _formKey,
                       child: Column(
@@ -147,9 +132,11 @@ class _ParametretirageState extends State<Parametretirage> {
                                   tachesTime.modifierNombreTache(nbTaches);
                                   _numberController.clear();
                                   choiceConvient = 0;
-                              
                                 });
-                                widget.onNavigateToQuetes!();
+                                tachesTime.reinitTAche();
+                                scoreP.createIsChecke(nbTaches);
+
+                                Navigator.pop(context);
                               }
                             },
                             child: Text("Valider"),
@@ -159,9 +146,10 @@ class _ParametretirageState extends State<Parametretirage> {
                     ),
                   ],
                 ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

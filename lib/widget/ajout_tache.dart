@@ -29,7 +29,7 @@ class _AjoutTacheState extends State<AjoutTache> {
   );
   final TextEditingController _TextController = TextEditingController();
   TacheDuration? dureeSelectionnee;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +49,7 @@ class _AjoutTacheState extends State<AjoutTache> {
       ),
       body: Center(
         child: Container(
-          margin: EdgeInsets.only(left: 40, right: 40),
+          margin: EdgeInsets.only(left: 10, right: 10),
           height: 500,
           child: Consumer<TachesProvider>(
             builder: (context, tache, chid) {
@@ -187,6 +187,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                             content: Text('Tâche ajoutée avec succès !'),
                           ),
                         );
+                        tache.reinitTAche();
 
                         Navigator.pop(context);
                       },

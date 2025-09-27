@@ -3,6 +3,7 @@ import 'package:flutter_application_1/data/schema/taches_shema.dart';
 import 'package:flutter_application_1/widget/ajout_tache.dart';
 
 import 'package:flutter_application_1/providers/taches_provider.dart';
+import 'package:flutter_application_1/widget/parametre_tirage.dart';
 import 'package:provider/provider.dart';
 
 class TacheListeAffichage extends StatefulWidget {
@@ -33,7 +34,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
               child: Column(
                 children: [
                   Text(
-                    "Appuie sur ce que tu veux modifier",
+                    "Appuie sur la tache ou la durée que veux modifier",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
@@ -63,10 +64,10 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                           children: [
                             TextButton(
                               style: ElevatedButton.styleFrom(
-                                elevation: 0.5,
+                                elevation: 1,
                                 padding: EdgeInsets.all(0),
                                 backgroundColor: const Color.fromARGB(
-                                  54,
+                                  0,
                                   255,
                                   255,
                                   255,
@@ -85,7 +86,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                                 "${tache.tacheName} :",
 
                                 style: TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: const Color.fromARGB(255, 95, 1, 82),
                                 ),
@@ -97,7 +98,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                                 elevation: 0.5,
                                 padding: EdgeInsets.all(0),
                                 backgroundColor: const Color.fromARGB(
-                                  54,
+                                  0,
                                   255,
                                   255,
                                   255,
@@ -208,12 +209,12 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                             dureeSelectionnee = value!;
                           });
                         },
-                      
+
                         child: GridView.count(
                           controller: ScrollController(keepScrollOffset: false),
                           crossAxisCount: 2,
                           childAspectRatio: 4,
-                      
+
                           children: [
                             SizedBox(
                               child: RadioListTile<TacheDuration>(
@@ -221,19 +222,19 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                                 value: TacheDuration.court,
                               ),
                             ),
-                      
+
                             SizedBox(
                               child: RadioListTile<TacheDuration>(
                                 title: Text('Moyen'),
                                 value: TacheDuration.moyen,
                               ),
                             ),
-                      
+
                             RadioListTile<TacheDuration>(
                               title: Text('Long'),
                               value: TacheDuration.long,
                             ),
-                      
+
                             RadioListTile<TacheDuration>(
                               title: Text('Très long'),
                               value: TacheDuration.tresLong,
@@ -296,6 +297,16 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                 ],
               ),
             ),
+            ElevatedButton(
+              onPressed: () async{
+              await  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Parametretirage()),
+                );
+              },
+              child: Text("Modifier le nombre de tirage"),
+            ),
+            SizedBox(height: 30),
           ],
         );
       },
@@ -327,7 +338,7 @@ Text changeEnumtoString(enumName) {
   return Text(
     convertValue,
     style: TextStyle(
-      fontSize: 20,
+      fontSize: 15,
       fontWeight: FontWeight.bold,
       color: colorAssigne,
     ),

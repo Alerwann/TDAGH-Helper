@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/TacheHazard/tirage_final.dart';
 import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
+import 'package:flutter_application_1/services/score_storage_service.dart';
 import 'package:flutter_application_1/services/taches_storage_service.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:provider/provider.dart';
@@ -15,17 +17,27 @@ class Quetesfinales extends StatefulWidget {
 
 class _QuetesfinalesState extends State<Quetesfinales> {
   bool afficheButton = false;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       List<String> tache = await TachesStorageService.getChoixTaches();
-      if (tache[0] == "0") {
-        afficheButton = true;
-      } else {
-        afficheButton = false;
-      }
+
+      List<bool> scoreStateInit = await ScoreStorageService.getTacheState();
+      setState(() {
+        if (scoreStateInit.length != tache.length) {
+          scoreStateInit = List.generate(tache.length, (index) => false);
+        }
+
+        afficheButton = tache.isEmpty || tache[0] == "0";
+        if (kDebugMode) {
+          print("premiere case ${tache[0]}");
+        }
+
+        isLoading = false;
+      });
     });
   }
 
@@ -34,6 +46,17 @@ class _QuetesfinalesState extends State<Quetesfinales> {
     return Center(
       child: Consumer2<TachesProvider, ScoreProvider>(
         builder: (context, tacheP, scoreP, child) {
+          final itemCount = tacheP.choixTaches.length;
+
+          if (isLoading) {
+            return CircularProgressIndicator();
+          }
+          if (kDebugMode) {
+            print(itemCount);
+          }
+          if (kDebugMode) {
+            print(scoreP.isChecked.length);
+          }
           return Container(
             margin: EdgeInsets.all(40),
             child: Column(
@@ -68,8 +91,34 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                   ),
                 ),
 
-                afficheButton == true
+                !afficheButton
                     ? Expanded(
+                        child: ListView.builder(
+                          itemCount: itemCount,
+                          itemBuilder: (context, index) {
+                            return Row(
+                              children: [
+                                Checkbox(
+                                  value: scoreP.isChecked[index],
+                                  onChanged: (bool? value) {
+                                    scoreP.updateTacheCheck(
+                                      index,
+                                      value ?? false,
+                                    );
+                                  },
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    tacheP.choixTaches[index],
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    : Expanded(
                         child: Column(
                           children: [
                             Text('Il faut faire le Tirage'),
@@ -83,45 +132,20 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                   ),
                                 );
                                 setState(() {
-                                  afficheButton =
-                                      false; 
+                                  afficheButton = false;
                                 });
                               },
                               child: Text('Faire le tirage'),
                             ),
                           ],
                         ),
-                      )
-                    : Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            for (int i = 0; i < tacheP.choixTaches.length; i++)
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    value: scoreP.isChecked[i],
-                                    onChanged: (bool? value) {
-                                      scoreP.updateTacheCheck(
-                                        i,
-                                        value ?? false,
-                                      );
-                                    },
-                                  ),
-                                  Text(
-                                    tacheP.choixTaches[i],
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
                       ),
+
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
                       tacheP.reinitTAche();
+
                       afficheButton = true;
                     });
                   },
