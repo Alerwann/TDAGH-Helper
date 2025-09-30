@@ -35,12 +35,12 @@ class SoundProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> playSound(String assetKey) async {
+  Future<void> playSound(String assetKey, String typeMemory) async {
     if (!_isReady || _audioController == null) {
       return;
     }
 
-    await _audioController!.playSound(assetKey);
+    await _audioController!.playSound(assetKey, typeMemory);
     _isPlaying = true;
   }
 
@@ -52,6 +52,7 @@ class SoundProvider extends ChangeNotifier {
     await _audioController!.pauseMusic();
     _isPlaying = false;
   }
+
   Future<void> stopSound() async {
     if (!isPlaying) {
       return;
@@ -60,6 +61,7 @@ class SoundProvider extends ChangeNotifier {
     await _audioController!.stopMusic();
     _isPlaying = false;
   }
+
   // Nettoyage des ressources
   @override
   void dispose() {

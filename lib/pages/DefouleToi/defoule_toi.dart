@@ -1,7 +1,10 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/DefouleToi/finish_defoule.dart';
+import 'package:flutter_application_1/main.dart';
+
+import 'package:flutter/material.dart';
+
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -49,12 +52,23 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
     }
   }
 
- 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          icon: Icon(
+            Icons.home,
+            color: const Color.fromARGB(255, 230, 177, 2),
+            size: 35,
+          ),
+        ),
         title: ShaderMask(
           shaderCallback: (bounds) {
             return gradient.createShader(

@@ -9,11 +9,7 @@ import 'package:provider/provider.dart';
 class ImageSet extends StatelessWidget {
   final double sizewidth;
 
-  const ImageSet(double d, 
-    {super.key,
-      required this.sizewidth, 
-    }
-  );
+  const ImageSet(double d, {super.key, required this.sizewidth});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,10 @@
 import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/list/bingocard_list.dart';
 import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/services/score_storage_service.dart';
 import 'package:flutter_application_1/widget/simpleflipcard.dart';
+import 'package:flutter/material.dart';
+
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';

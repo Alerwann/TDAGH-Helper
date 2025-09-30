@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
-import 'package:flutter_application_1/widget/imageSet.dart';
+import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../../widget/imageSet.dart';
 
 class ProfilParametreConfig extends StatefulWidget {
   const ProfilParametreConfig({super.key});
@@ -67,7 +69,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(75),
-                      child: ImageSet(sizewidth: 150,0),
+                      child: ImageSet(sizewidth: 150, 0),
                     ),
                     Positioned(
                       bottom: -25,
@@ -123,8 +125,19 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                     context,
                                   ).requestFocus(FocusNode());
                                 }
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Pseudo mis à jour avec succès !',
+                                    ),
+                                  ),
+                                );
                               },
-                              label: Text('Enregistrer'),
+                              label: Text(
+                                'Enregistrer le pseudo',
+                                textAlign: TextAlign.center,
+                              ),
                               icon: Icon(Icons.check_box, color: Colors.green),
                             ),
                           ),
@@ -138,7 +151,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                   context,
                                   listen: false,
                                 ).resetAll();
-                                 _pseudoController.text = profil.pseudo;
+                                _pseudoController.text = profil.pseudo;
                               },
                               icon: Icon(Icons.delete, color: Colors.red),
                               label: Text('Réinitialiser'),

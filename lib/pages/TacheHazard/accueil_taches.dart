@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pages/TacheHazard/action_choice.dart';
 import 'package:flutter_application_1/pages/TacheHazard/quetes_finales.dart';
 import 'package:flutter_application_1/pages/TacheHazard/tache_liste_affichage.dart';
@@ -36,6 +37,19 @@ class _AccueilTachesState extends State<AccueilTaches> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          icon: Icon(
+            Icons.home,
+            color: const Color.fromARGB(255, 230, 177, 2),
+            size: 35,
+          ),
+        ),
         title: ShaderMask(
           shaderCallback: (bounds) {
             return gradient.createShader(
@@ -51,7 +65,6 @@ class _AccueilTachesState extends State<AccueilTaches> {
         TacheListeAffichage(),
       ][_currentindex],
       bottomNavigationBar: ConvexAppBar(
-    
         style: TabStyle.react,
         backgroundColor: Colors.deepPurple,
         color: Colors.white,

@@ -1,8 +1,9 @@
+import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/pages/Bingo/general_bingo_card.dart';
+import 'package:flutter_application_1/providers/heures_profil_provider.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Bingo/general_bingo_card.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
-import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +46,19 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 100,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          icon: Icon(
+            Icons.home,
+            color: const Color.fromARGB(255, 230, 177, 2),
+            size: 35,
+          ),
+        ),
 
         title: SizedBox(
           width: 500.0,

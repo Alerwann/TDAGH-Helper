@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pages/ProfilsPages/heures_parametre.dart';
 import 'package:flutter_application_1/pages/ProfilsPages/profil_parametre.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
-
 import 'package:flutter_application_1/widget/imageSet.dart';
+import 'package:flutter/material.dart';
 
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +19,33 @@ class _ProfilPageState extends State<ProfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: Text(
+          "Gestion du profil",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 35,
+            color: Colors.amber,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          icon: Icon(
+            Icons.home,
+            color: const Color.fromARGB(255, 230, 177, 2),
+            size: 35,
+          ),
+        ),
+      ),
       body: Column(
         spacing: 2,
-
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Consumer<ProfilProvider>(
             builder: (context, profil, child) {
@@ -30,11 +53,12 @@ class _ProfilPageState extends State<ProfilPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(75),
-                    child: ImageSet(sizewidth: 150,0),
+                    child: ImageSet(sizewidth: 150, 0),
                   ),
                   Text(
                     profil.pseudo,
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 70),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 60),
                   ),
                 ],
               );

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_application_1/services/defoule_service.dart';
+import 'package:flutter/material.dart';
 
 class DefouleProvider extends ChangeNotifier {
   int _scoreDefoule = 0;

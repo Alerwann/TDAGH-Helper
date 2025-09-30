@@ -50,7 +50,7 @@ class ScoreProvider extends ChangeNotifier {
 
   Future<void> _checkAndReset() async {
     final now = DateTime.now();
-    final today6AM = DateTime(now.year, now.month, now.day, 15, 21);
+    final today6AM = DateTime(now.year, now.month, now.day, 6, 00);
 
     if (_lastResetDate == null || _lastResetDate!.isBefore(today6AM)) {
       if (now.isAfter(today6AM)) {
@@ -59,6 +59,8 @@ class ScoreProvider extends ChangeNotifier {
         _afternoonScore = 0;
         _eveningScore = 0;
         _tacheScore = 0;
+
+        await TachesStorageService.saveListeChoix(["0"]);
 
         nombreTirage = await TachesStorageService.getNombreT();
         _isChecked = List.generate(nombreTirage, (index) => false);
@@ -175,6 +177,14 @@ class ScoreProvider extends ChangeNotifier {
     List<bool> initList = List.generate(lengthList, (index) => false);
 
     await ScoreStorageService.saveTacheState(initList);
+    notifyListeners();
+  }
+
+  Future<void> resetCheckboxesWithLength(int newLength) async {
+    _isChecked = List.generate(newLength, (index) => false);
+    _currentStep = 0;
+
+    await ScoreStorageService.saveTacheState(_isChecked);
     notifyListeners();
   }
 }

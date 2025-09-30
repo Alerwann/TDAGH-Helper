@@ -1,6 +1,6 @@
+import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:provider/provider.dart';
 
 class HeureParametreConfig extends StatefulWidget {

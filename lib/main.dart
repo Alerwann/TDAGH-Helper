@@ -1,7 +1,7 @@
 import 'package:dot_curved_bottom_nav/dot_curved_bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/ProfilsPages/profil.dart';
-import 'package:flutter_application_1/pages/Bingo/homepage.dart';
+import 'package:flutter_application_1/pages/SuiviScores/accueil_score.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
 import 'package:flutter_application_1/providers/defoule_provider.dart';
 import 'package:flutter_application_1/providers/score_provider.dart';
@@ -79,12 +79,12 @@ class _MyScoreProvider extends State<MyApp> {
         ),
       ),
       home: Scaffold(
-        body: [HomeGlobalPage(), HomeBingoPage(), ProfilPage()][_currentindex],
+        body: [HomeGlobalPage(), AccueilScore(), ProfilPage()][_currentindex],
         bottomNavigationBar: DotCurvedBottomNav(
           scrollController: _scrollController,
           hideOnScroll: true,
-          indicatorColor: Colors.blue,
-          backgroundColor: const Color.fromARGB(155, 193, 187, 187),
+          indicatorColor: Colors.amber,
+          backgroundColor: Colors.purple,
           animationDuration: const Duration(milliseconds: 200),
           animationCurve: Curves.ease,
           selectedIndex: _currentindex,
@@ -98,21 +98,21 @@ class _MyScoreProvider extends State<MyApp> {
             Icon(
               Icons.home,
               color: _currentindex == 0
-                  ? const Color.fromARGB(255, 88, 151, 142)
+                  ? Colors.amber
                   : const Color.fromARGB(255, 0, 0, 0),
               size: 30,
             ),
             Icon(
               HugeIconsSolid.gameController02,
               color: _currentindex == 1
-                  ? const Color.fromARGB(255, 88, 151, 142)
+                  ? Colors.amber
                   : const Color.fromARGB(255, 0, 0, 0),
               size: 30,
             ),
             Icon(
               HugeIconsSolid.settings01,
               color: _currentindex == 2
-                  ? const Color.fromARGB(255, 88, 151, 142)
+                  ? Colors.amber
                   : const Color.fromARGB(255, 0, 0, 0),
               size: 30,
             ),

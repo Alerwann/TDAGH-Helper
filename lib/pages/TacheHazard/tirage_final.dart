@@ -32,6 +32,8 @@ class _TirageFinalState extends State<TirageFinal>
   List<String> listFinale = [];
   int nbCycles = 0;
 
+  bool _activeAnimation = false;
+
   @override
   void initState() {
     super.initState();
@@ -137,28 +139,29 @@ class _TirageFinalState extends State<TirageFinal>
                     );
                   },
                 ),
+                if (_activeAnimation == false)
+                  ElevatedButton(
+                    onPressed: () {
+                      listIndex = tabIndice(
+                        tacheP.nombreT,
+                        tacheP.taches.length - 1,
+                      );
+                      nbCycles = tacheP.nombreT;
 
-                ElevatedButton(
-                  onPressed: () {
-                    listIndex = tabIndice(
-                      tacheP.nombreT,
-                      tacheP.taches.length - 1,
-                    );
-                    nbCycles = tacheP.nombreT;
+                      for (int i = 0; i < tacheP.nombreT; i++) {
+                        int convertInt = (listIndex[i]);
 
-                    for (int i = 0; i < tacheP.nombreT; i++) {
-                      int convertInt = (listIndex[i]);
+                        listFinale.add(tacheP.taches[convertInt].tacheName);
+                      }
+                      tacheP.saveListeTache(listFinale);
 
-                      listFinale.add(tacheP.taches[convertInt].tacheName);
-                    }
-                    tacheP.saveListeTache(listFinale);
-
-                    setState(() {
-                      controllerAnimation.forward();
-                    });
-                  },
-                  child: Text("Tirer les tâches"),
-                ),
+                      setState(() {
+                        controllerAnimation.forward();
+                        _activeAnimation = true;
+                      });
+                    },
+                    child: Text("Tirer les tâches"),
+                  ),
               ],
             );
           },

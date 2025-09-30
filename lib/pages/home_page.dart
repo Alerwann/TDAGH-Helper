@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
 
-
   @override
   State<HomeGlobalPage> createState() => _HomeGlobalPageState();
 }
@@ -17,15 +16,21 @@ class HomeGlobalPage extends StatefulWidget {
 class _HomeGlobalPageState extends State<HomeGlobalPage> {
   late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.purple,
         title: Consumer<ProfilProvider>(
           builder: (context, profil, child) {
-            return Text("Bienvenue ${profil.pseudo}");
+            return Text(
+              "Bienvenue ${profil.pseudo}",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+                color: Colors.amber,
+              ),
+            );
           },
         ),
       ),
@@ -45,7 +50,6 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
             );
           }
 
-          // Afficher une erreur si l'audio n'a pas pu s'initialiser
           if (!audioProvider.isReady) {
             return Center(
               child: Column(
@@ -53,16 +57,11 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                 children: [
                   Icon(Icons.error, color: Colors.red, size: 50),
                   Text('Erreur d\'initialisation audio'),
-                  // ElevatedButton(
-                  //   onPressed: () => audioProvider.initialize(),
-                  //   child: Text('Réessayer'),
-                  // ),
                 ],
               ),
             );
           }
 
-          // Interface normale une fois l'audio prêt
           return Center(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

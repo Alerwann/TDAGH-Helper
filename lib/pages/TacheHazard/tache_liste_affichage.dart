@@ -298,8 +298,8 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
               ),
             ),
             ElevatedButton(
-              onPressed: () async{
-              await  Navigator.push(
+              onPressed: () async {
+                await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => Parametretirage()),
                 );

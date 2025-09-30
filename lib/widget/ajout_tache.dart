@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/data/schema/taches_shema.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -51,8 +52,8 @@ class _AjoutTacheState extends State<AjoutTache> {
         child: Container(
           margin: EdgeInsets.only(left: 10, right: 10),
           height: 500,
-          child: Consumer<TachesProvider>(
-            builder: (context, tache, chid) {
+          child: Consumer2<TachesProvider, ScoreProvider>(
+            builder: (context, tache, scoreP, chid) {
               return Form(
                 child: Column(
                   children: [
@@ -188,6 +189,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                           ),
                         );
                         tache.reinitTAche();
+                        scoreP.resetCheckboxesWithLength(1);
 
                         Navigator.pop(context);
                       },

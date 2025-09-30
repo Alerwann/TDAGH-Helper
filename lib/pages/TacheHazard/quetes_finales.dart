@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/TacheHazard/tirage_final.dart';
 import 'package:flutter_application_1/providers/score_provider.dart';
@@ -32,9 +31,6 @@ class _QuetesfinalesState extends State<Quetesfinales> {
         }
 
         afficheButton = tache.isEmpty || tache[0] == "0";
-        if (kDebugMode) {
-          print("premiere case ${tache[0]}");
-        }
 
         isLoading = false;
       });
@@ -51,12 +47,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
           if (isLoading) {
             return CircularProgressIndicator();
           }
-          if (kDebugMode) {
-            print(itemCount);
-          }
-          if (kDebugMode) {
-            print(scoreP.isChecked.length);
-          }
+
           return Container(
             margin: EdgeInsets.all(40),
             child: Column(
@@ -131,6 +122,25 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                     builder: (context) => TirageFinal(),
                                   ),
                                 );
+
+                                final tacheProvider =
+                                    Provider.of<TachesProvider>(
+                                      context,
+                                      listen: false,
+                                    );
+                                final scoreProvider =
+                                    Provider.of<ScoreProvider>(
+                                      context,
+                                      listen: false,
+                                    );
+
+                                if (scoreProvider.isChecked.length !=
+                                    tacheProvider.choixTaches.length) {
+                                  await scoreProvider.resetCheckboxesWithLength(
+                                    tacheProvider.choixTaches.length,
+                                  );
+                                }
+
                                 setState(() {
                                   afficheButton = false;
                                 });
@@ -145,7 +155,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                   onPressed: () {
                     setState(() {
                       tacheP.reinitTAche();
-
+                      scoreP.resetCheckboxesWithLength(1);
                       afficheButton = true;
                     });
                   },

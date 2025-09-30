@@ -30,22 +30,53 @@ class AudioController {
     }
   }
 
-  Future<void> playSound(String assetKey) async {
+  Future<void> playSound(String assetKey, String typeMemory) async {
     if (!_isInitialized || _audioPlayer == null) {
       _log.warning('AudioController not initialized, initializing now...');
       await initialize();
     }
 
     try {
-      await _audioPlayer!.play(AssetSource(assetKey));
-      _log.info('Playing sound: $assetKey');
+      if (typeMemory == "interne") {
+        print("👀 Fichier interne du téléphone");
+        await _audioPlayer!.play(DeviceFileSource(assetKey));
+      } else if (typeMemory == "appli") {
+        print("👀 Fichier de l'app");
+        await _audioPlayer!.play(AssetSource(assetKey));
+      }
     } catch (e) {
       _log.severe('Error playing sound: $e');
 
       try {
-        await _audioPlayer!.play(AssetSource(assetKey));
+        if (typeMemory == "interne") {
+          print("👀 Fichier interne du téléphone");
+          await _audioPlayer!.play(DeviceFileSource(assetKey));
+        } else if (typeMemory == "appli") {
+          print("👀 Fichier de l'app");
+          await _audioPlayer!.play(AssetSource(assetKey));
+        }
       } catch (e2) {
         _log.severe('Error playing sound: $e2');
+      }
+    }
+  }
+
+  Future<void> playDeviceFile(String filePath) async {
+    if (!_isInitialized || _audioPlayer == null) {
+      _log.warning('AudioController not initialized, initializing now...');
+      await initialize();
+    }
+
+    try {
+      await _audioPlayer!.play(DeviceFileSource(filePath));
+      _log.info('Playing device file: $filePath');
+    } catch (e) {
+      _log.severe('Error playing device file: $e');
+
+      try {
+        await _audioPlayer!.play(DeviceFileSource(filePath));
+      } catch (e2) {
+        _log.severe('Error playing device file: $e2');
       }
     }
   }

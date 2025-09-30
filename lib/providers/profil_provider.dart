@@ -7,12 +7,10 @@ class ProfilProvider extends ChangeNotifier {
   String _pseudo = 'Iconnu';
   String _profilImagePath = 'assets/images/defaultprofilimage.png';
 
-
   bool get isDefaultImage => _profilImagePath.startsWith('assets/');
 
   String get pseudo => _pseudo;
   String get profilImagePath => _profilImagePath;
-
 
   ProfilProvider() {
     _loadData();

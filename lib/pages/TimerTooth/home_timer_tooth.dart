@@ -1,11 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:custom_timer/custom_timer.dart';
-import 'package:flutter_application_1/services/audio_controller.dart';
 import 'package:flutter_application_1/data/list/music_list.dart';
 import 'package:flutter_application_1/data/schema/music_schema.dart';
-
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
+import 'package:flutter_application_1/services/audio_controller.dart';
 import 'package:flutter_application_1/widget/imageSet.dart';
+import 'package:path/path.dart' as path;
+import 'package:flutter/material.dart';
+import 'package:custom_timer/custom_timer.dart';
+
+import 'package:file_picker/file_picker.dart';
+
 import 'package:provider/provider.dart';
 
 class HomeTimertooth extends StatefulWidget {
@@ -18,7 +22,7 @@ class HomeTimertooth extends StatefulWidget {
 class _HomeTimertoothState extends State<HomeTimertooth>
     with TickerProviderStateMixin {
   final Duration _washDuration = Duration(milliseconds: 750);
-
+  String musicPathChoice = "";
   final AudioController soundController = AudioController();
   // ignore: unused_field
   bool _timerIsActive = false;
@@ -34,8 +38,29 @@ class _HomeTimertoothState extends State<HomeTimertooth>
 
   late Animation<Offset> _animation;
 
+  String musicName = "";
+
   MusicSchema? selectedMusic;
+
   final List<MusicSchema> musicList = MusicList.getDefaultCards();
+
+  Future<void> pickMusic() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+    );
+
+    if (result != null) {
+      setState(() {
+        musicPathChoice = result.files.single.path!;
+        musicName = path.basename(musicPathChoice);
+      });
+    }
+
+    if (_timerIsActive) {
+      final audioProvider = Provider.of<SoundProvider>(context, listen: false);
+      audioProvider.playSound(musicPathChoice, "interne");
+    }
+  }
 
   @override
   void initState() {
@@ -81,7 +106,21 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          },
+          icon: Icon(
+            Icons.home,
+            color: const Color.fromARGB(255, 230, 177, 2),
+            size: 35,
+          ),
+        ),
+      ),
       body: Consumer<SoundProvider>(
         builder: (context, audioProvider, child) {
           // Vérifier si l'audio est prêt
@@ -122,17 +161,30 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                     ElevatedButton(
                       onPressed: () {
                         controllerTimer.start();
-
                         _timerIsActive = true;
-                        if (selectedMusic != null) {
-                          soundController.playSound(selectedMusic!.musicPath);
+
+                        print("🔍 musicPathChoice: '$musicPathChoice'");
+                        print("🔍 selectedMusic: $selectedMusic");
+
+                        if (musicPathChoice.isNotEmpty) {
+                          print("➡️ Lecture fichier interne");
+                          audioProvider.playSound(musicPathChoice, "interne");
+                        } else if (selectedMusic != null) {
+                          print(
+                            "➡️ Lecture fichier app: ${selectedMusic!.musicPath}",
+                          );
+                          audioProvider.playSound(
+                            selectedMusic!.musicPath,
+                            "appli",
+                          );
+                        } else {
+                          print("❌ Aucune musique sélectionnée");
                         }
 
                         setState(() {
                           controllerAnimation.repeat(reverse: true);
                         });
                       },
-
                       child: Text('Start'),
                     ),
                     SizedBox(width: 20),
@@ -142,7 +194,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                         controllerTimer.pause();
                         _timerIsActive = false;
                         controllerAnimation.stop();
-                        soundController.pauseMusic();
+                        audioProvider.pauseSound();
                       },
                       child: Text('Stop'),
                     ),
@@ -165,16 +217,34 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                     }).toList(),
 
                     onChanged: (MusicSchema? newValue) {
+                      if (newValue!.musicTitle == "Importation") {
+                        pickMusic();
+                      } else {
+                        musicPathChoice = "";
+                        musicName = "";
+                      }
+
                       setState(() {
                         selectedMusic = newValue;
                       });
                       if (_timerIsActive == true) {
-                        soundController.playSound(selectedMusic!.musicPath);
+                        if (musicPathChoice != "") {
+                          audioProvider.playSound(musicPathChoice, "interne");
+                        } else {
+                          audioProvider.playSound(newValue.musicPath, "appli");
+                        }
                       }
                     },
                   ),
                 ),
                 SizedBox(height: 20),
+                if (musicName != "")
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Column(
+                      children: [Text("Musique à l'écoute :"), Text(musicName)],
+                    ),
+                  ),
                 SizedBox(
                   height: 300,
                   child: Stack(
@@ -207,5 +277,3 @@ class _HomeTimertoothState extends State<HomeTimertooth>
     );
   }
 }
-
-// Modifier le son pour qu'il s'arrete à la fin du timer

@@ -134,7 +134,7 @@ class _ParametretirageState extends State<Parametretirage> {
                                   choiceConvient = 0;
                                 });
                                 tachesTime.reinitTAche();
-                                scoreP.createIsChecke(nbTaches);
+                                scoreP.resetCheckboxesWithLength(1);
 
                                 Navigator.pop(context);
                               }
