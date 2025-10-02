@@ -47,7 +47,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
         title: ShaderMask(
@@ -71,7 +71,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
         activeColor: Colors.white,
         initialActiveIndex: _currentindex,
         items: [
-          TabItem(icon: Icons.home, title: 'Choix'),
+          TabItem(icon: Icons.question_mark_rounded, title: 'Choix'),
           TabItem(
             icon: Icons.play_arrow_sharp,
             title: 'Tirage', // Texte plus court

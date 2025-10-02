@@ -156,6 +156,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                     setState(() {
                       tacheP.reinitTAche();
                       scoreP.resetCheckboxesWithLength(1);
+                      scoreP.decrementglobal('taches');
                       afficheButton = true;
                     });
                   },

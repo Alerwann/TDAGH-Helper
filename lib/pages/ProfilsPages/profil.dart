@@ -39,7 +39,7 @@ class _ProfilPageState extends State<ProfilPage> {
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
       ),

@@ -37,6 +37,19 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   late AnimationController controllerAnimation;
 
   late Animation<Offset> _animation;
+  final gradient = LinearGradient(
+    colors: [
+      const Color.fromARGB(255, 237, 85, 2),
+      const Color.fromARGB(255, 244, 176, 4),
+      const Color.fromARGB(255, 255, 85, 59),
+    ],
+  );
+
+  final textStyle = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
 
   String musicName = "";
 
@@ -107,6 +120,14 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: ShaderMask(
+          shaderCallback: (bounds) {
+            return gradient.createShader(
+              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+            );
+          },
+          child: Text("Aides Les Dents", style: textStyle),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
@@ -117,7 +138,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
       ),
@@ -163,23 +184,14 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                         controllerTimer.start();
                         _timerIsActive = true;
 
-                        print("🔍 musicPathChoice: '$musicPathChoice'");
-                        print("🔍 selectedMusic: $selectedMusic");
-
                         if (musicPathChoice.isNotEmpty) {
-                          print("➡️ Lecture fichier interne");
                           audioProvider.playSound(musicPathChoice, "interne");
                         } else if (selectedMusic != null) {
-                          print(
-                            "➡️ Lecture fichier app: ${selectedMusic!.musicPath}",
-                          );
                           audioProvider.playSound(
                             selectedMusic!.musicPath,
                             "appli",
                           );
-                        } else {
-                          print("❌ Aucune musique sélectionnée");
-                        }
+                        } else {}
 
                         setState(() {
                           controllerAnimation.repeat(reverse: true);

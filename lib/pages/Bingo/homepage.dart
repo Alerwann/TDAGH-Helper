@@ -1,9 +1,9 @@
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/pages/Bingo/general_bingo_card.dart';
 import 'package:flutter_application_1/providers/heures_profil_provider.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/providers/score_provider.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +46,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
       appBar: AppBar(
         centerTitle: true,
         toolbarHeight: 100,
+
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
@@ -56,7 +57,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
 
@@ -83,7 +84,6 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
             repeatForever: true,
           ),
         ),
-        backgroundColor: const Color.fromARGB(155, 193, 187, 187),
       ),
 
       body: Card(
@@ -93,24 +93,6 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
             spacing: 30,
 
             children: [
-              Text(
-                "Score du jour : ",
-                style: TextStyle(
-                  fontFamily: "StoryScript",
-                  fontSize: 50,
-                  letterSpacing: 0.01,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-              Consumer<ScoreProvider>(
-                builder: (context, appState, child) {
-                  return Text(
-                    "${appState.globalScore} / 16",
-                    style: TextStyle(fontSize: 30, fontFamily: "StoryScript"),
-                  );
-                },
-              ),
-
               // matin
               _buildMomentButton(
                 'Matin',
@@ -156,6 +138,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
   ) {
     int hourMomentdeb = 12;
     int hourMomentfin = 12;
+    int scoreByMoment = 0;
 
     return ElevatedButton(
       onPressed: isActive
@@ -195,6 +178,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                 case 'midi':
                   hourMomentdeb = profil.midiHours - 1;
                   hourMomentfin = profil.soirhours + 1;
+
                   break;
                 case 'soir':
                   hourMomentdeb = profil.soirhours - 1;
@@ -210,6 +194,25 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
               return isActive
                   ? Text("Fin d'accès à $hourMomentfin H")
                   : Text("Ouverture à $hourMomentdeb H");
+            },
+          ),
+          Consumer<ScoreProvider>(
+            builder: (context, scoreP, child) {
+              switch (moment.toLowerCase()) {
+                case 'matin':
+                  scoreByMoment = scoreP.morningScore;
+                  break;
+                case 'midi':
+                  scoreByMoment = scoreP.midiScore;
+                  break;
+                case 'soir':
+                  scoreByMoment = scoreP.afternoonScore;
+                  break;
+                case 'couché':
+                  scoreByMoment = scoreP.eveningScore;
+                  break;
+              }
+              return Text(" Le score pour le $moment : $scoreByMoment/4");
             },
           ),
         ],

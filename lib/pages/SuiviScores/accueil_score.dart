@@ -34,7 +34,7 @@ class _AccueilScoreState extends State<AccueilScore> {
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
       ),

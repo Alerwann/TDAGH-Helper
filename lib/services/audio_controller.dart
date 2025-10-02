@@ -38,10 +38,8 @@ class AudioController {
 
     try {
       if (typeMemory == "interne") {
-        print("👀 Fichier interne du téléphone");
         await _audioPlayer!.play(DeviceFileSource(assetKey));
       } else if (typeMemory == "appli") {
-        print("👀 Fichier de l'app");
         await _audioPlayer!.play(AssetSource(assetKey));
       }
     } catch (e) {
@@ -49,10 +47,8 @@ class AudioController {
 
       try {
         if (typeMemory == "interne") {
-          print("👀 Fichier interne du téléphone");
           await _audioPlayer!.play(DeviceFileSource(assetKey));
         } else if (typeMemory == "appli") {
-          print("👀 Fichier de l'app");
           await _audioPlayer!.play(AssetSource(assetKey));
         }
       } catch (e2) {

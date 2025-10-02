@@ -3,7 +3,7 @@ import 'package:flutter_application_1/data/schema/taches_shema.dart';
 import 'package:flutter_application_1/widget/ajout_tache.dart';
 
 import 'package:flutter_application_1/providers/taches_provider.dart';
-import 'package:flutter_application_1/widget/parametre_tirage.dart';
+import 'package:flutter_application_1/pages/TacheHazard/parametre_tirage.dart';
 import 'package:provider/provider.dart';
 
 class TacheListeAffichage extends StatefulWidget {

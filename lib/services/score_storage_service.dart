@@ -125,7 +125,7 @@ class ScoreStorageService {
     await prefs.clear();
   }
 
-  static Future<List<bool>> getTacheState( {int defaultLength = 3}) async {
+  static Future<List<bool>> getTacheState({int defaultLength = 3}) async {
     final List<bool> defaultList = List.generate(3, (index) => false);
     final prefs = await SharedPreferences.getInstance();
     final key = _tacheStateKey;
@@ -159,5 +159,11 @@ class ScoreStorageService {
     );
     final jsonString = jsonEncode(resetTacheState);
     await prefs.setString(key, jsonString);
+  }
+
+  static Future<void> resetTacheScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _tacheScoreKey;
+    await prefs.setInt(key, 0);
   }
 }

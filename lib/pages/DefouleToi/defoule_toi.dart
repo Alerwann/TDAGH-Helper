@@ -4,6 +4,9 @@ import 'package:flutter_application_1/pages/DefouleToi/finish_defoule.dart';
 import 'package:flutter_application_1/main.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/DefouleToi/modif_timer_game.dart';
+import 'package:flutter_application_1/providers/defoule_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
@@ -66,7 +69,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
           icon: Icon(
             Icons.home,
             color: const Color.fromARGB(255, 230, 177, 2),
-            size: 35,
+            size: 45,
           ),
         ),
         title: ShaderMask(
@@ -78,82 +81,118 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
           child: Text("Tappe et défoule toi", style: textStyle),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Countdown(
-              controller: _controller,
-              seconds: 20,
-              build: (BuildContext context, double time) => Text(
-                "Timer : ${time.toString()}",
-                style: TextStyle(fontSize: 50, color: Colors.red),
-              ),
-              interval: Duration(milliseconds: 100),
-              onFinished: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FinishDefoule(score: _score),
+      body: Consumer<DefouleProvider>(
+        builder: (context, defouleP, child) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Countdown(
+                  controller: _controller,
+                  seconds: defouleP.timerDuration,
+                  build: (BuildContext context, double time) => Text(
+                    "Timer : ${time.toString()}",
+                    style: TextStyle(fontSize: 50, color: Colors.red),
                   ),
-                );
-              },
-            ),
-            _compteurActive == true
-                ? Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          "Ton score :$_score",
-                          style: TextStyle(fontSize: 40),
-                        ),
+                  interval: Duration(milliseconds: 100),
+                  onFinished: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FinishDefoule(score: _score),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                _compteurActive == true
+                    ? Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              "Ton score :$_score",
+                              style: TextStyle(fontSize: 40),
+                            ),
 
-                        Expanded(
-                          child: LayoutBuilder(
-                            builder: (context, constraints) {
-                              _containerSize = Size(
-                                constraints.maxWidth,
-                                constraints.maxHeight,
-                              );
+                            Expanded(
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  _containerSize = Size(
+                                    constraints.maxWidth,
+                                    constraints.maxHeight,
+                                  );
 
-                              return GestureDetector(
-                                onTapDown: (TapDownDetails details) {
-                                  _xTap = details.localPosition.dx;
-                                  _yTap = details.localPosition.dy;
+                                  return GestureDetector(
+                                    onTapDown: (TapDownDetails details) {
+                                      _xTap = details.localPosition.dx;
+                                      _yTap = details.localPosition.dy;
 
-                                  setState(() {
-                                    if ((_x - _radius <= _xTap &&
-                                            _xTap <= _x + _radius) &&
-                                        (_y - _radius <= _yTap &&
-                                            _yTap <= _y + _radius)) {
-                                      _score += 1;
-                                    }
-                                    _randomPoint();
-                                  });
+                                      setState(() {
+                                        if ((_x - _radius <= _xTap &&
+                                                _xTap <= _x + _radius) &&
+                                            (_y - _radius <= _yTap &&
+                                                _yTap <= _y + _radius)) {
+                                          _score += 1;
+                                        }
+                                        _randomPoint();
+                                      });
+                                    },
+                                    child: CustomPaint(
+                                      painter: MyGamePainter(_x, _y),
+                                      size: Size.infinite,
+                                    ),
+                                  );
                                 },
-                                child: CustomPaint(
-                                  painter: MyGamePainter(_x, _y),
-                                  size: Size.infinite,
-                                ),
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                : ElevatedButton(
-                    onPressed: () {
-                      _controller.start();
-                      setState(() {
-                        _compteurActive = true;
-                      });
-                    },
-                    child: Text("Start", style: TextStyle(fontSize: 60)),
-                  ),
-            SizedBox(height: 100),
-          ],
-        ),
+                      )
+                    : Column(
+                        children: [
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: 260,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _controller.start();
+                                setState(() {
+                                  _compteurActive = true;
+                                });
+                              },
+                              child: Text(
+                                "Start",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: 260,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (contex) => ModifTimerGame(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Modifier timer",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                SizedBox(height: 100),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

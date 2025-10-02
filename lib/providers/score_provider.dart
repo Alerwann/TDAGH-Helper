@@ -151,14 +151,6 @@ class ScoreProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void incrementTacheScore() {
-    for (var value in _isChecked) {
-      if (value == true) {
-        _currentStep += 1;
-      }
-    }
-  }
-
   Future<void> updateTacheCheck(int index, bool value) async {
     _isChecked[index] = value;
 
@@ -166,6 +158,8 @@ class ScoreProvider extends ChangeNotifier {
 
     if (_currentStep == _isChecked.length && _currentStep > 0) {
       await incrementglobal('taches');
+    } else {
+      resetTacheScore();
     }
 
     await ScoreStorageService.saveTacheState(_isChecked);
@@ -185,6 +179,12 @@ class ScoreProvider extends ChangeNotifier {
     _currentStep = 0;
 
     await ScoreStorageService.saveTacheState(_isChecked);
+    notifyListeners();
+  }
+
+  Future<void> resetTacheScore() async {
+    _tacheScore = 0;
+    await ScoreStorageService.resetTacheScore();
     notifyListeners();
   }
 }

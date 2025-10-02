@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 class DefouleProvider extends ChangeNotifier {
   int _scoreDefoule = 0;
+  int _timerDuration = 20;
+
   int get scoreDefoule => _scoreDefoule;
+  int get timerDuration => _timerDuration;
 
   DefouleProvider() {
     _loadData();
@@ -21,7 +24,19 @@ class DefouleProvider extends ChangeNotifier {
 
   Future<void> resetScore() async {
     _scoreDefoule = 0;
-    await DefouleService.saveScoreDefoule(_scoreDefoule);
+    await DefouleService.restScoreDefoule();
+    notifyListeners();
+  }
+
+    Future<void> saveTimerDuration(int timerD) async {
+    _timerDuration = timerD;
+    await DefouleService.saveTimerDuration(_timerDuration);
+    notifyListeners();
+  }
+
+  Future<void> resetTimerDuration() async {
+    _scoreDefoule = 0;
+    await DefouleService.resetTimerDuration();
     notifyListeners();
   }
 }

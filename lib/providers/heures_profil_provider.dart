@@ -10,6 +10,7 @@ class HeureProfilProvider extends ChangeNotifier {
   int _soirMinutes = 0;
   int _coucheHours = 22;
   int _coucheMinutes = 0;
+  int _timerGame = 20;
 
   int get reveilHours => _reveilHours;
   int get reveilMinutes => _reveilMinutes;
@@ -19,6 +20,7 @@ class HeureProfilProvider extends ChangeNotifier {
   int get soirMinutes => _soirMinutes;
   int get coucheHours => _coucheHours;
   int get coucheMinutes => _coucheMinutes;
+  int get timerGame => _timerGame;
 
   HeureProfilProvider() {
     _loadData();
@@ -33,6 +35,7 @@ class HeureProfilProvider extends ChangeNotifier {
     _soirMinutes = await HoraireStorageService.getMinutes('soir');
     _coucheHours = await HoraireStorageService.getHours('couché');
     _coucheMinutes = await HoraireStorageService.getMinutes('couché');
+    _timerGame = await HoraireStorageService.getTimerGame();
 
     notifyListeners();
   }
@@ -103,6 +106,12 @@ class HeureProfilProvider extends ChangeNotifier {
         break;
     }
 
+    notifyListeners();
+  }
+
+  Future<void> setTimerGame(int timerG) async {
+    _timerGame = timerG;
+    await HoraireStorageService.saveTimerGame(_timerGame);
     notifyListeners();
   }
 }

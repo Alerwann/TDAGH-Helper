@@ -9,6 +9,7 @@ class HoraireStorageService {
   static const String _soirMinutes = "soir_minutes";
   static const String _coucheHours = "couche_hours";
   static const String _coucheMinutes = "couche_minutes";
+  static const String _timerGame = "timer_game";
 
   static Future<void> saveHours(String moment, int hours) async {
     final prefs = await SharedPreferences.getInstance();
@@ -98,5 +99,17 @@ class HoraireStorageService {
     }
 
     return prefs.getInt(key) ?? 00;
+  }
+
+  static Future<void> saveTimerGame(int timerG) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _timerGame;
+    await prefs.setInt(key, timerG);
+  }
+
+  static Future<int> getTimerGame() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _timerGame;
+    return prefs.getInt(key) ?? 20;
   }
 }
