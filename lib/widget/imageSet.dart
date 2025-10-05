@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/providers/profil_provider.dart';
+import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:provider/provider.dart';
 
 class ImageSet extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/services/taches_storage_service.dart';
+import 'package:tdahelpe/services/taches_storage_service.dart';
 import '../services/score_storage_service.dart'; // Import du service qu'on vient de créer
 
 class ScoreProvider extends ChangeNotifier {

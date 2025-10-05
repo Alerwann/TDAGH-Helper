@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/TacheHazard/tirage_final.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
-import 'package:flutter_application_1/providers/taches_provider.dart';
-import 'package:flutter_application_1/services/score_storage_service.dart';
-import 'package:flutter_application_1/services/taches_storage_service.dart';
+import 'package:tdahelpe/pages/TacheHazard/tirage_final.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/providers/taches_provider.dart';
+import 'package:tdahelpe/services/score_storage_service.dart';
+import 'package:tdahelpe/services/taches_storage_service.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:provider/provider.dart';
 

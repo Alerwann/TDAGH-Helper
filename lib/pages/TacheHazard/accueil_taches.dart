@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/pages/TacheHazard/action_choice.dart';
-import 'package:flutter_application_1/pages/TacheHazard/quetes_finales.dart';
-import 'package:flutter_application_1/pages/TacheHazard/tache_liste_affichage.dart';
+import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/pages/TacheHazard/action_choice.dart';
+import 'package:tdahelpe/pages/TacheHazard/quetes_finales.dart';
+import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class AccueilTaches extends StatefulWidget {

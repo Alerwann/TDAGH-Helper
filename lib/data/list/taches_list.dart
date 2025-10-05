@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/data/schema/taches_shema.dart';
+import 'package:tdahelpe/data/schema/taches_shema.dart';
 
 class TachesList {
   // Liste par défaut (immuable)

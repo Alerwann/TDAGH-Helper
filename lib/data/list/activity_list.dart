@@ -1,9 +1,9 @@
 import 'dart:ui';
-import 'package:flutter_application_1/data/schema/activity_card_schema.dart';
-import 'package:flutter_application_1/pages/Bingo/homepage.dart';
-import 'package:flutter_application_1/pages/DefouleToi/defoule_toi.dart';
-import 'package:flutter_application_1/pages/TacheHazard/accueil_taches.dart';
-import 'package:flutter_application_1/pages/TimerTooth/home_timer_tooth.dart';
+import 'package:tdahelpe/data/schema/activity_card_schema.dart';
+import 'package:tdahelpe/pages/Bingo/homepage.dart';
+import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
+import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
+import 'package:tdahelpe/pages/TimerTooth/home_timer_tooth.dart';
 
 class ActivityList {
   static final List<ActivityCard> _defaultCards = [

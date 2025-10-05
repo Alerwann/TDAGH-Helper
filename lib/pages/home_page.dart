@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/list/activity_list.dart';
-import 'package:flutter_application_1/data/schema/activity_card_schema.dart';
-import 'package:flutter_application_1/providers/profil_provider.dart';
-import 'package:flutter_application_1/providers/sound_provider.dart';
+import 'package:tdahelpe/data/list/activity_list.dart';
+import 'package:tdahelpe/data/schema/activity_card_schema.dart';
+import 'package:tdahelpe/providers/profil_provider.dart';
+import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:gradient_txt/gradient_text.dart';
 import 'package:provider/provider.dart';
-
 
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});

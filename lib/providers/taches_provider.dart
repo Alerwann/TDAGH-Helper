@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/list/taches_list.dart';
-import 'package:flutter_application_1/data/schema/taches_shema.dart';
-import 'package:flutter_application_1/services/taches_storage_service.dart';
+import 'package:tdahelpe/data/list/taches_list.dart';
+import 'package:tdahelpe/data/schema/taches_shema.dart';
+import 'package:tdahelpe/services/taches_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TachesProvider extends ChangeNotifier {

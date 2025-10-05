@@ -1,10 +1,10 @@
 import 'dart:io' show Platform, File;
-import 'package:flutter_application_1/data/list/music_list.dart';
-import 'package:flutter_application_1/data/schema/music_schema.dart';
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/providers/sound_provider.dart';
-import 'package:flutter_application_1/services/audio_controller.dart';
-import 'package:flutter_application_1/widget/imageSet.dart';
+import 'package:tdahelpe/data/list/music_list.dart';
+import 'package:tdahelpe/data/schema/music_schema.dart';
+import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/providers/sound_provider.dart';
+import 'package:tdahelpe/services/audio_controller.dart';
+import 'package:tdahelpe/widget/imageSet.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_timer/custom_timer.dart';
 
@@ -73,7 +73,6 @@ class _HomeTimertoothState extends State<HomeTimertooth>
     if (result != null && result.files.single.path != null) {
       String sourcePath = result.files.single.path!;
 
-
       try {
         final directory = await getApplicationDocumentsDirectory();
         final fileName = result.files.single.name;
@@ -88,9 +87,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
             musicPathChoice = permanentPath;
             musicName = fileName;
           });
-
         } else {
-
           // Fallback pour iOS : essaie de jouer directement
           if (Platform.isIOS) {
             setState(() {
@@ -100,7 +97,6 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           }
         }
       } catch (e) {
-
         // Sur iOS, si la copie échoue, on tente de jouer directement
         if (Platform.isIOS) {
           setState(() {
@@ -269,7 +265,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                       );
                     }).toList(),
                     onTap: () {
-                       if (Platform.isIOS) {
+                      if (Platform.isIOS) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -281,7 +277,6 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                       }
                     },
                     onChanged: (MusicSchema? newValue) {
-                     
                       if (newValue!.musicTitle == "Importation") {
                         pickMusic();
                       } else {

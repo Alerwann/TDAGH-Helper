@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/schema/bingo_card_schema.dart';
+import 'package:tdahelpe/data/schema/bingo_card_schema.dart';
 
 class SimpleFlipCard extends StatefulWidget {
   final BingoCard cardData;

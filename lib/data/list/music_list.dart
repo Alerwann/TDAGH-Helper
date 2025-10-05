@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/data/schema/music_schema.dart';
+import 'package:tdahelpe/data/schema/music_schema.dart';
 
 class MusicList {
   static final List<MusicSchema> _defaultCards = [

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/widget/form_nombre.dart';
+import 'package:tdahelpe/widget/form_nombre.dart';
 
 class ModifTimerGame extends StatefulWidget {
   const ModifTimerGame({super.key});

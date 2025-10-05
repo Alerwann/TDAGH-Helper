@@ -1,4 +1,4 @@
-import 'package:flutter_application_1/services/defoule_service.dart';
+import 'package:tdahelpe/services/defoule_service.dart';
 import 'package:flutter/material.dart';
 
 class DefouleProvider extends ChangeNotifier {
@@ -28,7 +28,7 @@ class DefouleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<void> saveTimerDuration(int timerD) async {
+  Future<void> saveTimerDuration(int timerD) async {
     _timerDuration = timerD;
     await DefouleService.saveTimerDuration(_timerDuration);
     notifyListeners();

@@ -1,8 +1,8 @@
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/pages/ProfilsPages/heures_parametre.dart';
-import 'package:flutter_application_1/pages/ProfilsPages/profil_parametre.dart';
-import 'package:flutter_application_1/providers/profil_provider.dart';
-import 'package:flutter_application_1/widget/imageSet.dart';
+import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/pages/ProfilsPages/heures_parametre.dart';
+import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
+import 'package:tdahelpe/providers/profil_provider.dart';
+import 'package:tdahelpe/widget/imageSet.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hugeicons_pro/hugeicons.dart';

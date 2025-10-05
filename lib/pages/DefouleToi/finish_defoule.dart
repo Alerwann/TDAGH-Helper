@@ -1,6 +1,6 @@
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/pages/DefouleToi/defoule_toi.dart';
-import 'package:flutter_application_1/providers/defoule_provider.dart';
+import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
+import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';

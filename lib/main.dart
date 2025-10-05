@@ -1,22 +1,22 @@
 import 'package:dot_curved_bottom_nav/dot_curved_bottom_nav.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/ProfilsPages/profil.dart';
-import 'package:flutter_application_1/pages/SuiviScores/accueil_score.dart';
-import 'package:flutter_application_1/pages/home_page.dart';
-import 'package:flutter_application_1/providers/defoule_provider.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
-import 'package:flutter_application_1/providers/heures_profil_provider.dart';
-import 'package:flutter_application_1/providers/profil_provider.dart';
-import 'package:flutter_application_1/providers/sound_provider.dart';
-import 'package:flutter_application_1/providers/taches_provider.dart';
-import 'package:flutter_application_1/services/notification_service.dart';
+import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
+import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
+import 'package:tdahelpe/pages/home_page.dart';
+import 'package:tdahelpe/providers/defoule_provider.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/providers/heures_profil_provider.dart';
+import 'package:tdahelpe/providers/profil_provider.dart';
+import 'package:tdahelpe/providers/sound_provider.dart';
+import 'package:tdahelpe/providers/taches_provider.dart';
+import 'package:tdahelpe/services/notification_service.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- 
-   try {
+
+  try {
     await NotificationService.initialize();
   } catch (e) {
     // L'app continue même si les notifications échouent

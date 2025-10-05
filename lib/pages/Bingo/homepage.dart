@@ -1,9 +1,9 @@
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/pages/Bingo/general_bingo_card.dart';
-import 'package:flutter_application_1/providers/heures_profil_provider.dart';
+import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
+import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter_application_1/pages/DefouleToi/finish_defoule.dart';
-import 'package:flutter_application_1/main.dart';
+import 'package:tdahelpe/pages/DefouleToi/finish_defoule.dart';
+import 'package:tdahelpe/main.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/DefouleToi/modif_timer_game.dart';
-import 'package:flutter_application_1/providers/defoule_provider.dart';
+import 'package:tdahelpe/pages/DefouleToi/modif_timer_game.dart';
+import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:timer_count_down/timer_controller.dart';

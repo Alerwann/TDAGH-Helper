@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/providers/defoule_provider.dart';
-import 'package:flutter_application_1/providers/score_provider.dart';
-import 'package:flutter_application_1/providers/taches_provider.dart';
+import 'package:tdahelpe/providers/defoule_provider.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
 
 class NumberForm extends StatefulWidget {

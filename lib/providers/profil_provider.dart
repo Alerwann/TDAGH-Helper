@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/services/profil_storage_service.dart';
+import 'package:tdahelpe/services/profil_storage_service.dart';
 
 class ProfilProvider extends ChangeNotifier {
   String _pseudo = 'Iconnu';
