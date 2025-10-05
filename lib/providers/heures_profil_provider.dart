@@ -86,7 +86,9 @@ class HeureProfilProvider extends ChangeNotifier {
         await HoraireStorageService.saveHours("couché", _coucheHours);
         break;
     }
+
     await NotificationService.cancelAllNotifications();
+
     await NotificationService.scheduleAllNotifications(
       reveilHour: _midiHours,
       midiHour: _soirHours,

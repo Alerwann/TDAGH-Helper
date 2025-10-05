@@ -1,4 +1,4 @@
-import 'package:dot_curved_bottom_nav/dot_curved_bottom_nav.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
@@ -19,7 +19,7 @@ void main() async {
   try {
     await NotificationService.initialize();
   } catch (e) {
-    // L'app continue même si les notifications échouent
+    print(e);
   }
   runApp(
     MultiProvider(
@@ -52,8 +52,6 @@ class MyApp extends StatefulWidget {
 
 class _MyScoreProvider extends State<MyApp> {
   int _currentindex = 0;
-
-  final ScrollController _scrollController = ScrollController();
 
   setCurrentIndex(int index) {
     setState(() {
@@ -88,43 +86,38 @@ class _MyScoreProvider extends State<MyApp> {
       ),
       home: Scaffold(
         body: [HomeGlobalPage(), AccueilScore(), ProfilPage()][_currentindex],
-        bottomNavigationBar: DotCurvedBottomNav(
-          scrollController: _scrollController,
-          hideOnScroll: true,
-          indicatorColor: Colors.amber,
+
+        bottomNavigationBar: ConvexAppBar(
+          style: TabStyle.react,
           backgroundColor: Colors.purple,
-          animationDuration: const Duration(milliseconds: 200),
-          animationCurve: Curves.ease,
-          selectedIndex: _currentindex,
-          indicatorSize: 5,
-          borderRadius: 25,
-          height: 70,
-          onTap: (index) {
-            setState(() => _currentindex = index);
-          },
+          color: Colors.white,
+          activeColor: Colors.white,
+          initialActiveIndex: _currentindex,
+          height: 75,
           items: [
-            Icon(
-              Icons.home,
-              color: _currentindex == 0
-                  ? Colors.amber
-                  : const Color.fromARGB(255, 0, 0, 0),
-              size: 30,
+            TabItem(
+              icon: Icon(Icons.home, size: 25, color: Colors.white),
+              title: 'Accueil',
             ),
-            Icon(
-              HugeIconsSolid.gameController02,
-              color: _currentindex == 1
-                  ? Colors.amber
-                  : const Color.fromARGB(255, 0, 0, 0),
-              size: 30,
+            TabItem(
+              icon: Icon(
+                HugeIconsSolid.gameController02,
+                size: 25,
+                color: Colors.white,
+              ),
+              title: 'Scores', // Texte plus court
             ),
-            Icon(
-              HugeIconsSolid.settings01,
-              color: _currentindex == 2
-                  ? Colors.amber
-                  : const Color.fromARGB(255, 0, 0, 0),
-              size: 30,
+
+            TabItem(
+              icon: Icon(
+                HugeIconsSolid.settings01,
+                size: 25,
+                color: Colors.white,
+              ),
+              title: 'Paramètre',
             ),
           ],
+          onTap: (int i) => setCurrentIndex(i),
         ),
       ),
     );

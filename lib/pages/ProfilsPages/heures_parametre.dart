@@ -74,6 +74,7 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
   }
 
   Widget _horairesModif(String moment, String momentsend) {
+
     return Column(
       children: [
         Text(
@@ -90,15 +91,19 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
                   switch (moment) {
                     case 'réveil':
                       momentProfil = profil.reveilHours;
+                     
                       break;
                     case 'repas de midi':
                       momentProfil = profil.midiHours;
+                      
                       break;
                     case 'repas du soir':
                       momentProfil = profil.soirhours;
+                      
                       break;
                     case 'couché':
                       momentProfil = profil.coucheHours;
+                     
                       break;
                   }
                   return Center(
@@ -119,6 +124,7 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
 
                       onSelected: (hours) =>
                           profil.setHours(hours!, momentsend),
+                
                     ),
                   );
                 },

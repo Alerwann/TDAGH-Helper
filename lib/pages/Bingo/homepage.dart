@@ -21,18 +21,6 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
   Widget build(BuildContext context) {
     final now = DateTime.now();
 
-    final midi = DateTime(now.year, now.month, now.day, 12);
-    final afternoon = DateTime(now.year, now.month, now.day, 18);
-    final couche = DateTime(now.year, now.month, now.day, 21);
-
-    bool isMatinActive = now.isBefore(midi.add(Duration(hours: 1)));
-    bool isMidiActive =
-        now.isAfter(midi) && now.isBefore(afternoon.add(Duration(hours: 1)));
-    bool isSoirActive =
-        now.isAfter(afternoon) &&
-        now.isBefore(couche.add(Duration(minutes: 1)));
-    bool isCoucheActive = now.isAfter(couche);
-
     final colorizeColors = [
       Colors.purple,
       Colors.blue,
@@ -88,42 +76,59 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
 
       body: Card(
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 30,
+          child: Consumer<HeureProfilProvider>(
+            builder: (context, heureP, child) {
+              bool isMatinActive =
+                  now.hour <= heureP.midiHours + 1 &&
+                  now.hour >= heureP.reveilHours - 1;
+              bool isMidiActive =
+                  now.hour <= heureP.soirhours + 1 &&
+                  now.hour >= heureP.midiHours - 1;
+              bool isSoirActive =
+                  now.hour <= heureP.coucheHours + 1 &&
+                  now.hour >= heureP.soirhours - 1;
+              bool isCoucheActive =
+                  now.hour >= heureP.coucheHours - 1 &&
+                  now.hour <= heureP.reveilHours + 1;
 
-            children: [
-              // matin
-              _buildMomentButton(
-                'Matin',
-                HugeIconsSolid.sun02,
-                Color.fromARGB(255, 230, 120, 50),
-                isMatinActive,
-              ),
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 30,
 
-              //midi
-              _buildMomentButton(
-                'Midi',
-                HugeIconsSolid.apple01,
-                Color.fromARGB(255, 255, 0, 0),
-                isMidiActive,
-              ),
-              //soir
-              _buildMomentButton(
-                'Soir',
-                HugeIconsSolid.moon02,
-                Color.fromARGB(255, 255, 226, 63),
-                isSoirActive,
-              ),
+                children: [
+                  // matin
+                  _buildMomentButton(
+                    'Matin',
+                    HugeIconsSolid.sun02,
+                    Color.fromARGB(255, 230, 120, 50),
+                    isMatinActive,
+                  ),
 
-              //couché
-              _buildMomentButton(
-                'Couché',
-                HugeIconsSolid.star,
-                Color.fromARGB(255, 255, 255, 0),
-                isCoucheActive,
-              ),
-            ],
+                  //midi
+                  _buildMomentButton(
+                    'Midi',
+                    HugeIconsSolid.apple01,
+                    Color.fromARGB(255, 255, 0, 0),
+                    isMidiActive,
+                  ),
+                  //soir
+                  _buildMomentButton(
+                    'Soir',
+                    HugeIconsSolid.moon02,
+                    Color.fromARGB(255, 255, 226, 63),
+                    isSoirActive,
+                  ),
+
+                  //couché
+                  _buildMomentButton(
+                    'Couché',
+                    HugeIconsSolid.star,
+                    Color.fromARGB(255, 255, 255, 0),
+                    isCoucheActive,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -149,73 +154,76 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
               ),
             )
           : null,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: iconColor),
-              SizedBox(width: 10),
-              Text(
-                moment,
-                style: TextStyle(
-                  fontSize: 50,
-                  color: const Color.fromARGB(255, 31, 74, 61),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 5),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: iconColor),
+                SizedBox(width: 10),
+                Text(
+                  moment,
+                  style: TextStyle(
+                    fontSize: 50,
+                    color: const Color.fromARGB(255, 31, 74, 61),
+                  ),
                 ),
-              ),
-              SizedBox(width: 10),
-              Icon(icon, color: iconColor),
-            ],
-          ),
-          Consumer<HeureProfilProvider>(
-            builder: (context, profil, child) {
-              switch (moment.toLowerCase()) {
-                case 'matin':
-                  hourMomentdeb = profil.reveilHours - 1;
-                  hourMomentfin = profil.midiHours + 1;
+                SizedBox(width: 10),
+                Icon(icon, color: iconColor),
+              ],
+            ),
+            Consumer<HeureProfilProvider>(
+              builder: (context, profil, child) {
+                switch (moment.toLowerCase()) {
+                  case 'matin':
+                    hourMomentdeb = profil.reveilHours - 1;
+                    hourMomentfin = profil.midiHours + 1;
 
-                  break;
-                case 'midi':
-                  hourMomentdeb = profil.midiHours - 1;
-                  hourMomentfin = profil.soirhours + 1;
+                    break;
+                  case 'midi':
+                    hourMomentdeb = profil.midiHours - 1;
+                    hourMomentfin = profil.soirhours + 1;
 
-                  break;
-                case 'soir':
-                  hourMomentdeb = profil.soirhours - 1;
-                  hourMomentfin = profil.coucheHours + 1;
+                    break;
+                  case 'soir':
+                    hourMomentdeb = profil.soirhours - 1;
+                    hourMomentfin = profil.coucheHours + 1;
 
-                  break;
-                case 'couché':
-                  hourMomentdeb = profil.coucheHours - 1;
-                  hourMomentfin = profil.reveilHours + 1;
+                    break;
+                  case 'couché':
+                    hourMomentdeb = profil.coucheHours - 1;
+                    hourMomentfin = profil.reveilHours + 1;
 
-                  break;
-              }
-              return isActive
-                  ? Text("Fin d'accès à $hourMomentfin H")
-                  : Text("Ouverture à $hourMomentdeb H");
-            },
-          ),
-          Consumer<ScoreProvider>(
-            builder: (context, scoreP, child) {
-              switch (moment.toLowerCase()) {
-                case 'matin':
-                  scoreByMoment = scoreP.morningScore;
-                  break;
-                case 'midi':
-                  scoreByMoment = scoreP.midiScore;
-                  break;
-                case 'soir':
-                  scoreByMoment = scoreP.afternoonScore;
-                  break;
-                case 'couché':
-                  scoreByMoment = scoreP.eveningScore;
-                  break;
-              }
-              return Text(" Le score pour le $moment : $scoreByMoment/4");
-            },
-          ),
-        ],
+                    break;
+                }
+                return isActive
+                    ? Text("Fin d'accès à $hourMomentfin H")
+                    : Text("Ouverture à $hourMomentdeb H");
+              },
+            ),
+            Consumer<ScoreProvider>(
+              builder: (context, scoreP, child) {
+                switch (moment.toLowerCase()) {
+                  case 'matin':
+                    scoreByMoment = scoreP.morningScore;
+                    break;
+                  case 'midi':
+                    scoreByMoment = scoreP.midiScore;
+                    break;
+                  case 'soir':
+                    scoreByMoment = scoreP.afternoonScore;
+                    break;
+                  case 'couché':
+                    scoreByMoment = scoreP.eveningScore;
+                    break;
+                }
+                return Text(" Le score pour le $moment : $scoreByMoment/4");
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,7 +8,9 @@ import 'package:timezone/data/latest_all.dart' as tz_data;
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
+
   static const platform = MethodChannel('alarm_channel');
+
   static const int morningNotificationId = 1;
   static const int midiNotificationId = 2;
   static const int soirNotificationId = 3;
@@ -80,7 +82,6 @@ class NotificationService {
     required int soirHour,
     required int coucheHour,
   }) async {
-    // Planifier notification du matin
     await _scheduleNotification(
       id: morningNotificationId,
       title: '🌅 La période du matin va finir !!',
@@ -95,7 +96,7 @@ class NotificationService {
       title: '🍽️ La période du midi va finir !!',
       body: 'N\'oublie pas de valider tes tâches du midi',
       hour: midiHour,
-      minute: 0,
+      minute: 50,
     );
 
     // Planifier notification du soir
@@ -138,6 +139,8 @@ class NotificationService {
     int hour,
     int minute,
   ) async {
+    const platform = MethodChannel('alarm_channel');
+
     await platform.invokeMethod('scheduleAlarm', {
       'id': id,
       'title': title,
@@ -155,6 +158,7 @@ class NotificationService {
     int minute,
   ) async {
     final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
+
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
@@ -182,6 +186,7 @@ class NotificationService {
 
   static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+
     tz.TZDateTime scheduledDate = tz.TZDateTime(
       tz.local,
       now.year,
@@ -190,6 +195,9 @@ class NotificationService {
       hour,
       minute,
     );
+
+    print('⏰ Maintenant : $now');
+    print('⏰ Notification prévue : $scheduledDate');
 
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
@@ -202,6 +210,7 @@ class NotificationService {
     if (Platform.isAndroid) {
       await platform.invokeMethod('cancelAlarm', {'id': id});
     } else if (Platform.isIOS) {
+      // Utiliser flutter_local_notifications pour iOS
       await _notifications.cancel(id);
     }
   }

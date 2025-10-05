@@ -6,7 +6,7 @@ class ActivityCard {
   final Widget destination;
   final Color firstColor;
   final Color secondColor;
-
+  final Color backColor;
 
   ActivityCard({
     required this.activityName,
@@ -14,5 +14,6 @@ class ActivityCard {
     required this.destination,
     required this.firstColor,
     required this.secondColor,
+    required this.backColor,
   });
 }

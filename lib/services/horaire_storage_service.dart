@@ -31,23 +31,34 @@ class HoraireStorageService {
     await prefs.setInt(key, hours);
   }
 
-  static Future<int> getHours(String moment) async {
-    final prefs = await SharedPreferences.getInstance();
-    String key = '';
+static Future<int> getHours(String moment) async {
+  final prefs = await SharedPreferences.getInstance();
+  String key;
+  int defaultValue;
 
-    switch (moment.toLowerCase()) {
-      case 'réveil':
-        return prefs.getInt(key) ?? 7;
-      case 'midi':
-        return prefs.getInt(key) ?? 12;
-      case 'soir':
-        return prefs.getInt(key) ?? 19;
-      case 'couché':
-        return prefs.getInt(key) ?? 21;
-      default:
-        return 0;
-    }
+  switch (moment.toLowerCase()) {
+    case 'réveil':
+      key = _reveilHours;  // ← Assigne la bonne clé
+      defaultValue = 7;
+      break;
+    case 'midi':
+      key = _midiHours;  // ← Assigne la bonne clé
+      defaultValue = 12;
+      break;
+    case 'soir':
+      key = _soirHours;  // ← Assigne la bonne clé
+      defaultValue = 19;
+      break;
+    case 'couché':
+      key = _coucheHours;  // ← Assigne la bonne clé
+      defaultValue = 21;
+      break;
+    default:
+      return 0;
   }
+
+  return prefs.getInt(key) ?? defaultValue;
+}
 
   static Future<void> saveTimerGame(int timerG) async {
     final prefs = await SharedPreferences.getInstance();

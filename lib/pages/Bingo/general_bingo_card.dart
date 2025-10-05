@@ -26,7 +26,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
   late int affichescore;
   late AnimationController _celebrationController;
   bool _showAnimation = false;
-  bool _isLoading = true; // Pour afficher un loader pendant le chargement
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -92,23 +92,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
   @override
   Widget build(BuildContext context) {
-    final appState = Provider.of<ScoreProvider>(context);
 
-    // Récupérer le bon score selon le moment
-    switch (widget.titleMoment) {
-      case 'Matin':
-        affichescore = appState.morningScore;
-        break;
-      case 'Midi':
-        affichescore = appState.midiScore;
-        break;
-      case 'Soir':
-        affichescore = appState.afternoonScore;
-        break;
-      case 'Couché':
-        affichescore = appState.eveningScore;
-        break;
-    }
 
     // Afficher un loader pendant le chargement
     if (_isLoading) {
@@ -120,111 +104,127 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
     return Scaffold(
       appBar: AppBar(title: Text('Retour')),
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                SpringText(
-                  text: widget.titleMoment,
-                  duration: const Duration(milliseconds: 2000),
-                  type: AnimationType.word,
-                  textStyle: TextStyle(
-                    fontSize: 50,
-                    fontFamily: 'Metamorphous',
-                    foreground: Paint()
-                      ..shader = ui.Gradient.linear(
-                        const Offset(0, 20),
-                        const Offset(150, 20),
-                        <Color>[
-                          const ui.Color.fromARGB(255, 2, 236, 96),
-                          const ui.Color.fromARGB(255, 2, 174, 125),
-                        ],
+      body: Consumer<ScoreProvider>(
+        
+        builder: (context, scoreP, child) {
+        int momentScore;
+          switch (widget.titleMoment) {
+            case 'Matin':
+              momentScore = scoreP.morningScore;
+              break;
+            case 'Midi':
+              momentScore = scoreP.midiScore;
+              break;
+            case 'Soir':
+              momentScore = scoreP.afternoonScore;
+              break;
+            case 'Couché':
+              momentScore = scoreP.eveningScore;
+              break;
+            default:
+              momentScore = 0;
+          }
+          return Stack(
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    SpringText(
+                      text: widget.titleMoment,
+                      duration: const Duration(milliseconds: 2000),
+                      type: AnimationType.word,
+                      textStyle: TextStyle(
+                        fontSize: 50,
+                        fontFamily: 'Metamorphous',
+                        foreground: Paint()
+                          ..shader = ui.Gradient.linear(
+                            const Offset(0, 20),
+                            const Offset(150, 20),
+                            <Color>[
+                              const ui.Color.fromARGB(255, 2, 236, 96),
+                              const ui.Color.fromARGB(255, 2, 174, 125),
+                            ],
+                          ),
                       ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                CircularStepProgressIndicator(
-                  totalSteps: bingoCards.length,
-                  currentStep: affichescore,
-                  selectedColor: const ui.Color.fromARGB(255, 0, 245, 0),
-                  unselectedColor: const ui.Color.fromARGB(255, 255, 0, 0),
-                  padding: 0,
-                  height: 75,
-                  width: 85,
-                  child: Icon(HugeIconsSolid.alien01),
-                ),
-                SizedBox(height: 50),
-                Text("Score : $affichescore/${bingoCards.length}"),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
                     ),
-                    itemCount: bingoCards.length,
-                    itemBuilder: (context, index) {
-                      return SimpleFlipCard(
-                        cardData: bingoCards[index],
-                        isFlipped: bingoCards[index].isFlipped,
-                        onTap: () async {
-                          setState(() {
-                            if (bingoCards[index].isFlipped) {
-                              // La carte était retournée, on la remet
-                              Provider.of<ScoreProvider>(
-                                context,
-                                listen: false,
-                              ).decrementglobal(
-                                widget.titleMoment.toLowerCase(),
-                              );
-                            } else {
-                              // La carte n'était pas retournée, on la retourne
-                              Provider.of<ScoreProvider>(
-                                context,
-                                listen: false,
-                              ).incrementglobal(
-                                widget.titleMoment.toLowerCase(),
-                              );
-                            }
+                    SizedBox(height: 20),
+                    CircularStepProgressIndicator(
+                      totalSteps: bingoCards.length,
+                      currentStep: momentScore,
+                      selectedColor: const ui.Color.fromARGB(255, 0, 245, 0),
+                      unselectedColor: const ui.Color.fromARGB(255, 255, 0, 0),
+                      padding: 0,
+                      height: 75,
+                      width: 85,
+                      child: Icon(HugeIconsSolid.alien01),
+                    ),
+                    SizedBox(height: 50),
 
-                            bingoCards[index].isFlipped =
-                                !bingoCards[index].isFlipped;
-                          });
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1,
+                        ),
+                        itemCount: bingoCards.length,
+                        itemBuilder: (context, index) {
+                          return SimpleFlipCard(
+                            cardData: bingoCards[index],
+                            isFlipped: bingoCards[index].isFlipped,
+                            onTap: () async {
+                              
+                              setState(() {
+                                if (bingoCards[index].isFlipped) {
+                              
+                                  scoreP.decrementglobal(
+                                    widget.titleMoment.toLowerCase(),
+                                  );
+                                } else {
+                                  scoreP.incrementglobal(
+                                    widget.titleMoment.toLowerCase(),
+                                  );
+                                
+                                }
 
-                          // Sauvegarder l'état des cartes après chaque changement
-                          await _saveCardsState();
+                                bingoCards[index].isFlipped =
+                                    !bingoCards[index].isFlipped;
+                              });
 
-                          // Vérifier si toutes les cartes sont retournées
-                          final newScore = bingoCards
-                              .where((card) => card.isFlipped)
-                              .length;
-                          if (newScore == bingoCards.length) {
-                            _showAnimation = true;
-                            _celebrationController.duration = Duration(
-                              milliseconds: 3000,
-                            );
-                            _celebrationController.forward();
-                          }
+                              await _saveCardsState();
+
+                     
+                              final newScore = bingoCards
+                                  .where((card) => card.isFlipped)
+                                  .length;
+                              if (newScore == bingoCards.length) {
+                                _showAnimation = true;
+                                _celebrationController.duration = Duration(
+                                  milliseconds: 3000,
+                                );
+                                _celebrationController.forward();
+                              }
+                            },
+                          );
                         },
-                      );
-                    },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (_showAnimation)
+                Center(
+                  child: Lottie.asset(
+                    'assets/animations/Confetti-Animation.json',
+                    controller: _celebrationController,
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.contain,
                   ),
                 ),
-              ],
-            ),
-          ),
-          if (_showAnimation)
-            Center(
-              child: Lottie.asset(
-                'assets/animations/Confetti-Animation.json',
-                controller: _celebrationController,
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
-              ),
-            ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

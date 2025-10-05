@@ -3,7 +3,6 @@ import 'package:tdahelpe/data/list/activity_list.dart';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
-import 'package:gradient_txt/gradient_text.dart';
 import 'package:provider/provider.dart';
 
 class HomeGlobalPage extends StatefulWidget {
@@ -23,12 +22,14 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
         backgroundColor: Colors.purple,
         title: Consumer<ProfilProvider>(
           builder: (context, profil, child) {
-            return Text(
-              "Bienvenue ${profil.pseudo}",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.amber,
+            return Center(
+              child: Text(
+                "Bienvenue ${profil.pseudo}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Colors.amber,
+                ),
               ),
             );
           },
@@ -74,6 +75,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                   width: 400,
                   margin: EdgeInsets.all(10),
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: activityCard[index].backColor),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -92,17 +94,33 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                             width: 130,
                           ),
                           SizedBox(height: 10),
-                          GradientText(
-                            text: activityCard[index].activityName,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            gradient: LinearGradient(
-                              colors: [
-                                activityCard[index].firstColor,
-                                activityCard[index].secondColor,
-                              ],
+
+                          ShaderMask(
+                            shaderCallback: (bounds) {
+                              return LinearGradient(
+                                colors: [
+                                  activityCard[index].firstColor,
+                                  activityCard[index].secondColor,
+                                ],
+                              ).createShader(
+                                Rect.fromLTWH(
+                                  0,
+                                  0,
+                                  bounds.width,
+                                  bounds.height,
+                                ),
+                              );
+                            },
+                            child: Text(
+                              activityCard[index].activityName,
+                              textAlign:
+                                  TextAlign.center, 
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors
+                                    .white, 
+                              ),
                             ),
                           ),
                         ],

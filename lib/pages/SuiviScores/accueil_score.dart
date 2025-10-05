@@ -43,10 +43,14 @@ class _AccueilScoreState extends State<AccueilScore> {
           builder: (context, scoreP, child) {
             return Column(
               children: [
+                SizedBox(height: 50),
                 Text("${scoreP.morningScore} score du matin"),
                 Text("${scoreP.midiScore} score du midi"),
                 Text("${scoreP.afternoonScore} score du après-midi"),
                 Text("${scoreP.eveningScore} score du soir"),
+                SizedBox(height: 10),
+                Text("${scoreP.globalBingoScore} global bingo score"),
+                SizedBox(height: 50),
                 Text("${scoreP.tacheScore} tache score"),
                 Text("${scoreP.globalScore} global score"),
               ],

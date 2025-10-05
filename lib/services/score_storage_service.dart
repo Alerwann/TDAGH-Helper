@@ -6,12 +6,16 @@ class ScoreStorageService {
   static const String _midiScoreKey = 'midi_score';
   static const String _afternoonScoreKey = 'afternoon_score';
   static const String _eveningScoreKey = 'evening_score';
+
+  static const String _globalBingoScore = 'global_bingo_score';
+
   static const String _cardsStateKey = 'cards_state';
+
   static const String _tacheScoreKey = 'taches_score';
   static const String _tacheStateKey = 'taches_state';
+
   static const String _lastResetDateKey = 'last_reset_date';
 
-  // Sauvegarder les scores
   static Future<void> saveScore(String moment, int score) async {
     final prefs = await SharedPreferences.getInstance();
     String key;
@@ -32,6 +36,10 @@ class ScoreStorageService {
       case 'taches':
         key = _tacheScoreKey;
         break;
+      case 'bingoGlobal':
+        key = _globalBingoScore;
+        break;
+
       default:
         return;
     }
@@ -59,6 +67,9 @@ class ScoreStorageService {
         break;
       case 'taches':
         key = _tacheScoreKey;
+        break;
+      case 'bingoGlobal':
+        key = _globalBingoScore;
         break;
       default:
         return 0;

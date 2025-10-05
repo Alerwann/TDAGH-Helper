@@ -10,9 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
 class AlarmReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
-     
+        // Récupérer les données depuis l'Intent
         val id = intent.getIntExtra("id", 0)
         val title = intent.getStringExtra("title") ?: "Rappel"
         val body = intent.getStringExtra("body") ?: "Il est temps !"

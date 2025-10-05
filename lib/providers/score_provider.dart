@@ -7,8 +7,11 @@ class ScoreProvider extends ChangeNotifier {
   int _midiScore = 0;
   int _afternoonScore = 0;
   int _eveningScore = 0;
+
+
+
   int _tacheScore = 0;
-  // int _tirageFait = 0;
+
   DateTime? _lastResetDate;
   List<bool> _isChecked = List.generate(3, (index) => false);
   int _currentStep = 0;
@@ -17,19 +20,21 @@ class ScoreProvider extends ChangeNotifier {
   int get midiScore => _midiScore;
   int get afternoonScore => _afternoonScore;
   int get eveningScore => _eveningScore;
+
   int get tacheScore => _tacheScore;
   List<bool> get isChecked => _isChecked;
   int get currentStep => _currentStep;
 
-  // int get tirageFait => _tirageFait;
+  int get globalBingoScore {
+    int sumScores =
+        _morningScore + _midiScore + _afternoonScore + _eveningScore;
+    return (sumScores / 4).floor(); // Arrondi à l'inférieur
+  }
 
-  int get globalScore =>
-      _morningScore +
-      _midiScore +
-      _afternoonScore +
-      _eveningScore +
-      _tacheScore;
+  int get globalScore => (globalBingoScore + _tacheScore);
+
   int nombreTirage = 0;
+
   ScoreProvider() {
     _loadData();
   }
@@ -70,6 +75,7 @@ class ScoreProvider extends ChangeNotifier {
         await ScoreStorageService.saveScore('soir', 0);
         await ScoreStorageService.saveScore('couché', 0);
         await ScoreStorageService.saveScore('taches', 0);
+        await ScoreStorageService.saveScore('bingoGlobal', 0);
 
         await ScoreStorageService.saveTacheState(_isChecked);
 
@@ -81,6 +87,12 @@ class ScoreProvider extends ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  Future<int> getScoreByMoment(String moment) async {
+    int score;
+    score = await ScoreStorageService.getScore(moment);
+    return score;
   }
 
   Future<void> incrementglobal(String moment) async {
@@ -105,6 +117,8 @@ class ScoreProvider extends ChangeNotifier {
         _tacheScore += 1;
         await ScoreStorageService.saveScore('taches', _tacheScore);
         break;
+
+    
     }
     notifyListeners();
   }
@@ -131,6 +145,7 @@ class ScoreProvider extends ChangeNotifier {
         _tacheScore = _tacheScore > 0 ? _tacheScore - 1 : 0;
         await ScoreStorageService.saveScore('taches', _tacheScore);
         break;
+
     }
     notifyListeners();
   }

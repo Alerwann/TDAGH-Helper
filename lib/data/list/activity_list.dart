@@ -13,27 +13,32 @@ class ActivityList {
       destination: HomeBingoPage(),
       firstColor: Color.fromARGB(255, 70, 220, 210),
       secondColor: Color.fromARGB(255, 230, 130, 240),
+      backColor: Color.fromARGB(208, 255, 230, 6),
     ),
     ActivityCard(
-      activityName: 'Timer brosse à dent',
-      imagePath: 'assets/images/timerdent.png',
-      destination: HomeTimertooth(),
-      firstColor: Color.fromARGB(255, 23, 189, 230),
-      secondColor: Color.fromARGB(255, 243, 120, 177),
-    ),
-    ActivityCard(
-      activityName: 'Tache au hasard',
+      activityName: 'Tire Tâches',
       imagePath: 'assets/images/Tacheslogo.png',
       destination: AccueilTaches(),
-      firstColor: Color.fromARGB(255, 241, 203, 145),
-      secondColor: Color.fromARGB(255, 17, 220, 156),
+      firstColor: Color.fromARGB(255, 23, 189, 230),
+      secondColor: Color.fromARGB(255, 243, 120, 177),
+      backColor: Color.fromARGB(121, 230, 255, 5),
     ),
+    ActivityCard(
+      activityName: 'Brosse à Dents',
+      imagePath: 'assets/images/timerdent.png',
+      destination: HomeTimertooth(),
+      firstColor: Color.fromARGB(255, 255, 214, 118),
+      secondColor: Color.fromARGB(255, 248, 7, 28),
+      backColor: Color.fromARGB(167, 181, 253, 0),
+    ),
+
     ActivityCard(
       activityName: 'Défoulage',
       imagePath: 'assets/images/rageux.png',
       destination: HomeDefouleToi(),
       firstColor: Color.fromARGB(255, 255, 214, 118),
       secondColor: Color.fromARGB(255, 248, 7, 28),
+      backColor: Color.fromARGB(99, 3, 216, 92),
     ),
   ];
   static List<ActivityCard> getDefaultCards() {
