@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz_data;
@@ -7,6 +8,7 @@ import 'package:timezone/data/latest_all.dart' as tz_data;
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
+  static const platform = MethodChannel('alarm_channel');
   static const int morningNotificationId = 1;
   static const int midiNotificationId = 2;
   static const int soirNotificationId = 3;
@@ -16,6 +18,8 @@ class NotificationService {
     tz_data.initializeTimeZones();
 
     final String locationName = tz.local.name;
+
+    // A modifier pour le bon fuseau horaire sans erreur
 
     try {
       tz.setLocalLocation(tz.getLocation(locationName));
@@ -29,7 +33,6 @@ class NotificationService {
       }
     }
 
-    // Configurer Android
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -70,6 +73,7 @@ class NotificationService {
     }
   }
 
+  //ne change pas
   static Future<void> scheduleAllNotifications({
     required int reveilHour,
     required int midiHour,
@@ -120,29 +124,45 @@ class NotificationService {
     required int hour,
     required int minute,
   }) async {
-    // Créer l'heure de la notification avec le timezone local
+    if (Platform.isAndroid) {
+      await _scheduleNotificationAndroid(id, title, body, hour, minute);
+    } else if (Platform.isIOS) {
+      await _scheduleNotificationIOS(id, title, body, hour, minute);
+    }
+  }
+
+  static Future<void> _scheduleNotificationAndroid(
+    int id,
+    String title,
+    String body,
+    int hour,
+    int minute,
+  ) async {
+    await platform.invokeMethod('scheduleAlarm', {
+      'id': id,
+      'title': title,
+      'body': body,
+      'hour': hour,
+      'minute': minute,
+    });
+  }
+
+  static Future<void> _scheduleNotificationIOS(
+    int id,
+    String title,
+    String body,
+    int hour,
+    int minute,
+  ) async {
     final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
-
-    // Configurer les détails Android
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-          'daily_notifications', // ID du canal
-          'Notifications quotidiennes', // Nom du canal
-          channelDescription: 'Rappels pour valider tes tâches quotidiennes',
-          importance: Importance.high,
-          priority: Priority.high,
-        );
-
-    // Configurer les détails iOS
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
 
-    // Combiner Android + iOS
+    // Combiner iOS
     const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidDetails,
       iOS: iosDetails,
     );
 
@@ -153,7 +173,7 @@ class NotificationService {
       body,
       scheduledDate,
       notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
@@ -178,11 +198,19 @@ class NotificationService {
     return scheduledDate;
   }
 
-  static Future<void> cancelAllNotifications() async {
-    await _notifications.cancelAll();
+  static Future<void> cancelNotification(int id) async {
+    if (Platform.isAndroid) {
+      await platform.invokeMethod('cancelAlarm', {'id': id});
+    } else if (Platform.isIOS) {
+      await _notifications.cancel(id);
+    }
   }
 
-  static Future<void> cancelNotification(int id) async {
-    await _notifications.cancel(id);
+  static Future<void> cancelAllNotifications() async {
+    if (Platform.isAndroid) {
+      await platform.invokeMethod('cancelAllAlarms');
+    } else if (Platform.isIOS) {
+      await _notifications.cancelAll();
+    }
   }
 }

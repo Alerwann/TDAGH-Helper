@@ -30,6 +30,8 @@
 	<string>Pick an image from Camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Pick an image from Gallery</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Sélectionner une musique pour le minuteur</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

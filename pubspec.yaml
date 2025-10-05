@@ -59,6 +59,7 @@ dependencies:
   linear_progress_bar: "^1.2.0"
   convex_bottom_bar:
   timer_count_down: ^2.2.0
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

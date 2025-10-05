@@ -6,6 +6,7 @@ import 'package:flutter_application_1/providers/sound_provider.dart';
 import 'package:gradient_txt/gradient_text.dart';
 import 'package:provider/provider.dart';
 
+
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
 

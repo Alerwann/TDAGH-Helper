@@ -200,11 +200,11 @@ class NotificationService {
 
   static Future<void> cancelNotification(int id) async {
     if (Platform.isAndroid) {
-      // Appeler le Kotlin pour annuler l'alarme Android
+    
 
       await platform.invokeMethod('cancelAlarm', {'id': id});
     } else if (Platform.isIOS) {
-      // Utiliser flutter_local_notifications pour iOS
+   
       await _notifications.cancel(id);
     }
   }

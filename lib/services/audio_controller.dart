@@ -10,6 +10,26 @@ class AudioController {
   Future<void> initialize() async {
     try {
       _audioPlayer = AudioPlayer();
+
+      await _audioPlayer!.setAudioContext(
+        AudioContext(
+          iOS: AudioContextIOS(
+            category: AVAudioSessionCategory.playback,
+            options: {
+              AVAudioSessionOptions.mixWithOthers,
+              AVAudioSessionOptions.duckOthers,
+            },
+          ),
+          android: AudioContextAndroid(
+            isSpeakerphoneOn: false,
+            stayAwake: true,
+            contentType: AndroidContentType.music,
+            usageType: AndroidUsageType.media,
+            audioFocus: AndroidAudioFocus.gain,
+          ),
+        ),
+      );
+
       _isInitialized = true;
       _log.info('AudioController initialized successfully');
     } catch (e) {
@@ -30,19 +50,29 @@ class AudioController {
     }
   }
 
-  Future<void> playSound(String assetKey, String typeMemory) async {
+Future<void> playSound(String assetKey, String typeMemory) async {
+    // LIGNE 1
+
     if (!_isInitialized || _audioPlayer == null) {
+      // LIGNE 2
       _log.warning('AudioController not initialized, initializing now...');
       await initialize();
     }
 
+    // LIGNE 3
+
     try {
       if (typeMemory == "interne") {
+        // LIGNE 4
         await _audioPlayer!.play(DeviceFileSource(assetKey));
+        // LIGNE 5
       } else if (typeMemory == "appli") {
+        // LIGNE 6
         await _audioPlayer!.play(AssetSource(assetKey));
+        // LIGNE 7
       }
     } catch (e) {
+      // LIGNE 8
       _log.severe('Error playing sound: $e');
 
       try {
@@ -52,6 +82,7 @@ class AudioController {
           await _audioPlayer!.play(AssetSource(assetKey));
         }
       } catch (e2) {
+        // LIGNE 9
         _log.severe('Error playing sound: $e2');
       }
     }

@@ -1,15 +1,15 @@
+import 'dart:io' show Platform, File;
 import 'package:flutter_application_1/data/list/music_list.dart';
 import 'package:flutter_application_1/data/schema/music_schema.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
 import 'package:flutter_application_1/services/audio_controller.dart';
 import 'package:flutter_application_1/widget/imageSet.dart';
-import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:custom_timer/custom_timer.dart';
 
 import 'package:file_picker/file_picker.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeTimertooth extends StatefulWidget {
@@ -58,18 +58,59 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   final List<MusicSchema> musicList = MusicList.getDefaultCards();
 
   Future<void> pickMusic() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.audio,
-    );
+    FilePickerResult? result;
 
-    if (result != null) {
-      setState(() {
-        musicPathChoice = result.files.single.path!;
-        musicName = path.basename(musicPathChoice);
-      });
+    // Adapte le type de fichier selon la plateforme
+    if (Platform.isIOS) {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['mp3', 'm4a', 'wav', 'aac'],
+      );
+    } else {
+      result = await FilePicker.platform.pickFiles(type: FileType.audio);
     }
 
-    if (_timerIsActive) {
+    if (result != null && result.files.single.path != null) {
+      String sourcePath = result.files.single.path!;
+
+
+      try {
+        final directory = await getApplicationDocumentsDirectory();
+        final fileName = result.files.single.name;
+        final permanentPath = '${directory.path}/$fileName';
+
+        final File sourceFile = File(sourcePath);
+
+        if (await sourceFile.exists()) {
+          await sourceFile.copy(permanentPath);
+
+          setState(() {
+            musicPathChoice = permanentPath;
+            musicName = fileName;
+          });
+
+        } else {
+
+          // Fallback pour iOS : essaie de jouer directement
+          if (Platform.isIOS) {
+            setState(() {
+              musicPathChoice = sourcePath;
+              musicName = fileName;
+            });
+          }
+        }
+      } catch (e) {
+
+        // Sur iOS, si la copie échoue, on tente de jouer directement
+        if (Platform.isIOS) {
+          setState(() {
+            musicPathChoice = sourcePath;
+          });
+        }
+      }
+    }
+
+    if (_timerIsActive && musicPathChoice.isNotEmpty) {
       final audioProvider = Provider.of<SoundProvider>(context, listen: false);
       audioProvider.playSound(musicPathChoice, "interne");
     }
@@ -227,8 +268,20 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                         child: Text(music.musicTitle),
                       );
                     }).toList(),
-
+                    onTap: () {
+                       if (Platform.isIOS) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Importation de son uniquement depuis Fichiers, iCloud ou Téléchargements',
+                            ),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
+                    },
                     onChanged: (MusicSchema? newValue) {
+                     
                       if (newValue!.musicTitle == "Importation") {
                         pickMusic();
                       } else {
