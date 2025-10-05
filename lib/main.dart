@@ -9,10 +9,18 @@ import 'package:flutter_application_1/providers/heures_profil_provider.dart';
 import 'package:flutter_application_1/providers/profil_provider.dart';
 import 'package:flutter_application_1/providers/sound_provider.dart';
 import 'package:flutter_application_1/providers/taches_provider.dart';
+import 'package:flutter_application_1/services/notification_service.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+ 
+   try {
+    await NotificationService.initialize();
+  } catch (e) {
+    // L'app continue même si les notifications échouent
+  }
   runApp(
     MultiProvider(
       providers: [

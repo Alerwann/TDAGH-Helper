@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/services/horaire_storage_service.dart';
+import 'package:flutter_application_1/services/notification_service.dart';
 
 class HeureProfilProvider extends ChangeNotifier {
   int _reveilHours = 7;
@@ -28,13 +29,13 @@ class HeureProfilProvider extends ChangeNotifier {
 
   Future<void> _loadData() async {
     _reveilHours = await HoraireStorageService.getHours('réveil');
-    _reveilMinutes = await HoraireStorageService.getMinutes('réveil');
+
     _midiHours = await HoraireStorageService.getHours('midi');
-    _midiMinutes = await HoraireStorageService.getMinutes('midi');
+
     _soirHours = await HoraireStorageService.getHours('soir');
-    _soirMinutes = await HoraireStorageService.getMinutes('soir');
+
     _coucheHours = await HoraireStorageService.getHours('couché');
-    _coucheMinutes = await HoraireStorageService.getMinutes('couché');
+
     _timerGame = await HoraireStorageService.getTimerGame();
 
     notifyListeners();
@@ -55,10 +56,13 @@ class HeureProfilProvider extends ChangeNotifier {
     await HoraireStorageService.saveHours("soir", _soirHours);
     await HoraireStorageService.saveHours("couché", _coucheHours);
 
-    await HoraireStorageService.saveMinutes("réveil", _reveilMinutes);
-    await HoraireStorageService.saveMinutes("midi", _midiMinutes);
-    await HoraireStorageService.saveMinutes("soir", _soirMinutes);
-    await HoraireStorageService.saveMinutes('couché', _coucheMinutes);
+    await NotificationService.cancelAllNotifications();
+    await NotificationService.scheduleAllNotifications(
+      reveilHour: _midiHours,
+      midiHour: _soirHours,
+      soirHour: _coucheHours,
+      coucheHour: _coucheHours + 1,
+    );
 
     notifyListeners();
   }
@@ -82,29 +86,13 @@ class HeureProfilProvider extends ChangeNotifier {
         await HoraireStorageService.saveHours("couché", _coucheHours);
         break;
     }
-
-    notifyListeners();
-  }
-
-  Future<void> setMinutes(int minutes, String moment) async {
-    switch (moment.toLowerCase()) {
-      case 'réveil':
-        _reveilMinutes = minutes;
-        await HoraireStorageService.saveMinutes('réveil', _reveilMinutes);
-        break;
-      case 'midi':
-        _midiMinutes = minutes;
-        await HoraireStorageService.saveMinutes('midi', _midiMinutes);
-        break;
-      case 'soir':
-        _soirMinutes = minutes;
-        await HoraireStorageService.saveMinutes("soir", _soirMinutes);
-        break;
-      case 'couché':
-        _coucheMinutes = minutes;
-        await HoraireStorageService.saveMinutes("couché", _coucheMinutes);
-        break;
-    }
+    await NotificationService.cancelAllNotifications();
+    await NotificationService.scheduleAllNotifications(
+      reveilHour: _midiHours,
+      midiHour: _soirHours,
+      soirHour: _coucheHours,
+      coucheHour: _coucheHours + 1,
+    );
 
     notifyListeners();
   }
