@@ -108,7 +108,7 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
                   }
                   return Center(
                     child: DropdownMenuFormField(
-                      key: ValueKey('${moment}_$momentProfil'),
+                
                       initialSelection: momentProfil,
 
                       label: Text('Heures'),

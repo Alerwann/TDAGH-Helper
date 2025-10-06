@@ -64,71 +64,75 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
           }
 
           return Center(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.7,
-              ),
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  width: 400,
-                  margin: EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: activityCard[index].backColor),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => activityCard[index].destination,
-                        ),
-                      );
-                    },
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            activityCard[index].imagePath,
-                            height: 130,
-                            width: 130,
+            child: Container(
+              margin: EdgeInsets.only(top: 20),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                ),
+                itemCount: 4,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    width: 400,
+                    margin: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: activityCard[index].backColor,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                activityCard[index].destination,
                           ),
-                          SizedBox(height: 10),
+                        );
+                      },
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              activityCard[index].imagePath,
+                              height: 130,
+                              width: 130,
+                            ),
+                            SizedBox(height: 10),
 
-                          ShaderMask(
-                            shaderCallback: (bounds) {
-                              return LinearGradient(
-                                colors: [
-                                  activityCard[index].firstColor,
-                                  activityCard[index].secondColor,
-                                ],
-                              ).createShader(
-                                Rect.fromLTWH(
-                                  0,
-                                  0,
-                                  bounds.width,
-                                  bounds.height,
+                            ShaderMask(
+                              shaderCallback: (bounds) {
+                                return LinearGradient(
+                                  colors: [
+                                    activityCard[index].firstColor,
+                                    activityCard[index].secondColor,
+                                  ],
+                                ).createShader(
+                                  Rect.fromLTWH(
+                                    0,
+                                    0,
+                                    bounds.width,
+                                    bounds.height,
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                activityCard[index].activityName,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                              );
-                            },
-                            child: Text(
-                              activityCard[index].activityName,
-                              textAlign:
-                                  TextAlign.center, 
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors
-                                    .white, 
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           );
         },

@@ -38,19 +38,19 @@ static Future<int> getHours(String moment) async {
 
   switch (moment.toLowerCase()) {
     case 'réveil':
-      key = _reveilHours;  // ← Assigne la bonne clé
+      key = _reveilHours;  
       defaultValue = 7;
       break;
     case 'midi':
-      key = _midiHours;  // ← Assigne la bonne clé
+      key = _midiHours;  
       defaultValue = 12;
       break;
     case 'soir':
-      key = _soirHours;  // ← Assigne la bonne clé
+      key = _soirHours;  
       defaultValue = 19;
       break;
     case 'couché':
-      key = _coucheHours;  // ← Assigne la bonne clé
+      key = _coucheHours;  
       defaultValue = 21;
       break;
     default:

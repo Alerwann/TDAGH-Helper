@@ -3,12 +3,12 @@ import 'package:tdahelpe/services/taches_storage_service.dart';
 import '../services/score_storage_service.dart'; // Import du service qu'on vient de créer
 
 class ScoreProvider extends ChangeNotifier {
+  int _xpGlobal = 0;
+
   int _morningScore = 0;
   int _midiScore = 0;
   int _afternoonScore = 0;
   int _eveningScore = 0;
-
-
 
   int _tacheScore = 0;
 
@@ -16,6 +16,7 @@ class ScoreProvider extends ChangeNotifier {
   List<bool> _isChecked = List.generate(3, (index) => false);
   int _currentStep = 0;
 
+  int get xpGlobal => _xpGlobal;
   int get morningScore => _morningScore;
   int get midiScore => _midiScore;
   int get afternoonScore => _afternoonScore;
@@ -31,7 +32,7 @@ class ScoreProvider extends ChangeNotifier {
     return (sumScores / 4).floor(); // Arrondi à l'inférieur
   }
 
-  int get globalScore => (globalBingoScore + _tacheScore);
+  int get globalScore => (globalBingoScore + _tacheScore * 5);
 
   int nombreTirage = 0;
 
@@ -47,6 +48,7 @@ class ScoreProvider extends ChangeNotifier {
     _tacheScore = await ScoreStorageService.getScore('taches');
     _lastResetDate = await ScoreStorageService.getLastResetDate();
     _isChecked = await ScoreStorageService.getTacheState();
+    _xpGlobal = await ScoreStorageService.getXpglobal();
 
     await _checkAndReset();
 
@@ -64,6 +66,9 @@ class ScoreProvider extends ChangeNotifier {
         _afternoonScore = 0;
         _eveningScore = 0;
         _tacheScore = 0;
+        _xpGlobal = _xpGlobal + globalScore;
+        
+        await ScoreStorageService.saveXpGlobal(_xpGlobal);
 
         await TachesStorageService.saveListeChoix(["0"]);
 
@@ -84,6 +89,7 @@ class ScoreProvider extends ChangeNotifier {
         _lastResetDate = now;
         await ScoreStorageService.saveLastResetDate(_lastResetDate!);
 
+        
         notifyListeners();
       }
     }
@@ -117,8 +123,6 @@ class ScoreProvider extends ChangeNotifier {
         _tacheScore += 1;
         await ScoreStorageService.saveScore('taches', _tacheScore);
         break;
-
-    
     }
     notifyListeners();
   }
@@ -145,7 +149,6 @@ class ScoreProvider extends ChangeNotifier {
         _tacheScore = _tacheScore > 0 ? _tacheScore - 1 : 0;
         await ScoreStorageService.saveScore('taches', _tacheScore);
         break;
-
     }
     notifyListeners();
   }
@@ -202,4 +205,6 @@ class ScoreProvider extends ChangeNotifier {
     await ScoreStorageService.resetTacheScore();
     notifyListeners();
   }
+
+
 }

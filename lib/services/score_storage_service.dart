@@ -16,6 +16,8 @@ class ScoreStorageService {
 
   static const String _lastResetDateKey = 'last_reset_date';
 
+  static const String _xpGlobal = 'xp_global';
+
   static Future<void> saveScore(String moment, int score) async {
     final prefs = await SharedPreferences.getInstance();
     String key;
@@ -176,5 +178,18 @@ class ScoreStorageService {
     final prefs = await SharedPreferences.getInstance();
     final key = _tacheScoreKey;
     await prefs.setInt(key, 0);
+  }
+
+  static Future<void> saveXpGlobal(int score) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _xpGlobal;
+
+    await prefs.setInt(key, score);
+  }
+
+  static Future<int> getXpglobal() async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _xpGlobal;
+    return prefs.getInt(key) ?? 0;
   }
 }

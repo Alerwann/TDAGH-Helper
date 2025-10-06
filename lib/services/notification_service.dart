@@ -19,9 +19,37 @@ class NotificationService {
   static Future<void> initialize() async {
     tz_data.initializeTimeZones();
 
-    final String locationName = tz.local.name;
+    final String systemTimeZone = DateTime.now().timeZoneName;
 
-    // A modifier pour le bon fuseau horaire sans erreur
+    String locationName;
+    if (systemTimeZone == 'CEST' || systemTimeZone == 'CET') {
+      locationName = 'Europe/Paris';
+    } else if (systemTimeZone == 'EST' || systemTimeZone == 'EDT') {
+      locationName = 'America/Toronto';
+    } else if (systemTimeZone == 'PST' || systemTimeZone == 'PDT') {
+      locationName = 'America/Vancouver';
+    } else if (systemTimeZone == 'MST' || systemTimeZone == 'MDT') {
+      locationName = 'America/Edmonton';
+    } else if (systemTimeZone == 'CST' || systemTimeZone == 'CDT') {
+      locationName = 'America/Winnipeg';
+    } else if (systemTimeZone == 'AST' || systemTimeZone == 'ADT') {
+      locationName = 'America/Halifax';
+    } else if (systemTimeZone.contains('/')) {
+      // Si déjà un nom complet (ex: "Europe/Paris")
+      locationName = systemTimeZone;
+    } else {
+      // Fallback : essayer quand même
+      locationName = systemTimeZone;
+    }
+
+    try {
+      tz.setLocalLocation(tz.getLocation(locationName));
+      print('✅ Fuseau horaire configuré : $locationName');
+    } catch (e) {
+      // Dernier recours : utiliser Europe/Paris
+      tz.setLocalLocation(tz.getLocation('Europe/Paris'));
+      print('⚠️ Erreur timezone, fallback Europe/Paris : $e');
+    }
 
     try {
       tz.setLocalLocation(tz.getLocation(locationName));
@@ -96,7 +124,7 @@ class NotificationService {
       title: '🍽️ La période du midi va finir !!',
       body: 'N\'oublie pas de valider tes tâches du midi',
       hour: midiHour,
-      minute: 50,
+      minute: 0,
     );
 
     // Planifier notification du soir
@@ -157,6 +185,8 @@ class NotificationService {
     int hour,
     int minute,
   ) async {
+    print('📱 iOS - Planification notification #$id');
+    print('   Heure demandée : $hour:$minute');
     final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
 
     const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
@@ -196,13 +226,11 @@ class NotificationService {
       minute,
     );
 
-    print('⏰ Maintenant : $now');
-    print('⏰ Notification prévue : $scheduledDate');
-
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-
+    print('⏰ Maintenant : $now');
+    print('⏰ Notification prévue : $scheduledDate');
     return scheduledDate;
   }
 

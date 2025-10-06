@@ -13,6 +13,7 @@ class HeureProfilProvider extends ChangeNotifier {
   int _coucheMinutes = 0;
   int _timerGame = 20;
 
+
   int get reveilHours => _reveilHours;
   int get reveilMinutes => _reveilMinutes;
   int get midiHours => _midiHours;
@@ -37,8 +38,20 @@ class HeureProfilProvider extends ChangeNotifier {
     _coucheHours = await HoraireStorageService.getHours('couché');
 
     _timerGame = await HoraireStorageService.getTimerGame();
+    await _scheduleNotificationsWithLoadedHours();
 
     notifyListeners();
+  }
+
+  Future<void> _scheduleNotificationsWithLoadedHours() async {
+
+    await NotificationService.cancelAllNotifications();
+    await NotificationService.scheduleAllNotifications(
+      reveilHour: _reveilHours, 
+      midiHour: _midiHours, 
+      soirHour: _soirHours, 
+      coucheHour: _coucheHours, 
+    );
   }
 
   Future<void> resetAllHours() async {
@@ -56,18 +69,39 @@ class HeureProfilProvider extends ChangeNotifier {
     await HoraireStorageService.saveHours("soir", _soirHours);
     await HoraireStorageService.saveHours("couché", _coucheHours);
 
-    await NotificationService.cancelAllNotifications();
-    await NotificationService.scheduleAllNotifications(
-      reveilHour: _midiHours,
-      midiHour: _soirHours,
-      soirHour: _coucheHours,
-      coucheHour: _coucheHours + 1,
-    );
+    await _scheduleNotificationsWithLoadedHours();
 
     notifyListeners();
   }
 
-  Future<void> setHours(int hours, String moment) async {
+Future<void> setHours(int hours, String moment) async {
+    // Vérifie si la valeur a changé
+    int currentValue;
+    switch (moment.toLowerCase()) {
+      case 'réveil':
+        currentValue = _reveilHours;
+        break;
+      case 'midi':
+        currentValue = _midiHours;
+        break;
+      case 'soir':
+        currentValue = _soirHours;
+        break;
+      case 'couché':
+        currentValue = _coucheHours;
+        break;
+      default:
+        return;
+    }
+
+    // Si la valeur n'a pas changé, ne rien faire
+    if (currentValue == hours) {
+      print('⏭️ Même valeur, pas de modification');
+      return;
+    }
+
+    print('🔧 setHours appelé : $moment = $hours');
+
     switch (moment.toLowerCase()) {
       case 'réveil':
         _reveilHours = hours;
@@ -87,15 +121,7 @@ class HeureProfilProvider extends ChangeNotifier {
         break;
     }
 
-    await NotificationService.cancelAllNotifications();
-
-    await NotificationService.scheduleAllNotifications(
-      reveilHour: _midiHours,
-      midiHour: _soirHours,
-      soirHour: _coucheHours,
-      coucheHour: _coucheHours + 1,
-    );
-
+    await _scheduleNotificationsWithLoadedHours();
     notifyListeners();
   }
 
