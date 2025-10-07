@@ -10,11 +10,13 @@ class DefouleService {
     await prefs.setInt(key, score);
   }
 
-  static Future<void> restScoreDefoule() async {
+  static Future<void> resetScoreDefoulee() async {
+    print("🔧 Service: Début reset score");
     final prefs = await SharedPreferences.getInstance();
     final key = _scoreDefoule;
     final score = 0;
     await prefs.setInt(key, score);
+    print("🔧 Service: Score sauvegardé = ${prefs.getInt(key)}");
   }
 
   static Future<int> getScoreDefoule() async {

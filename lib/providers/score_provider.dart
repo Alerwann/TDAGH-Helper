@@ -17,6 +17,7 @@ class ScoreProvider extends ChangeNotifier {
   int _currentStep = 0;
 
   int get xpGlobal => _xpGlobal;
+
   int get morningScore => _morningScore;
   int get midiScore => _midiScore;
   int get afternoonScore => _afternoonScore;
@@ -26,13 +27,14 @@ class ScoreProvider extends ChangeNotifier {
   List<bool> get isChecked => _isChecked;
   int get currentStep => _currentStep;
 
-  int get globalBingoScore {
-    int sumScores =
-        _morningScore + _midiScore + _afternoonScore + _eveningScore;
-    return (sumScores / 4).floor(); // Arrondi à l'inférieur
-  }
+  int get globalBingoScore =>
+      _morningScore + _midiScore + _afternoonScore + _eveningScore;
 
-  int get globalScore => (globalBingoScore + _tacheScore * 5);
+  int get globalScore => ((globalBingoScore / 4).floor()*5 + _tacheScore*5 );
+
+  int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
+
+  int get xpByLevel => (_xpGlobal + globalScore) % 140;
 
   int nombreTirage = 0;
 
@@ -67,7 +69,7 @@ class ScoreProvider extends ChangeNotifier {
         _eveningScore = 0;
         _tacheScore = 0;
         _xpGlobal = _xpGlobal + globalScore;
-        
+
         await ScoreStorageService.saveXpGlobal(_xpGlobal);
 
         await TachesStorageService.saveListeChoix(["0"]);
@@ -89,7 +91,6 @@ class ScoreProvider extends ChangeNotifier {
         _lastResetDate = now;
         await ScoreStorageService.saveLastResetDate(_lastResetDate!);
 
-        
         notifyListeners();
       }
     }
@@ -205,6 +206,4 @@ class ScoreProvider extends ChangeNotifier {
     await ScoreStorageService.resetTacheScore();
     notifyListeners();
   }
-
-
 }

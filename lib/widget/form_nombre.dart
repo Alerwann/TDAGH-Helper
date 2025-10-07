@@ -71,6 +71,7 @@ class _ParametretirageState extends State<NumberForm> {
                                   tachesTime.modifierNombreTache(nbSaisi);
                                 } else if (typechoice == "game") {
                                   defoulP.saveTimerDuration(nbSaisi);
+                                  defoulP.resetScore();
                                 } else {}
                                 _numberController.clear();
                               });

@@ -96,14 +96,110 @@ class NotificationService {
           print('⚠️ Erreur demande permission: $e');
         }
       }
+
+      try {
+        final bool? canSchedule = await platform.invokeMethod(
+          'checkPermissions',
+        );
+        if (kDebugMode) {
+          if (canSchedule == true) {
+            print('✅ Permission SCHEDULE_EXACT_ALARM accordée');
+          } else {
+            print('⚠️ Permission SCHEDULE_EXACT_ALARM manquante');
+            print(
+              '💡 L\'utilisateur doit l\'activer manuellement dans les paramètres',
+            );
+          }
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Erreur vérification SCHEDULE_EXACT_ALARM: $e');
+        }
+      }
     }
 
     if (kDebugMode) {
       print('✅ Notifications complètement initialisées');
     }
   }
+// Méthode pour vérifier TOUTES les permissions nécessaires
+  static Future<bool> hasAllPermissions() async {
+    if (Platform.isAndroid) {
+      try {
+        // Vérifier SCHEDULE_EXACT_ALARM via Kotlin
+        final bool? canSchedule = await platform.invokeMethod(
+          'checkPermissions',
+        );
 
-  //ne change pas
+        if (canSchedule == false) {
+          if (kDebugMode) {
+            print('❌ Permission SCHEDULE_EXACT_ALARM manquante');
+          }
+          return false;
+        }
+
+        if (kDebugMode) {
+          print('✅ Toutes les permissions Android accordées');
+        }
+        return true;
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Erreur vérification permissions: $e');
+        }
+        return false;
+      }
+    }
+
+    // Sur iOS, pas besoin de cette permission
+    return true;
+  }
+
+  // Méthode pour demander les permissions manquantes
+  static Future<void> requestMissingPermissions() async {
+    if (Platform.isAndroid) {
+      try {
+        final bool? canSchedule = await platform.invokeMethod(
+          'checkPermissions',
+        );
+
+        if (canSchedule == false) {
+          // Ouvrir les paramètres pour que l'utilisateur active manuellement
+          await platform.invokeMethod('openSettings');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Erreur demande permissions: $e');
+        }
+      }
+    }
+  }
+
+  
+  static Future<bool> checkPermissions() async {
+    if (Platform.isAndroid) {
+      try {
+        final bool? canSchedule = await platform.invokeMethod(
+          'checkPermissions',
+        );
+        return canSchedule ?? false;
+      } catch (e) {
+        print('Erreur vérification permissions: $e');
+        return false;
+      }
+    }
+    return true; // iOS n'a pas besoin de cette permission
+  }
+
+  static Future<void> openSettings() async {
+    if (Platform.isAndroid) {
+      try {
+        await platform.invokeMethod('openSettings');
+      } catch (e) {
+        print('Erreur ouverture paramètres: $e');
+      }
+    }
+  }
+
   static Future<void> scheduleAllNotifications({
     required int reveilHour,
     required int midiHour,

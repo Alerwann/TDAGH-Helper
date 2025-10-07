@@ -13,7 +13,6 @@ class HeureProfilProvider extends ChangeNotifier {
   int _coucheMinutes = 0;
   int _timerGame = 20;
 
-
   int get reveilHours => _reveilHours;
   int get reveilMinutes => _reveilMinutes;
   int get midiHours => _midiHours;
@@ -43,15 +42,29 @@ class HeureProfilProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _scheduleNotificationsWithLoadedHours() async {
+Future<void> _scheduleNotificationsWithLoadedHours() async {
+    try {
+      // ✅ Vérifier TOUTES les permissions nécessaires
+      bool hasPermissions = await NotificationService.hasAllPermissions();
 
-    await NotificationService.cancelAllNotifications();
-    await NotificationService.scheduleAllNotifications(
-      reveilHour: _reveilHours, 
-      midiHour: _midiHours, 
-      soirHour: _soirHours, 
-      coucheHour: _coucheHours, 
-    );
+      if (!hasPermissions) {
+        print('⚠️ Permissions manquantes pour programmer les alarmes');
+        // Optionnel : demander à l'utilisateur d'aller dans les paramètres
+        // await NotificationService.requestMissingPermissions();
+        return;
+      }
+
+      await NotificationService.scheduleAllNotifications(
+        reveilHour: _reveilHours,
+        midiHour: _midiHours,
+        soirHour: _soirHours,
+        coucheHour: _coucheHours,
+      );
+
+      print('✅ Toutes les notifications programmées');
+    } catch (e) {
+      print('❌ Erreur lors de la programmation des notifications : $e');
+    }
   }
 
   Future<void> resetAllHours() async {
@@ -74,10 +87,13 @@ class HeureProfilProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-Future<void> setHours(int hours, String moment) async {
-    // Vérifie si la valeur a changé
+  Future<void> setHours(int hours, String moment) async {
+    // Normaliser une seule fois
+    final momentLower = moment.toLowerCase();
+
+    // Récupérer la valeur actuelle
     int currentValue;
-    switch (moment.toLowerCase()) {
+    switch (momentLower) {
       case 'réveil':
         currentValue = _reveilHours;
         break;
@@ -91,18 +107,20 @@ Future<void> setHours(int hours, String moment) async {
         currentValue = _coucheHours;
         break;
       default:
+        print('⚠️ Moment inconnu : $moment');
         return;
     }
 
     // Si la valeur n'a pas changé, ne rien faire
     if (currentValue == hours) {
-      print('⏭️ Même valeur, pas de modification');
+      print('⏭️ $moment : même valeur ($hours), pas de modification');
       return;
     }
 
     print('🔧 setHours appelé : $moment = $hours');
 
-    switch (moment.toLowerCase()) {
+    // Mettre à jour la valeur et sauvegarder
+    switch (momentLower) {
       case 'réveil':
         _reveilHours = hours;
         await HoraireStorageService.saveHours('réveil', _reveilHours);
@@ -113,15 +131,23 @@ Future<void> setHours(int hours, String moment) async {
         break;
       case 'soir':
         _soirHours = hours;
-        await HoraireStorageService.saveHours("soir", _soirHours);
+        await HoraireStorageService.saveHours('soir', _soirHours);
         break;
       case 'couché':
         _coucheHours = hours;
-        await HoraireStorageService.saveHours("couché", _coucheHours);
+        await HoraireStorageService.saveHours('couché', _coucheHours);
         break;
     }
 
+    print(
+      '✅ $moment mis à jour : $hours, reprogrammation des notifications...',
+    );
+
+    // Reprogrammer TOUTES les notifications avec les nouvelles heures
     await _scheduleNotificationsWithLoadedHours();
+
+    print('✅ Notifications reprogrammées');
+
     notifyListeners();
   }
 

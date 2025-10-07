@@ -55,9 +55,11 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
     }
   }
 
+  Key _refreshKey = UniqueKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _refreshKey,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -182,6 +184,25 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                               },
                               child: Text(
                                 "Modifier timer",
+                                style: TextStyle(fontSize: 30),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: 260,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                await defouleP.resetScore();
+                                print("✅ Score:  ${defouleP.scoreDefoule}");
+                                setState(() {
+                                  _refreshKey =
+                                      UniqueKey(); // ✅ Force un rebuild complet
+                                });
+                              },
+                              child: Text(
+                                "Remise à 0",
                                 style: TextStyle(fontSize: 30),
                               ),
                             ),

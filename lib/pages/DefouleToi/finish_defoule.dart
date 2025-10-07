@@ -14,6 +14,7 @@ class FinishDefoule extends StatefulWidget {
 }
 
 class _FinishDefouleState extends State<FinishDefoule> {
+
   bool bestRecord = false;
   bool enregistreRecord = true;
   final gradient = LinearGradient(
@@ -29,13 +30,28 @@ class _FinishDefouleState extends State<FinishDefoule> {
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );
+
+    @override
+  void initState() {
+    // ✅ Utilise initState au lieu de build
+    super.initState();
+
+    // ✅ Fais la sauvegarde UNE SEULE FOIS au démarrage
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final defouleP = Provider.of<DefouleProvider>(context, listen: false);
+      if (defouleP.scoreDefoule < widget.score) {
+        defouleP.saveScore(widget.score);
+      }
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DefouleProvider>(
       builder: (context, defouleP, child) {
-        if (defouleP.scoreDefoule < widget.score) {
-          defouleP.saveScore(widget.score);
-        }
+     
 
         return Scaffold(
           appBar: AppBar(
@@ -99,10 +115,9 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   width: 250,
                   margin: EdgeInsets.all(15),
                   child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        defouleP.resetScore();
-                      });
+                    onPressed: () async {
+                      await defouleP.resetScore();
+                      print("✅ Score:  ${defouleP.scoreDefoule}");
                     },
                     child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
                   ),
