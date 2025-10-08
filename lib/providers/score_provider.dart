@@ -30,9 +30,10 @@ class ScoreProvider extends ChangeNotifier {
   int get globalBingoScore =>
       _morningScore + _midiScore + _afternoonScore + _eveningScore;
 
-  int get globalScore => ((globalBingoScore / 4).floor()*5 + _tacheScore*5 );
+  int get globalScore => ((globalBingoScore / 4).floor() * 5 + _tacheScore * 5);
 
-  int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
+  // int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
+  int get niveauPersonnal => 42;
 
   int get xpByLevel => (_xpGlobal + globalScore) % 140;
 

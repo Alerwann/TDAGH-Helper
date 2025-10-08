@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
+import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
@@ -37,6 +38,7 @@ void main() async {
         ),
         ChangeNotifierProvider(create: (context) => TachesProvider()),
         ChangeNotifierProvider(create: (contex) => DefouleProvider()),
+        ChangeNotifierProvider(create: (contex) => BonusLevelProvider()),
       ],
       child: MyApp(),
     ),
@@ -93,7 +95,7 @@ class _MyScoreProvider extends State<MyApp> {
           color: Colors.white,
           activeColor: Colors.white,
           initialActiveIndex: _currentindex,
-          height: 75,
+          height: 65,
           items: [
             TabItem(
               icon: Icon(Icons.home, size: 25, color: Colors.white),
