@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/TacheHazard/tirage_final.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
-import 'package:tdahelpe/services/score_storage_service.dart';
-import 'package:tdahelpe/services/taches_storage_service.dart';
 import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -18,36 +16,25 @@ class _QuetesfinalesState extends State<Quetesfinales> {
   bool afficheButton = false;
   bool isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      List<String> tache = await TachesStorageService.getChoixTaches();
-
-      List<bool> scoreStateInit = await ScoreStorageService.getTacheState();
-      setState(() {
-        if (scoreStateInit.length != tache.length) {
-          scoreStateInit = List.generate(tache.length, (index) => false);
-        }
-
-        afficheButton = tache.isEmpty || tache[0] == "0";
-
-        isLoading = false;
-      });
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final ScoreP = Provider.of<ScoreProvider>(context, listen: false);
+   
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Consumer2<TachesProvider, ScoreProvider>(
         builder: (context, tacheP, scoreP, child) {
-          final itemCount = tacheP.choixTaches.length;
-
-          if (isLoading) {
+          if (scoreP.isLoading || tacheP.isLoading) {
             return CircularProgressIndicator();
           }
-
+          final itemCount = tacheP.choixTaches.length;
+          var afficheButton =
+              tacheP.choixTaches.isEmpty || tacheP.choixTaches[0] == "0";
+           print("👀 Score aprè init ${scoreP.currentStep}");
           return Container(
             margin: EdgeInsets.all(40),
             child: Column(
@@ -153,12 +140,10 @@ class _QuetesfinalesState extends State<Quetesfinales> {
 
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      tacheP.reinitTAche();
-                      scoreP.resetCheckboxesWithLength(1);
-                      scoreP.decrementglobal('taches');
-                      afficheButton = true;
-                    });
+                    tacheP.reinitTAche();
+                    scoreP.resetCheckboxesWithLength(1);
+                    scoreP.decrementglobal('taches');
+                    afficheButton = true;
                   },
                   child: Text("Reset"),
                 ),

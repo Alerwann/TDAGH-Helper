@@ -1,5 +1,7 @@
 import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 import 'package:tdahelpe/data/list/bingocard_list.dart';
+import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/services/score_storage_service.dart';
 import 'package:tdahelpe/widget/simpleflipcard.dart';
@@ -31,54 +33,111 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAccess();
+    });
     _initializeData();
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+    _celebrationController.dispose();
+    super.dispose();
+  }
+
+  void _checkAccess() {
+    final profil = Provider.of<HeureProfilProvider>(context, listen: false);
+
+    if (!_isMomentAccessible(widget.titleMoment, profil)) {
+      // Fermer la page et afficher un message
+      Navigator.of(context).pop();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '⏰ La période ${widget.titleMoment} n\'est plus accessible',
+          ),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
+  bool _isMomentAccessible(String moment, HeureProfilProvider profil) {
+    final now = DateTime.now();
+
+    switch (moment) {
+      case 'Matin':
+        return now.hour <= profil.midiHours + 1 &&
+            now.hour >= profil.reveilHours - 1;
+      case 'Midi':
+        return now.hour <= profil.soirhours + 1 &&
+            now.hour >= profil.midiHours - 1;
+      case 'Soir':
+        return now.hour <= profil.coucheHours + 1 &&
+            now.hour >= profil.soirhours - 1;
+      case 'Couché':
+        return now.hour >= profil.coucheHours - 1 &&
+            now.hour <= profil.reveilHours + 1;
+      default:
+        return false;
+    }
   }
 
   // Initialiser les données avec les sauvegardes
   Future<void> _initializeData() async {
     // Charger les cartes par défaut
-    switch (widget.titleMoment) {
-      case 'Matin':
-        bingoCards = BingoDataMorning.getDefaultCards();
-        break;
-      case 'Midi':
-        bingoCards = BingoDataMidi.getDefaultCards();
-        break;
-      case 'Soir':
-        bingoCards = BingoDataSoir.getDefaultCards();
-        break;
-      case 'Couché':
-        bingoCards = BingoDataCouche.getDefaultCards();
-        break;
-      default:
-        bingoCards = BingoDataMorning.getDefaultCards();
-    }
-
-    // Charger l'état sauvegardé des cartes
-    final savedStates = await ScoreStorageService.getCardsState(
-      widget.titleMoment,
-      bingoCards.length,
-    );
-
-    // Appliquer l'état sauvegardé aux cartes
-    for (int i = 0; i < bingoCards.length && i < savedStates.length; i++) {
-      bingoCards[i].isFlipped = savedStates[i];
-    }
-
-    _celebrationController = AnimationController(vsync: this);
-
-    _celebrationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          _showAnimation = false;
-          _celebrationController.reset();
-        });
+    try {
+      switch (widget.titleMoment) {
+        case 'Matin':
+          bingoCards = BingoDataMorning.getDefaultCards();
+          break;
+        case 'Midi':
+          bingoCards = BingoDataMidi.getDefaultCards();
+          break;
+        case 'Soir':
+          bingoCards = BingoDataSoir.getDefaultCards();
+          break;
+        case 'Couché':
+          bingoCards = BingoDataCouche.getDefaultCards();
+          break;
+        default:
+          bingoCards = BingoDataMorning.getDefaultCards();
       }
-    });
+      // Charger l'état sauvegardé des cartes
+      final savedStates = await ScoreStorageService.getCardsState(
+        widget.titleMoment,
+        bingoCards.length,
+      );
 
-    setState(() {
-      _isLoading = false;
-    });
+      // Appliquer l'état sauvegardé aux cartes
+      for (int i = 0; i < bingoCards.length && i < savedStates.length; i++) {
+        bingoCards[i].isFlipped = savedStates[i];
+      }
+
+      _celebrationController = AnimationController(vsync: this);
+
+      _celebrationController.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            _showAnimation = false;
+            _celebrationController.reset();
+          });
+        }
+      });
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erreur de chargement')));
+      Navigator.pop(context);
+    }
   }
 
   // Sauvegarder l'état des cartes
@@ -92,9 +151,6 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
   @override
   Widget build(BuildContext context) {
-
-
-    // Afficher un loader pendant le chargement
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(title: Text('Retour')),
@@ -105,9 +161,8 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     return Scaffold(
       appBar: AppBar(title: Text('Retour')),
       body: Consumer<ScoreProvider>(
-        
         builder: (context, scoreP, child) {
-        int momentScore;
+          int momentScore;
           switch (widget.titleMoment) {
             case 'Matin':
               momentScore = scoreP.morningScore;
@@ -163,6 +218,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
                     Expanded(
                       child: GridView.builder(
+                        cacheExtent: 1000,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           childAspectRatio: 1,
@@ -173,10 +229,8 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
                             cardData: bingoCards[index],
                             isFlipped: bingoCards[index].isFlipped,
                             onTap: () async {
-                              
                               setState(() {
                                 if (bingoCards[index].isFlipped) {
-                              
                                   scoreP.decrementglobal(
                                     widget.titleMoment.toLowerCase(),
                                   );
@@ -184,7 +238,6 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
                                   scoreP.incrementglobal(
                                     widget.titleMoment.toLowerCase(),
                                   );
-                                
                                 }
 
                                 bingoCards[index].isFlipped =
@@ -193,7 +246,6 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
                               await _saveCardsState();
 
-                     
                               final newScore = bingoCards
                                   .where((card) => card.isFlipped)
                                   .length;
@@ -227,11 +279,5 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _celebrationController.dispose();
-    super.dispose();
   }
 }

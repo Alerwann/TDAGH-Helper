@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/data/list/activity_list.dart';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/utils/device_utils.dart';
 
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
@@ -13,6 +18,56 @@ class HomeGlobalPage extends StatefulWidget {
 }
 
 class _HomeGlobalPageState extends State<HomeGlobalPage> {
+  final MethodChannel _batteryChannel = MethodChannel(
+    'alarm_channel',
+  );
+  @override
+  void initState() {
+    super.initState();
+    _checkBatteryOptimizationIfNeeded();
+  }
+
+  Future<void> _checkBatteryOptimizationIfNeeded() async {
+    if (DeviceUtils.isBatteryOptimizationNeeded()) {
+      final prefs = await SharedPreferences.getInstance();
+      final alreadyShown = prefs.getBool('battery_guide_shown') ?? false;
+
+      if (!alreadyShown) {
+        final isIgnoring = await _checkBatteryOptimizationStatus();
+        if (!isIgnoring) {
+          _showBatteryOptimizationDialog();
+          prefs.setBool('battery_guide_shown', true);
+        }
+      }
+    }
+  }
+
+  Future<bool> _checkBatteryOptimizationStatus() async {
+    if (Platform.isAndroid) {
+      final result = await _batteryChannel.invokeMethod('checkBatteryOptimization');
+      return result == true;
+    }
+    return true;
+  }
+
+  void _showBatteryOptimizationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('⚠️ Notifications importantes'),
+        content: Text('Sur votre appareil...'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              /* ... */
+            },
+            child: Text('Autoriser'),
+          ),
+        ],
+      ),
+    );
+  }
+
   late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
 
   @override

@@ -4,7 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -15,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class MainActivity : FlutterActivity() {
+
     private val CHANNEL = "alarm_channel"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -38,13 +41,14 @@ class MainActivity : FlutterActivity() {
                                     return@setMethodCallHandler
                                 }
                             }
-                            
+
                             scheduleExactAlarm(id, title, body, hour, minute)
                             result.success("Alarme planifiée pour ${hour}h${minute}")
                         } else {
                             result.error("INVALID_ARGS", "Paramètres manquants", null)
                         }
                     }
+
                     "cancelAlarm" -> {
                         val id = call.argument<Int>("id")
                         if (id != null) {
@@ -54,10 +58,12 @@ class MainActivity : FlutterActivity() {
                             result.error("INVALID_ARGS", "ID manquant", null)
                         }
                     }
+
                     "cancelAllAlarms" -> {
                         cancelAllAlarms()
                         result.success("Toutes les alarmes annulées")
                     }
+
                     "checkPermissions" -> {
                         val canSchedule = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             canScheduleExactAlarms()
@@ -66,10 +72,35 @@ class MainActivity : FlutterActivity() {
                         }
                         result.success(canSchedule)
                     }
+
                     "openSettings" -> {
                         openAlarmSettings()
                         result.success(null)
                     }
+
+                    "getNotificationData" -> {
+                        val prefs = getSharedPreferences("notification_data", Context.MODE_PRIVATE)
+                        val moment = prefs.getString("moment", null)
+                        val openBingo = prefs.getBoolean("open_bingo", false)
+
+                        if (openBingo && moment != null) {
+                            prefs.edit().clear().apply()
+                            result.success(mapOf("openBingo" to true, "moment" to moment))
+                        } else {
+                            result.success(null)
+                        }
+                    }
+
+                    "checkBatteryOptimization" -> {
+                        val isIgnoring = isIgnoringBatteryOptimizations()
+                        result.success(isIgnoring)
+                    }
+
+                    "requestBatteryOptimization" -> {
+                        requestIgnoreBatteryOptimizations()
+                        result.success(null)
+                    }
+
                     else -> result.notImplemented()
                 }
             }
@@ -89,15 +120,14 @@ class MainActivity : FlutterActivity() {
 
     private fun openAlarmSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = android.net.Uri.parse("package:$packageName")
+            data = Uri.parse("package:$packageName")
         }
         startActivity(intent)
     }
 
     private fun scheduleExactAlarm(id: Int, title: String, body: String, hour: Int, minute: Int) {
-        // ✅ Maintenant Log.d() va fonctionner !
         Log.d("MainActivity", "🕐 Programmation alarme ID: $id pour ${hour}h${minute}")
-        
+
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, AlarmReceiver::class.java).apply {
@@ -105,7 +135,7 @@ class MainActivity : FlutterActivity() {
             putExtra("title", title)
             putExtra("body", body)
         }
-        
+
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             id,
@@ -121,26 +151,21 @@ class MainActivity : FlutterActivity() {
         }
 
         val now = System.currentTimeMillis()
-        
-        // ✅ SimpleDateFormat va aussi fonctionner !
         Log.d("MainActivity", "⏰ Maintenant: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now)}")
         Log.d("MainActivity", "⏰ Alarme prévue: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
 
-        if (calendar.timeInMillis <= System.currentTimeMillis()) {
+        if (calendar.timeInMillis <= now) {
             Log.d("MainActivity", "⚠️ Heure passée, ajout d'un jour")
             calendar.add(Calendar.DAY_OF_YEAR, 1)
             Log.d("MainActivity", "⏰ Nouvelle heure: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
         }
-
-        val delayMinutes = (calendar.timeInMillis - now) / 1000 / 60
-        Log.d("MainActivity", "✅ Programmation de l'alarme dans $delayMinutes minutes")
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             pendingIntent
         )
-        
+
         Log.d("MainActivity", "✅ Alarme programmée avec succès !")
     }
 
@@ -159,6 +184,23 @@ class MainActivity : FlutterActivity() {
     private fun cancelAllAlarms() {
         for (id in 1..4) {
             cancelAlarm(id)
+        }
+    }
+
+    private fun isIgnoringBatteryOptimizations(): Boolean {
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            powerManager.isIgnoringBatteryOptimizations(packageName)
+        } else {
+            true
+        }
+    }
+
+    private fun requestIgnoreBatteryOptimizations() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
         }
     }
 }

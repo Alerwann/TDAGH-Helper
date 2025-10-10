@@ -86,7 +86,7 @@ flutter:
     - assets/animations/
     - assets/music/
     - assets/data/level_bonus.csv
-
+    - assets/logotdah.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -115,5 +115,5 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logotdah.png"  # ← Chemin vers ton logo
+  image_path: "assets/icon_TDAHelp.png"  # ← Chemin vers ton logo
   remove_alpha_ios: true  

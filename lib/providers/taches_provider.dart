@@ -6,6 +6,8 @@ import 'package:tdahelpe/services/taches_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TachesProvider extends ChangeNotifier {
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
   List<TachesSchema> _taches = [];
   List<String> _choixTaches = [];
   static const String _storageKey = 'user_taches';
@@ -38,6 +40,7 @@ class TachesProvider extends ChangeNotifier {
       _taches = TachesList.getDefaultCards();
       await _saveTaches(); // Sauvegarder immédiatement
     }
+    _isLoading = false;
     notifyListeners();
   }
 

@@ -1,4 +1,3 @@
-import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -37,10 +36,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
 
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.home,

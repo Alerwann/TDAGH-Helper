@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
 
 class FinishDefoule extends StatefulWidget {
   final int score;
@@ -14,7 +17,6 @@ class FinishDefoule extends StatefulWidget {
 }
 
 class _FinishDefouleState extends State<FinishDefoule> {
-
   bool bestRecord = false;
   bool enregistreRecord = true;
   final gradient = LinearGradient(
@@ -31,28 +33,27 @@ class _FinishDefouleState extends State<FinishDefoule> {
     color: Colors.white,
   );
 
-    @override
+  @override
   void initState() {
-    // ✅ Utilise initState au lieu de build
     super.initState();
+     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    // ✅ Fais la sauvegarde UNE SEULE FOIS au démarrage
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final defouleP = Provider.of<DefouleProvider>(context, listen: false);
-      if (defouleP.scoreDefoule < widget.score) {
+      final scoreP = Provider.of<ScoreProvider>(context, listen: false);
+      if (defouleP.scoreDefoule <= widget.score) {
+        if (defouleP.scoreDefoule != 0) {
+          scoreP.incrementDefouleScore();
+        }
         defouleP.saveScore(widget.score);
       }
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer<DefouleProvider>(
       builder: (context, defouleP, child) {
-     
-
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
@@ -99,7 +100,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   margin: EdgeInsets.all(15),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => HomeDefouleToi(),
@@ -117,7 +118,9 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   child: ElevatedButton(
                     onPressed: () async {
                       await defouleP.resetScore();
-                      print("✅ Score:  ${defouleP.scoreDefoule}");
+                      if (kDebugMode) {
+                        print("✅ Score:  ${defouleP.scoreDefoule}");
+                      }
                     },
                     child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
                   ),

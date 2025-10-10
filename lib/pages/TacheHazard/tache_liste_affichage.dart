@@ -122,7 +122,25 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                           icon: Icon(Icons.delete),
                           onPressed: () {
                             setState(() {
-                              tacheP.supprimerTache(tache.tacheName);
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: Text('Supprimer ?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: Navigator.of(context).pop,
+                                      child: Text('Non'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        tacheP.supprimerTache(tache.tacheName);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Oui'),
+                                    ),
+                                  ],
+                                ),
+                              );
                             });
                           },
                         ),

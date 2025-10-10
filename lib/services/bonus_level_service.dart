@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart'; // Pour rootBundle
 import 'package:csv/csv.dart'; // Pour lire le CSV
 import 'package:tdahelpe/data/schema/bonus_level_schema.dart';
@@ -19,10 +20,14 @@ class BonusLevelService {
           .map((row) => BonusLevel.fromCsv(row)) // Transformer chaque ligne
           .toList(); // Convertir en liste
 
-      print('✅ ${levels.length} grades chargés');
+      if (kDebugMode) {
+        print('✅ ${levels.length} grades chargés');
+      }
       return levels;
     } catch (e) {
-      print('❌ Erreur lors du chargement des grades : $e');
+      if (kDebugMode) {
+        print('❌ Erreur lors du chargement des grades : $e');
+      }
       return [];
     }
   }

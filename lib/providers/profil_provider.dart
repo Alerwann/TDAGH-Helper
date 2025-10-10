@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/services/profil_storage_service.dart';
 
 class ProfilProvider extends ChangeNotifier {
-  String _pseudo = 'Iconnu';
+  String _pseudo = 'Inconnu';
   String _profilImagePath = 'assets/images/defaultprofilimage.png';
 
   bool get isDefaultImage => _profilImagePath.startsWith('assets/');

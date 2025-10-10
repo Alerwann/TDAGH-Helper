@@ -177,10 +177,14 @@ class _TirageFinalState extends State<TirageFinal>
     super.dispose();
   }
 
-  List tabIndice(nbChoiceadd, tacheLength) {
+  List tabIndice(int nbChoiceadd,int tacheLength) {
     int randomIndex;
     List listeIndex = [];
     List listToreturn = [];
+
+      if (nbChoiceadd > tacheLength) {
+      nbChoiceadd = tacheLength; 
+    }
 
     while (listToreturn.length < nbChoiceadd) {
       randomIndex = math.Random().nextInt(tacheLength);

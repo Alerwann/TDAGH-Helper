@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:tdahelpe/data/schema/bonus_level_schema.dart';
 import 'package:tdahelpe/services/bonus_level_service.dart';
 
@@ -10,20 +9,26 @@ class BonusLevelProvider extends ChangeNotifier {
   List<BonusLevel> get levels => _levels;
   bool get isLoading => _isLoading;
   BonusLevelProvider() {
-    print('🎯 BonusLevelProvider créé');
+    if (kDebugMode) {
+      print('🎯 BonusLevelProvider créé');
+    }
     _loadLevels();
   }
 
   // Pour l'instant, méthode vide
   Future<void> _loadLevels() async {
-    print('📥 Début du chargement des grades...');
+    if (kDebugMode) {
+      print('📥 Début du chargement des grades...');
+    }
 
     _isLoading = true;
     notifyListeners();
 
     _levels = await BonusLevelService.loadLevels();
 
-    print('✅ ${_levels.length} grades chargés dans le provider');
+    if (kDebugMode) {
+      print('✅ ${_levels.length} grades chargés dans le provider');
+    }
 
     _isLoading = false;
     notifyListeners();

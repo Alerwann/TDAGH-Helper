@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/SuiviScores/bingo_score.dart';
+import 'package:tdahelpe/pages/SuiviScores/bonus_score.dart';
+import 'package:tdahelpe/pages/SuiviScores/fonctionnement_score.dart';
 import 'package:tdahelpe/pages/SuiviScores/tache_score.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
@@ -29,19 +30,7 @@ class _AccueilScoreState extends State<AccueilScore> {
             color: Colors.amber,
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          },
-          icon: Icon(
-            Icons.home,
-            color: const Color.fromARGB(255, 230, 177, 2),
-            size: 45,
-          ),
-        ),
+       
       ),
       body: Container(
         margin: EdgeInsets.only(bottom: 20),
@@ -93,7 +82,7 @@ class _AccueilScoreState extends State<AccueilScore> {
 
                   SizedBox(
                     height: 60,
-                    width: 200,
+                    width: 250,
 
                     child: ElevatedButton(
                       onPressed: () {
@@ -113,7 +102,7 @@ class _AccueilScoreState extends State<AccueilScore> {
                   ),
                   SizedBox(
                     height: 60,
-                    width: 200,
+                    width: 250,
 
                     child: ElevatedButton(
                       onPressed: () {
@@ -133,10 +122,15 @@ class _AccueilScoreState extends State<AccueilScore> {
                   ),
                   SizedBox(
                     height: 60,
-                    width: 200,
+                    width: 250,
 
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BonusScore()),
+                        );
+                      },
                       child: Text(
                         "Points bonus",
                         style: TextStyle(
@@ -149,10 +143,17 @@ class _AccueilScoreState extends State<AccueilScore> {
                   Container(
                     margin: EdgeInsets.only(top: 15),
                     height: 60,
-                    width: 200,
+                    width: 250,
 
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FonctionnementScore(),
+                          ),
+                        );
+                      },
                       child: Text(
                         "Fonctionnement",
                         style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications =
@@ -42,27 +43,39 @@ class NotificationService {
       locationName = systemTimeZone;
     }
 
+   bool success = false;
+
+    // 1. Essayer le fuseau détecté
     try {
       tz.setLocalLocation(tz.getLocation(locationName));
-      print('✅ Fuseau horaire configuré : $locationName');
+      if (kDebugMode) print('✅ Fuseau horaire configuré : $locationName');
+      success = true;
     } catch (e) {
-      // Dernier recours : utiliser Europe/Paris
-      tz.setLocalLocation(tz.getLocation('Europe/Paris'));
-      print('⚠️ Erreur timezone, fallback Europe/Paris : $e');
+      if (kDebugMode) print('⚠️ Échec avec $locationName : $e');
     }
 
-    try {
-      tz.setLocalLocation(tz.getLocation(locationName));
-      if (kDebugMode) {
-        print('✅ Fuseau horaire configuré : $locationName');
-      }
-    } catch (e) {
-      tz.setLocalLocation(tz.getLocation('UTC'));
-      if (kDebugMode) {
-        print('⚠️ Erreur timezone, utilisation de UTC : $e');
+    // 2. Si échec, essayer Europe/Paris
+    if (!success) {
+      try {
+        tz.setLocalLocation(tz.getLocation('Europe/Paris'));
+        if (kDebugMode) print('✅ Fallback sur Europe/Paris');
+        success = true;
+      } catch (e) {
+        if (kDebugMode) print('⚠️ Échec avec Europe/Paris : $e');
       }
     }
 
+    // 3. Si tout échoue, utiliser UTC
+    if (!success) {
+      try {
+        tz.setLocalLocation(tz.getLocation('UTC'));
+        if (kDebugMode) print('✅ Fallback ultime sur UTC');
+      } catch (e) {
+        if (kDebugMode)
+          print('❌ Échec total de la configuration du fuseau horaire');
+        // `timezone` devrait toujours avoir UTC → ce cas ne devrait jamais arriver
+      }
+    }
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -72,6 +85,12 @@ class NotificationService {
           requestAlertPermission: true,
           requestBadgePermission: true,
           requestSoundPermission: true,
+          // ✅ Ajout du support des attachments (images)
+          requestCriticalPermission:
+              false, // Optionnel pour notifications critiques
+          defaultPresentAlert: true,
+          defaultPresentBadge: true,
+          defaultPresentSound: true,
         );
 
     // Combiner
@@ -79,7 +98,43 @@ class NotificationService {
         InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     // Initialiser
-    await _notifications.initialize(initializationSettings);
+    await _notifications.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        if (kDebugMode) {
+          print('📱 CALLBACK iOS: Notification response reçue !');
+        }
+        if (kDebugMode) {
+          if (kDebugMode) {
+        }
+        if (kDebugMode) {
+            print('📱 CALLBACK iOS: ID = ${response.id}');
+        }
+        }
+        if (kDebugMode) {
+          print('📱 CALLBACK iOS: Payload = ${response.payload}');
+        }
+        if (kDebugMode) {
+          print('📱 CALLBACK iOS: Action = ${response.actionId}');
+        }
+
+        final String? payload = response.payload;
+
+        if (payload != null) {
+          if (kDebugMode) {
+            print('📱 CALLBACK iOS: Stockage du moment: $payload');
+          }
+          await _storeNotificationData(payload);
+          if (kDebugMode) {
+            print('📱 CALLBACK iOS: Moment stocké avec succès');
+          }
+        } else {
+          if (kDebugMode) {
+            print('⚠️ CALLBACK iOS: Payload est null !');
+          }
+        }
+      },
+    );
 
     if (Platform.isAndroid) {
       try {
@@ -122,7 +177,7 @@ class NotificationService {
       print('✅ Notifications complètement initialisées');
     }
   }
-// Méthode pour vérifier TOUTES les permissions nécessaires
+
   static Future<bool> hasAllPermissions() async {
     if (Platform.isAndroid) {
       try {
@@ -154,10 +209,10 @@ class NotificationService {
     return true;
   }
 
-  // Méthode pour demander les permissions manquantes
   static Future<void> requestMissingPermissions() async {
     if (Platform.isAndroid) {
       try {
+
         final bool? canSchedule = await platform.invokeMethod(
           'checkPermissions',
         );
@@ -174,7 +229,6 @@ class NotificationService {
     }
   }
 
-  
   static Future<bool> checkPermissions() async {
     if (Platform.isAndroid) {
       try {
@@ -183,7 +237,9 @@ class NotificationService {
         );
         return canSchedule ?? false;
       } catch (e) {
-        print('Erreur vérification permissions: $e');
+        if (kDebugMode) {
+          print('Erreur vérification permissions: $e');
+        }
         return false;
       }
     }
@@ -195,7 +251,9 @@ class NotificationService {
       try {
         await platform.invokeMethod('openSettings');
       } catch (e) {
-        print('Erreur ouverture paramètres: $e');
+        if (kDebugMode) {
+          print('Erreur ouverture paramètres: $e');
+        }
       }
     }
   }
@@ -206,6 +264,21 @@ class NotificationService {
     required int soirHour,
     required int coucheHour,
   }) async {
+    if (kDebugMode) {
+      print('🔔 scheduleAllNotifications appelé avec:');
+    }
+    if (kDebugMode) {
+      print('   Réveil: $reveilHour h');
+    }
+    if (kDebugMode) {
+      print('   Midi: $midiHour h');
+    }
+    if (kDebugMode) {
+      print('   Soir: $soirHour h');
+    }
+    if (kDebugMode) {
+      print('   Couché: $coucheHour h');
+    }
     await _scheduleNotification(
       id: morningNotificationId,
       title: '🌅 La période du matin va finir !!',
@@ -219,8 +292,9 @@ class NotificationService {
       id: midiNotificationId,
       title: '🍽️ La période du midi va finir !!',
       body: 'N\'oublie pas de valider tes tâches du midi',
-      hour: midiHour,
-      minute: 0,
+      // hour: midiHour,
+      hour: 16,
+      minute: 35,
     );
 
     // Planifier notification du soir
@@ -281,32 +355,55 @@ class NotificationService {
     int hour,
     int minute,
   ) async {
-    print('📱 iOS - Planification notification #$id');
-    print('   Heure demandée : $hour:$minute');
+    if (kDebugMode) {
+      print('📱 iOS - Planification notification #$id');
+    }
+    if (kDebugMode) {
+      print('   Heure demandée : $hour:$minute');
+    }
+
     final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
 
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+    String moment;
+    switch (id) {
+      case morningNotificationId:
+        moment = 'Matin';
+        break;
+      case midiNotificationId:
+        moment = 'Midi';
+        break;
+      case soirNotificationId:
+        moment = 'Soir';
+        break;
+      case coucheNotificationId:
+        moment = 'Couché';
+        break;
+      default:
+        moment = 'Matin';
+    }
+
+    
+    final DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+   
     );
 
-    // Combiner iOS
-    const NotificationDetails notificationDetails = NotificationDetails(
+    final NotificationDetails notificationDetails = NotificationDetails(
       iOS: iosDetails,
     );
 
-    // Planifier la notification quotidienne
     await _notifications.zonedSchedule(
       id,
       title,
       body,
       scheduledDate,
       notificationDetails,
-
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
+      payload: moment, // On garde le payload pour essayer
     );
   }
 
@@ -325,8 +422,12 @@ class NotificationService {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print('⏰ Maintenant : $now');
-    print('⏰ Notification prévue : $scheduledDate');
+    if (kDebugMode) {
+      print('⏰ Maintenant : $now');
+    }
+    if (kDebugMode) {
+      print('⏰ Notification prévue : $scheduledDate');
+    }
     return scheduledDate;
   }
 
@@ -344,6 +445,93 @@ class NotificationService {
       await platform.invokeMethod('cancelAllAlarms');
     } else if (Platform.isIOS) {
       await _notifications.cancelAll();
+    }
+  }
+
+  static Future<void> _storeNotificationData(String moment) async {
+    if (kDebugMode) {
+      print('💾 _storeNotificationData appelé avec: $moment');
+    }
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('pending_notification_moment', moment);
+    await prefs.setBool('pending_notification_open', true);
+    if (kDebugMode) {
+      print('💾 Moment stocké: $moment');
+    }
+
+    // ✅ Vérifier immédiatement que c'est bien sauvegardé
+    final saved = prefs.getString('pending_notification_moment');
+    if (kDebugMode) {
+      print('💾 Vérification: moment sauvegardé = $saved');
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getNotificationData() async {
+    if (Platform.isAndroid) {
+      return _getNotificationDataAndroid();
+    } else if (Platform.isIOS) {
+      return _getNotificationDataIOS();
+    }
+    return null;
+  }
+
+  static Future<Map<String, dynamic>?> _getNotificationDataAndroid() async {
+    try {
+      final result = await platform.invokeMethod('getNotificationData');
+
+      if (result != null) {
+        if (kDebugMode) {
+          print('📱 Android: Données notification reçues');
+        }
+        return Map<String, dynamic>.from(result);
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        if (kDebugMode) {
+      }
+        print('❌ Erreur Android: $e');
+      }
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> _getNotificationDataIOS() async {
+    try {
+      if (kDebugMode) {
+        print('📱 iOS: Vérification données notification...');
+      }
+
+  
+      final prefs = await SharedPreferences.getInstance();
+      final shouldOpen = prefs.getBool('pending_notification_open') ?? false;
+      final moment = prefs.getString('pending_notification_moment');
+
+      if (kDebugMode) {
+        print('📱 iOS: SharedPrefs - shouldOpen=$shouldOpen, moment=$moment');
+      }
+
+      if (shouldOpen && moment != null) {
+        if (kDebugMode) {
+          print('📱 iOS: Moment trouvé dans SharedPrefs = $moment');
+        }
+
+        // Nettoyer après lecture
+        await prefs.remove('pending_notification_open');
+        await prefs.remove('pending_notification_moment');
+
+        return {'openBingo': true, 'moment': moment};
+      }
+
+      if (kDebugMode) {
+        print('📱 iOS: Aucune donnée notification trouvée');
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur iOS: $e');
+      }
+      return null;
     }
   }
 }

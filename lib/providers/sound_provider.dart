@@ -35,32 +35,29 @@ class SoundProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> playSound(String assetKey, String typeMemory) async {
-    if (!_isReady || _audioController == null) {
-      return;
-    }
-
+Future<void> playSound(String assetKey, String typeMemory) async {
+    if (!_isReady) return;
     await _audioController!.playSound(assetKey, typeMemory);
-    _isPlaying = true;
+    _isPlaying = true; 
+    notifyListeners();
   }
 
   Future<void> pauseSound() async {
-    if (!isPlaying) {
-      return;
+    if (_isPlaying) {
+      await _audioController!.pauseMusic();
+      _isPlaying = false; 
+      notifyListeners();
     }
-
-    await _audioController!.pauseMusic();
-    _isPlaying = false;
   }
 
   Future<void> stopSound() async {
-    if (!isPlaying) {
-      return;
+    if (_isPlaying) {
+      await _audioController!.stopMusic();
+      _isPlaying = false; 
+      notifyListeners();
     }
-
-    await _audioController!.stopMusic();
-    _isPlaying = false;
   }
+
 
   // Nettoyage des ressources
   @override

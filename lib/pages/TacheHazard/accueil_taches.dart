@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/TacheHazard/action_choice.dart';
 import 'package:tdahelpe/pages/TacheHazard/quetes_finales.dart';
 import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
@@ -39,10 +38,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
+           Navigator.pop(context);
           },
           icon: Icon(
             Icons.home,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DefouleService {
@@ -11,12 +12,16 @@ class DefouleService {
   }
 
   static Future<void> resetScoreDefoulee() async {
-    print("🔧 Service: Début reset score");
+    if (kDebugMode) {
+      print("🔧 Service: Début reset score");
+    }
     final prefs = await SharedPreferences.getInstance();
     final key = _scoreDefoule;
     final score = 0;
     await prefs.setInt(key, score);
-    print("🔧 Service: Score sauvegardé = ${prefs.getInt(key)}");
+    if (kDebugMode) {
+      print("🔧 Service: Score sauvegardé = ${prefs.getInt(key)}");
+    }
   }
 
   static Future<int> getScoreDefoule() async {

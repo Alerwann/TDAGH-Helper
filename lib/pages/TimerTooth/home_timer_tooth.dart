@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:io' show Platform, File;
 import 'package:tdahelpe/data/list/music_list.dart';
 import 'package:tdahelpe/data/schema/music_schema.dart';
-import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
-import 'package:tdahelpe/services/audio_controller.dart';
 import 'package:tdahelpe/widget/imageSet.dart';
 import 'package:flutter/material.dart';
 import 'package:custom_timer/custom_timer.dart';
@@ -20,12 +20,12 @@ class HomeTimertooth extends StatefulWidget {
 }
 
 class _HomeTimertoothState extends State<HomeTimertooth>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late SoundProvider _audioProvider;
+
   final Duration _washDuration = Duration(milliseconds: 750);
   String musicPathChoice = "";
-  final AudioController soundController = AudioController();
-  // ignore: unused_field
-  bool _timerIsActive = false;
+
   late CustomTimerController controllerTimer = CustomTimerController(
     vsync: this,
     begin: Duration(minutes: 3),
@@ -33,7 +33,9 @@ class _HomeTimertoothState extends State<HomeTimertooth>
     initialState: CustomTimerState.reset,
     interval: CustomTimerInterval.seconds,
   );
-
+  bool get _isTimerActive =>
+      controllerTimer.state.value != CustomTimerState.reset &&
+      controllerTimer.state.value != CustomTimerState.finished;
   late AnimationController controllerAnimation;
 
   late Animation<Offset> _animation;
@@ -60,7 +62,6 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   Future<void> pickMusic() async {
     FilePickerResult? result;
 
-    // Adapte le type de fichier selon la plateforme
     if (Platform.isIOS) {
       result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -106,7 +107,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
       }
     }
 
-    if (_timerIsActive && musicPathChoice.isNotEmpty) {
+    if (_isTimerActive && musicPathChoice.isNotEmpty) {
       final audioProvider = Provider.of<SoundProvider>(context, listen: false);
       audioProvider.playSound(musicPathChoice, "interne");
     }
@@ -115,8 +116,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   @override
   void initState() {
     super.initState();
-
-    soundController.initialize();
+    WidgetsBinding.instance.addObserver(this);
 
     controllerAnimation = AnimationController(
       duration: _washDuration,
@@ -131,209 +131,287 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           CurvedAnimation(parent: controllerAnimation, curve: Curves.linear),
         );
     controllerTimer.addListener(() {
-      if (controllerTimer.state.value == CustomTimerState.finished &&
-          _timerIsActive) {
+      if (controllerTimer.state.value == CustomTimerState.finished) {
         setState(() {
-          _timerIsActive = false;
           controllerAnimation.stop();
         });
-        soundController.stopMusic();
+        final audioProvider = Provider.of<SoundProvider>(
+          context,
+          listen: false,
+        );
+        audioProvider.stopSound();
       }
     });
   }
 
   @override
-  void dispose() async {
-    soundController.stopMusic().then((_) {
-      soundController.dispose;
-    });
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_audioProvider.stopSound());
     controllerTimer.dispose();
     controllerAnimation.dispose();
-
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _audioProvider.stopSound();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text("Aides Les Dents", style: textStyle),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          },
-          icon: Icon(
-            Icons.home,
-            color: const Color.fromARGB(255, 230, 177, 2),
-            size: 45,
+    _audioProvider = Provider.of<SoundProvider>(context, listen: false);
+    return PopScope(
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        // if (didPop) return;
+
+        await _audioProvider.stopSound();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: ShaderMask(
+            shaderCallback: (bounds) {
+              return gradient.createShader(
+                Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+              );
+            },
+            child: Text("Aides Les Dents", style: textStyle),
+          ),
+          leading: IconButton(
+            onPressed: () async {
+              final audioProvider = Provider.of<SoundProvider>(
+                context,
+                listen: false,
+              );
+              await audioProvider.stopSound();
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.home,
+              color: const Color.fromARGB(255, 230, 177, 2),
+              size: 45,
+            ),
           ),
         ),
-      ),
-      body: Consumer<SoundProvider>(
-        builder: (context, audioProvider, child) {
-          // Vérifier si l'audio est prêt
-          if (!audioProvider.isReady) {
+        body: Consumer2<SoundProvider, ScoreProvider>(
+          builder: (context, audioProvider, scoreP, child) {
+            // Vérifier si l'audio est prêt
+            if (!audioProvider.isReady) {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 20),
+                      Text('Audio en cours d\'initialisation...'),
+                    ],
+                  ),
+                ),
+              );
+            }
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text('Audio en cours d\'initialisation...'),
-                ],
-              ),
-            );
-          }
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CustomTimer(
-                  controller: controllerTimer,
+                  CustomTimer(
+                    controller: controllerTimer,
 
-                  builder: (state, time) {
-                    return Text(
-                      "${time.minutes}:${time.seconds}",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'Metamorphous',
-                      ),
-                    );
-                  },
-                ),
+                    builder: (state, time) {
+                      return Text(
+                        "${time.minutes}:${time.seconds}",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontFamily: 'Metamorphous',
+                        ),
+                      );
+                    },
+                  ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    width: 300,
+                    height: 60,
+                    child: ElevatedButton(
                       onPressed: () {
                         controllerTimer.start();
-                        _timerIsActive = true;
 
-                        if (musicPathChoice.isNotEmpty) {
-                          audioProvider.playSound(musicPathChoice, "interne");
-                        } else if (selectedMusic != null) {
-                          audioProvider.playSound(
-                            selectedMusic!.musicPath,
-                            "appli",
-                          );
-                        } else {}
+                        _playCurrentMusic();
 
                         setState(() {
                           controllerAnimation.repeat(reverse: true);
                         });
                       },
-                      child: Text('Start'),
+                      child: Text('Start', style: TextStyle(fontSize: 25)),
                     ),
-                    SizedBox(width: 20),
+                  ),
 
-                    ElevatedButton(
-                      onPressed: () {
-                        controllerTimer.pause();
-                        _timerIsActive = false;
-                        controllerAnimation.stop();
-                        audioProvider.pauseSound();
-                      },
-                      child: Text('Stop'),
-                    ),
-                    SizedBox(width: 20),
-                  ],
-                ),
-                SizedBox(height: 40),
-                SizedBox(
-                  height: 50,
-                  child: DropdownButton<MusicSchema>(
-                    value: selectedMusic,
-                    hint: const Text('Sélectionner une musique'),
-                    items: musicList.map<DropdownMenuItem<MusicSchema>>((
-                      MusicSchema music,
-                    ) {
-                      return DropdownMenuItem<MusicSchema>(
-                        value: music,
-                        child: Text(music.musicTitle),
-                      );
-                    }).toList(),
-                    onTap: () {
-                      if (Platform.isIOS) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Importation de son uniquement depuis Fichiers, iCloud ou Téléchargements',
+                  if (_isTimerActive)
+                    Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 15, bottom: 15),
+                          width: 300,
+                          height: 60,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              controllerTimer.pause();
+
+                              controllerAnimation.stop();
+                              audioProvider.pauseSound();
+                              scoreP.incrementToothScore();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Fin du lavage de dent et validation',
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.center,
                             ),
-                            duration: Duration(seconds: 3),
                           ),
-                        );
-                      }
-                    },
-                    onChanged: (MusicSchema? newValue) {
-                      if (newValue!.musicTitle == "Importation") {
-                        pickMusic();
-                      } else {
-                        musicPathChoice = "";
-                        musicName = "";
-                      }
+                        ),
 
-                      setState(() {
-                        selectedMusic = newValue;
-                      });
-                      if (_timerIsActive == true) {
-                        if (musicPathChoice != "") {
-                          audioProvider.playSound(musicPathChoice, "interne");
-                        } else {
+                        SizedBox(
+                          width: 300,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final audioProvider = Provider.of<SoundProvider>(
+                                context,
+                                listen: false,
+                              );
+                              if (audioProvider.isPlaying) {
+                                audioProvider.pauseSound();
+                              } else if (selectedMusic?.musicPath != null) {
+                                _playCurrentMusic();
+                              }
+                            },
+                            child: Text(
+                              audioProvider.isPlaying
+                                  ? '⏸️ Pause'
+                                  : '▶️ Play Musique',
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                  SizedBox(height: 40),
+                  SizedBox(
+                    height: 50,
+                    child: DropdownButton<MusicSchema>(
+                      value: selectedMusic,
+                      hint: const Text('Sélectionner une musique'),
+                      items: musicList.map<DropdownMenuItem<MusicSchema>>((
+                        MusicSchema music,
+                      ) {
+                        return DropdownMenuItem<MusicSchema>(
+                          value: music,
+                          child: Text(music.musicTitle),
+                        );
+                      }).toList(),
+                      onTap: () {
+                        if (Platform.isIOS) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'Importation de son uniquement depuis Fichiers, iCloud ou Téléchargements',
+                              ),
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
+                        }
+                      },
+                      onChanged: (MusicSchema? newValue) {
+                        print(
+                          "🔍 onChanged appelé, newValue = ${newValue?.musicTitle}",
+                        );
+                        print("🔊 _isTimerActive = $_isTimerActive");
+
+                        if (newValue == null) return;
+
+                        if (newValue.musicTitle.toLowerCase() ==
+                            "importation") {
+                          setState(() {
+                            selectedMusic = null;
+                          });
+                          pickMusic();
+                          return;
+                        }
+
+                        final audioProvider = Provider.of<SoundProvider>(
+                          context,
+                          listen: false,
+                        );
+                        print("🎵 audioProvider récupéré via Provider.of");
+
+                        if (_isTimerActive) {
+                          print("🚀 Lecture demandée");
                           audioProvider.playSound(newValue.musicPath, "appli");
                         }
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 20),
-                if (musicName != "")
-                  Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Column(
-                      children: [Text("Musique à l'écoute :"), Text(musicName)],
+
+                        setState(() {
+                          selectedMusic = newValue;
+                        });
+                      },
                     ),
                   ),
-                SizedBox(
-                  height: 300,
-                  child: Stack(
-                    alignment: AlignmentDirectional.center,
+                  SizedBox(height: 20),
 
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(200),
-                        child: ImageSet(sizewidth: 600, 0),
+                  if (musicName.isNotEmpty)
+                    Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsetsDirectional.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Text("Musique à l'écoute :"),
+                          Text(musicName, textAlign: TextAlign.center),
+                        ],
                       ),
+                    ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
 
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          return FractionalTranslation(
-                            translation: _animation.value,
-                            child: child,
-                          );
-                        },
-                        child: Image.asset('assets/images/brosseadent.png'),
-                      ),
-                    ],
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(200),
+                          child: ImageSet(sizewidth: 200, 0),
+                        ),
+
+                        AnimatedBuilder(
+                          animation: _animation,
+                          builder: (context, child) {
+                            return FractionalTranslation(
+                              translation: _animation.value,
+                              child: child,
+                            );
+                          },
+                          child: Image.asset('assets/images/brosseadent.png'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void _playCurrentMusic() {
+    final audioProvider = Provider.of<SoundProvider>(context, listen: false);
+    if (musicPathChoice.isNotEmpty) {
+      audioProvider.playSound(musicPathChoice, "interne");
+    } else if (selectedMusic != null) {
+      audioProvider.playSound(selectedMusic!.musicPath, "appli");
+    }
   }
 }

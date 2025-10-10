@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/pages/Bingo/homepage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 
 class BingoScore extends StatefulWidget {
@@ -57,6 +58,19 @@ class _BingoScoreState extends State<BingoScore> {
               sousQuete("Midi", scoreP.midiScore),
               sousQuete("Soir", scoreP.afternoonScore),
               sousQuete("Couché", scoreP.eveningScore),
+              SizedBox(height: 20,),
+               OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeBingoPage()),
+                  );
+                },
+                child: Text(
+                  "Aller valider le bingo",
+                  style: TextStyle(fontSize: 25),
+                ),
+              ),
             ],
           );
         },

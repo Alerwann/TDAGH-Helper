@@ -1,8 +1,8 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:tdahelpe/pages/DefouleToi/finish_defoule.dart';
-import 'package:tdahelpe/main.dart';
-
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/DefouleToi/modif_timer_game.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -55,18 +55,21 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
     }
   }
 
-  Key _refreshKey = UniqueKey();
+  @override
+  void initState() {
+    super.initState();
+
+    // 🔒 Verrouille l'orientation en portrait
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _refreshKey,
+
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
+            Navigator.pop(context); // ✅
           },
           icon: Icon(
             Icons.home,
@@ -158,9 +161,10 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                             height: 60,
                             child: ElevatedButton(
                               onPressed: () {
-                                _controller.start();
+                                _controller.restart();
                                 setState(() {
                                   _compteurActive = true;
+                                  _score = 0;
                                 });
                               },
                               child: Text(
@@ -195,10 +199,11 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                             child: ElevatedButton(
                               onPressed: () async {
                                 await defouleP.resetScore();
-                                print("✅ Score:  ${defouleP.scoreDefoule}");
+                                if (kDebugMode) {
+                                  print("✅ Score:  ${defouleP.scoreDefoule}");
+                                }
                                 setState(() {
-                                  _refreshKey =
-                                      UniqueKey(); // ✅ Force un rebuild complet
+                             
                                 });
                               },
                               child: Text(

@@ -1,4 +1,3 @@
-import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/ProfilsPages/heures_parametre.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
@@ -29,19 +28,7 @@ class _ProfilPageState extends State<ProfilPage> {
             color: Colors.amber,
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => MyApp()),
-            );
-          },
-          icon: Icon(
-            Icons.home,
-            color: const Color.fromARGB(255, 230, 177, 2),
-            size: 45,
-          ),
-        ),
+
       ),
       body: Column(
         spacing: 2,

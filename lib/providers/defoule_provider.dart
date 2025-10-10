@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/services/defoule_service.dart';
-import 'package:flutter/material.dart';
 
 class DefouleProvider extends ChangeNotifier {
   int _scoreDefoule = 0;
@@ -11,25 +11,37 @@ class DefouleProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   DefouleProvider() {
-    print("🏗️ Provider créé");
+    if (kDebugMode) {
+      print("🏗️ Provider créé");
+    }
     _loadData();
   }
 
   Future<void> _loadData() async {
-    print("📥 Début du chargement...");
+    if (kDebugMode) {
+      print("📥 Début du chargement...");
+    }
     _isLoading = true; // ✅
     _scoreDefoule = await DefouleService.getScoreDefoule();
     _timerDuration = await DefouleService.getTimerDuration();
-    print("📥 Données chargées : score=$_scoreDefoule, timer=$_timerDuration");
+    if (kDebugMode) {
+      if (kDebugMode) {
+    }
+      print("📥 Données chargées : score=$_scoreDefoule, timer=$_timerDuration");
+    }
     _isLoading = false; // ✅
     notifyListeners(); // ✅ Important !
   }
 
   Future<void> resetScore() async {
-    print("👀 provider Remise à 0 - AVANT");
+    if (kDebugMode) {
+      print("👀 provider Remise à 0 - AVANT");
+    }
     _scoreDefoule = 0;
     await DefouleService.resetScoreDefoulee();
-    print("👀 provider Remise à 0 - APRÈS sauvegarde");
+    if (kDebugMode) {
+      print("👀 provider Remise à 0 - APRÈS sauvegarde");
+    }
     notifyListeners();
   }
 

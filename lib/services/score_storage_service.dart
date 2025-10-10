@@ -18,6 +18,10 @@ class ScoreStorageService {
 
   static const String _xpGlobal = 'xp_global';
 
+  static const String _toothScore = 'tooth_score';
+
+  static const String _defouleScore = 'defoule_score';
+
   static Future<void> saveScore(String moment, int score) async {
     final prefs = await SharedPreferences.getInstance();
     String key;
@@ -49,7 +53,6 @@ class ScoreStorageService {
     await prefs.setInt(key, score);
   }
 
-  // Récupérer un score
   static Future<int> getScore(String moment) async {
     final prefs = await SharedPreferences.getInstance();
     String key;
@@ -191,5 +194,27 @@ class ScoreStorageService {
     final prefs = await SharedPreferences.getInstance();
     final key = _xpGlobal;
     return prefs.getInt(key) ?? 0;
+  }
+
+  static Future<void> saveToothScore(int score) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _toothScore;
+    await prefs.setInt(key, score);
+  }
+
+  static Future<int> getToothScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_toothScore) ?? 0;
+  }
+
+  static Future<void> saveDefouleScore(int score) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _defouleScore;
+    await prefs.setInt(key, score);
+  }
+
+  static Future<int> getDefouleScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_defouleScore) ?? 0;
   }
 }

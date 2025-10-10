@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/services/horaire_storage_service.dart';
 import 'package:tdahelpe/services/taches_storage_service.dart';
 import '../services/score_storage_service.dart'; // Import du service qu'on vient de créer
 
 class ScoreProvider extends ChangeNotifier {
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
   int _xpGlobal = 0;
 
   int _morningScore = 0;
@@ -12,9 +16,13 @@ class ScoreProvider extends ChangeNotifier {
 
   int _tacheScore = 0;
 
+  int _toothScore = 0;
+
   DateTime? _lastResetDate;
   List<bool> _isChecked = List.generate(3, (index) => false);
   int _currentStep = 0;
+
+  int _defouleScore = 0;
 
   int get xpGlobal => _xpGlobal;
 
@@ -27,13 +35,19 @@ class ScoreProvider extends ChangeNotifier {
   List<bool> get isChecked => _isChecked;
   int get currentStep => _currentStep;
 
+  int get toothScore => _toothScore;
+  int get defouleScore => _defouleScore;
+
   int get globalBingoScore =>
       _morningScore + _midiScore + _afternoonScore + _eveningScore;
 
-  int get globalScore => ((globalBingoScore / 4).floor() * 5 + _tacheScore * 5);
+  int get globalScore =>
+      ((globalBingoScore / 4).floor() * 5 +
+      _tacheScore * 5 +
+      _toothScore +
+      _defouleScore);
 
-  // int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
-  int get niveauPersonnal => 42;
+  int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
 
   int get xpByLevel => (_xpGlobal + globalScore) % 140;
 
@@ -51,16 +65,20 @@ class ScoreProvider extends ChangeNotifier {
     _tacheScore = await ScoreStorageService.getScore('taches');
     _lastResetDate = await ScoreStorageService.getLastResetDate();
     _isChecked = await ScoreStorageService.getTacheState();
+    _currentStep = _isChecked.where((checked) => checked).length;
     _xpGlobal = await ScoreStorageService.getXpglobal();
+    _toothScore = await ScoreStorageService.getToothScore();
+    _defouleScore = await ScoreStorageService.getDefouleScore();
 
     await _checkAndReset();
-
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> _checkAndReset() async {
     final now = DateTime.now();
-    final today6AM = DateTime(now.year, now.month, now.day, 6, 00);
+    final reinitHour = await HoraireStorageService.getHours("reinit");
+    final today6AM = DateTime(now.year, now.month, now.day, reinitHour, 00);
 
     if (_lastResetDate == null || _lastResetDate!.isBefore(today6AM)) {
       if (now.isAfter(today6AM)) {
@@ -70,6 +88,9 @@ class ScoreProvider extends ChangeNotifier {
         _eveningScore = 0;
         _tacheScore = 0;
         _xpGlobal = _xpGlobal + globalScore;
+        _toothScore = 0;
+        _defouleScore = 0;
+        _currentStep = 0;
 
         await ScoreStorageService.saveXpGlobal(_xpGlobal);
 
@@ -84,6 +105,8 @@ class ScoreProvider extends ChangeNotifier {
         await ScoreStorageService.saveScore('couché', 0);
         await ScoreStorageService.saveScore('taches', 0);
         await ScoreStorageService.saveScore('bingoGlobal', 0);
+        await ScoreStorageService.saveToothScore(0);
+        await ScoreStorageService.saveDefouleScore(0);
 
         await ScoreStorageService.saveTacheState(_isChecked);
 
@@ -205,6 +228,22 @@ class ScoreProvider extends ChangeNotifier {
   Future<void> resetTacheScore() async {
     _tacheScore = 0;
     await ScoreStorageService.resetTacheScore();
+    notifyListeners();
+  }
+
+  Future<void> incrementToothScore() async {
+    if (_toothScore < 15) {
+      _toothScore += 5;
+    }
+    await ScoreStorageService.saveToothScore(_toothScore);
+    notifyListeners();
+  }
+
+  Future<void> incrementDefouleScore() async {
+    if (_defouleScore < 20) {
+      _defouleScore += 5;
+    }
+    await ScoreStorageService.saveDefouleScore(_defouleScore);
     notifyListeners();
   }
 }

@@ -119,8 +119,10 @@ Future<void> playSound(String assetKey, String typeMemory) async {
   Future<void> stopMusic() async {
     if (_audioPlayer != null && _isInitialized) {
       await _audioPlayer!.stop();
+      await _audioPlayer!.release();
     } else {
       _log.warning('Cannot stop: AudioController not initialized');
     }
+    
   }
 }

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +28,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Erreur: $e')));
+      ).showSnackBar(SnackBar(content: Text('Impossible de charger l\'image')));
     }
   }
 
@@ -58,113 +56,141 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Configuration Profil')),
-      body: Center(
-        child: Consumer<ProfilProvider>(
-          builder: (context, profil, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(75),
-                      child: ImageSet(sizewidth: 150, 0),
-                    ),
-                    Positioned(
-                      bottom: -25,
-                      right: -10,
-                      child: IconButton(
-                        onPressed: pickImage,
-                        icon: Icon(Icons.camera_alt, size: 40),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Consumer<ProfilProvider>(
+            builder: (context, profil, child) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(75),
+                        child: ImageSet(sizewidth: 150, 0),
                       ),
-                    ),
-                  ],
-                ),
+                      Positioned(
+                        bottom: -25,
+                        right: -10,
+                        child: IconButton(
+                          onPressed: pickImage,
+                          icon: Icon(Icons.camera_alt, size: 40),
+                        ),
+                      ),
+                    ],
+                  ),
 
-                SizedBox(height: 30),
-                Container(
-                  margin: EdgeInsets.all(40),
-                  child: Form(
-                    key: _formKey,
+                  SizedBox(height: 30),
+                  Container(
+                    margin: EdgeInsets.all(40),
+                    child: Form(
+                      key: _formKey,
 
-                    child: SizedBox(
-                      width: 300,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              hintText: profil.pseudo,
-                              prefixIcon: Icon(Icons.person),
-                              labelText: 'Pseudo',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      child: SizedBox(
+                        width: 300,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: profil.pseudo,
+                                prefixIcon: Icon(Icons.person),
+                                labelText: 'Pseudo',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Champs du pseudo vide";
-                              }
-                              return null;
-                            },
-                            maxLength: 20,
-                            controller: _pseudoController,
-                          ),
-                          SizedBox(height: 16),
-                          SizedBox(
-                            width: 200,
-                            height: 50,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Provider.of<ProfilProvider>(
-                                    context,
-                                    listen: false,
-                                  ).setPseudo(_pseudoController.text);
-                                  FocusScope.of(
-                                    context,
-                                  ).requestFocus(FocusNode());
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Champs du pseudo vide";
                                 }
+                                return null;
+                              },
+                              maxLength: 20,
+                              controller: _pseudoController,
+                            ),
+                            SizedBox(height: 16),
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    Provider.of<ProfilProvider>(
+                                      context,
+                                      listen: false,
+                                    ).setPseudo(_pseudoController.text);
+                                    FocusScope.of(
+                                      context,
+                                    ).requestFocus(FocusNode());
+                                  }
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Pseudo mis à jour avec succès !',
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Pseudo mis à jour avec succès !',
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              label: Text(
-                                'Enregistrer le pseudo',
-                                textAlign: TextAlign.center,
+                                  );
+                                },
+                                label: Text(
+                                  'Enregistrer le pseudo',
+                                  textAlign: TextAlign.center,
+                                ),
+                                icon: Icon(
+                                  Icons.check_box,
+                                  color: Colors.green,
+                                ),
                               ),
-                              icon: Icon(Icons.check_box, color: Colors.green),
                             ),
-                          ),
-                          SizedBox(height: 16),
-                          SizedBox(
-                            width: 200,
-                            height: 50,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                Provider.of<ProfilProvider>(
-                                  context,
-                                  listen: false,
-                                ).resetAll();
-                                _pseudoController.text = profil.pseudo;
-                              },
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              label: Text('Réinitialiser'),
+                            SizedBox(height: 16),
+                            SizedBox(
+                              width: 200,
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Réinitialiser ?'),
+                                      content: Text(
+                                        'Toutes tes données seront perdues.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: Navigator.of(context).pop,
+                                          child: Text('Annuler'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Provider.of<ProfilProvider>(
+                                              context,
+                                              listen: false,
+                                            ).resetAll().then((_) {
+                                              _pseudoController.text =
+                                                  'Inconnu';
+                                            });
+                                          },
+                                          child: Text('Confirmer'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                label: Text('Réinitialiser'),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
