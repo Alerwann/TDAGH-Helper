@@ -43,7 +43,7 @@ class NotificationService {
       locationName = systemTimeZone;
     }
 
-   bool success = false;
+    bool success = false;
 
     // 1. Essayer le fuseau détecté
     try {
@@ -72,8 +72,8 @@ class NotificationService {
         if (kDebugMode) print('✅ Fallback ultime sur UTC');
       } catch (e) {
         if (kDebugMode)
-          print('❌ Échec total de la configuration du fuseau horaire');
-        // `timezone` devrait toujours avoir UTC → ce cas ne devrait jamais arriver
+       {   print('❌ Échec total de la configuration du fuseau horaire');}
+    
       }
     }
     const AndroidInitializationSettings androidSettings =
@@ -85,9 +85,9 @@ class NotificationService {
           requestAlertPermission: true,
           requestBadgePermission: true,
           requestSoundPermission: true,
-          // ✅ Ajout du support des attachments (images)
+      
           requestCriticalPermission:
-              false, // Optionnel pour notifications critiques
+              false, 
           defaultPresentAlert: true,
           defaultPresentBadge: true,
           defaultPresentSound: true,
@@ -105,11 +105,10 @@ class NotificationService {
           print('📱 CALLBACK iOS: Notification response reçue !');
         }
         if (kDebugMode) {
+          if (kDebugMode) {}
           if (kDebugMode) {
-        }
-        if (kDebugMode) {
             print('📱 CALLBACK iOS: ID = ${response.id}');
-        }
+          }
         }
         if (kDebugMode) {
           print('📱 CALLBACK iOS: Payload = ${response.payload}');
@@ -212,7 +211,6 @@ class NotificationService {
   static Future<void> requestMissingPermissions() async {
     if (Platform.isAndroid) {
       try {
-
         final bool? canSchedule = await platform.invokeMethod(
           'checkPermissions',
         );
@@ -281,8 +279,8 @@ class NotificationService {
     }
     await _scheduleNotification(
       id: morningNotificationId,
-      title: '🌅 La période du matin va finir !!',
-      body: 'N\'oublie pas de valider tes tâches du matin',
+      title: '🌅 La journée commence !!',
+      body: 'Passe une excellente journée',
       hour: reveilHour,
       minute: 0,
     );
@@ -290,18 +288,18 @@ class NotificationService {
     // Planifier notification du midi
     await _scheduleNotification(
       id: midiNotificationId,
-      title: '🍽️ La période du midi va finir !!',
-      body: 'N\'oublie pas de valider tes tâches du midi',
-      // hour: midiHour,
-      hour: 16,
-      minute: 35,
+      title: '🌅 La période du matin va finir !!',
+      body: 'N\'oublie pas de valider tes tâches du matin',
+      hour: midiHour,
+      // hour:    DateTime.now().hour,
+      minute:0,
     );
 
     // Planifier notification du soir
     await _scheduleNotification(
       id: soirNotificationId,
-      title: '🌆 La période du soir va finir !!',
-      body: 'N\'oublie pas de valider tes tâches du soir',
+      title: '🍽️ La période du midi va finir !!',
+      body: 'N\'oublie pas de valider tes tâches du midi',
       hour: soirHour,
       minute: 0,
     );
@@ -382,12 +380,10 @@ class NotificationService {
         moment = 'Matin';
     }
 
-    
     final DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
-   
     );
 
     final NotificationDetails notificationDetails = NotificationDetails(
@@ -466,72 +462,47 @@ class NotificationService {
     }
   }
 
-  static Future<Map<String, dynamic>?> getNotificationData() async {
+  // Remplace toute la section getNotificationData par ceci :
+
+  static Future<bool> isOpenedFromNotification() async {
     if (Platform.isAndroid) {
-      return _getNotificationDataAndroid();
+      return _isOpenedFromNotificationAndroid();
     } else if (Platform.isIOS) {
-      return _getNotificationDataIOS();
+      return _isOpenedFromNotificationIOS();
     }
-    return null;
+    return false;
   }
 
-  static Future<Map<String, dynamic>?> _getNotificationDataAndroid() async {
+  static Future<bool> _isOpenedFromNotificationAndroid() async {
     try {
       final result = await platform.invokeMethod('getNotificationData');
-
-      if (result != null) {
-        if (kDebugMode) {
-          print('📱 Android: Données notification reçues');
-        }
-        return Map<String, dynamic>.from(result);
-      }
-      return null;
+      return result != null;
     } catch (e) {
       if (kDebugMode) {
-        if (kDebugMode) {
-      }
         print('❌ Erreur Android: $e');
       }
-      return null;
+      return false;
     }
   }
 
-  static Future<Map<String, dynamic>?> _getNotificationDataIOS() async {
+  static Future<bool> _isOpenedFromNotificationIOS() async {
     try {
-      if (kDebugMode) {
-        print('📱 iOS: Vérification données notification...');
-      }
-
-  
       final prefs = await SharedPreferences.getInstance();
       final shouldOpen = prefs.getBool('pending_notification_open') ?? false;
-      final moment = prefs.getString('pending_notification_moment');
 
-      if (kDebugMode) {
-        print('📱 iOS: SharedPrefs - shouldOpen=$shouldOpen, moment=$moment');
-      }
-
-      if (shouldOpen && moment != null) {
-        if (kDebugMode) {
-          print('📱 iOS: Moment trouvé dans SharedPrefs = $moment');
-        }
-
+      if (shouldOpen) {
         // Nettoyer après lecture
         await prefs.remove('pending_notification_open');
         await prefs.remove('pending_notification_moment');
-
-        return {'openBingo': true, 'moment': moment};
+        return true;
       }
 
-      if (kDebugMode) {
-        print('📱 iOS: Aucune donnée notification trouvée');
-      }
-      return null;
+      return false;
     } catch (e) {
       if (kDebugMode) {
         print('❌ Erreur iOS: $e');
       }
-      return null;
+      return false;
     }
   }
 }

@@ -6,6 +6,8 @@ import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class TacheScore extends StatefulWidget {
   const TacheScore({super.key});
@@ -26,7 +28,7 @@ class _TacheScoreState extends State<TacheScore> {
     ).isChecked;
     numberOfTrue = listOfTrue.where((task) => task).length;
     final tacheL = Provider.of<TachesProvider>(context, listen: false).taches;
-    if (tacheL.isEmpty || tacheL[0] == "0") {
+    if (tacheL.isEmpty || tacheL[0].tacheName == "0") {
       tacheTirer = false;
     } else {
       tacheTirer = true;
@@ -37,60 +39,57 @@ class _TacheScoreState extends State<TacheScore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "T'es pas tâche",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.amber,
-          ),
-          textAlign: TextAlign.center,
-        ),
+        title: TextDegrade(title: "T'es pas tâche", choicetype: 'parametre'),
       ),
       body: Consumer3<ScoreProvider, ProfilProvider, TachesProvider>(
         builder: (context, scoreP, profilP, tacheP, child) {
-          return Center(
-            child: Container(
-              padding: EdgeInsets.all(25),
-              child: Column(
-                spacing: 25,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularStepProgressIndicator(
-                    totalSteps: tacheP.nombreT,
-                    currentStep: numberOfTrue,
-                    selectedColor: const Color.fromARGB(255, 106, 243, 1),
-                    unselectedColor: const Color.fromARGB(255, 237, 3, 229),
-                    padding: 0,
-                    height: 75,
-                    width: 85,
-                    child: Icon(HugeIconsSolid.assignments),
-                  ),
-                  Text(
-                    "Actuellement tu as fais $numberOfTrue tâches.",
-                    style: TextStyle(fontSize: 30),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    "Il te reste ${tacheP.nombreT - numberOfTrue} pour valider la quête.",
-                    style: TextStyle(fontSize: 25),
-                    textAlign: TextAlign.center,
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AccueilTaches(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Aller valider ses tâches",
-                      style: TextStyle(fontSize: 25),
+          return SingleChildScrollView(
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(25),
+                child: Column(
+                  spacing: 25,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularStepProgressIndicator(
+                      totalSteps: tacheP.nombreT,
+                      currentStep: numberOfTrue,
+                      selectedColor: Theme.of(context).colorScheme.secondary,
+                      unselectedColor: Theme.of(context).colorScheme.primary,
+                      padding: 0,
+                      height: 75,
+                      width: 85,
+                      child: Icon(HugeIconsSolid.assignments),
                     ),
-                  ),
-                ],
+                    CustomText.center(
+                      "Progression global pour la journée",
+                      Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    CustomText.center(
+                      "Actuellement tu as fais $numberOfTrue tâches.",
+                      Theme.of(context).textTheme.headlineMedium,
+                    ),
+                     CustomText.center(
+                      "Il te reste ${tacheP.nombreT - numberOfTrue} pour valider la quête.",
+                      Theme.of(context).textTheme.headlineMedium,
+                    ),
+                   
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AccueilTaches(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Aller valider ses tâches",
+                       
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

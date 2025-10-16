@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -36,7 +35,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
   @override
   void initState() {
     super.initState();
-     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+   
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final defouleP = Provider.of<DefouleProvider>(context, listen: false);

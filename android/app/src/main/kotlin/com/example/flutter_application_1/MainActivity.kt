@@ -19,91 +19,130 @@ import java.util.Calendar
 class MainActivity : FlutterActivity() {
 
     private val CHANNEL = "alarm_channel"
+    private var notificationData: Map<String, Any>? = null
+    private var flutterMethodChannel: MethodChannel? = null // ← Renommé pour éviter confusion
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-            .setMethodCallHandler { call, result ->
-                when (call.method) {
-                    "scheduleAlarm" -> {
-                        val id = call.argument<Int>("id")
-                        val title = call.argument<String>("title")
-                        val body = call.argument<String>("body")
-                        val hour = call.argument<Int>("hour")
-                        val minute = call.argument<Int>("minute")
+        // ✅ Créer et stocker le MethodChannel
+        flutterMethodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        
+        flutterMethodChannel?.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "scheduleAlarm" -> {
+                    val id = call.argument<Int>("id")
+                    val title = call.argument<String>("title")
+                    val body = call.argument<String>("body")
+                    val hour = call.argument<Int>("hour")
+                    val minute = call.argument<Int>("minute")
 
-                        if (id != null && title != null && body != null && hour != null && minute != null) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                if (!canScheduleExactAlarms()) {
-                                    requestExactAlarmPermission()
-                                    result.error("NO_PERMISSION", "Permission alarme exacte requise", null)
-                                    return@setMethodCallHandler
-                                }
+                    if (id != null && title != null && body != null && hour != null && minute != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            if (!canScheduleExactAlarms()) {
+                                requestExactAlarmPermission()
+                                result.error("NO_PERMISSION", "Permission alarme exacte requise", null)
+                                return@setMethodCallHandler
                             }
-
-                            scheduleExactAlarm(id, title, body, hour, minute)
-                            result.success("Alarme planifiée pour ${hour}h${minute}")
-                        } else {
-                            result.error("INVALID_ARGS", "Paramètres manquants", null)
                         }
+
+                        scheduleExactAlarm(id, title, body, hour, minute)
+                        result.success("Alarme planifiée pour ${hour}h${minute}")
+                    } else {
+                        result.error("INVALID_ARGS", "Paramètres manquants", null)
                     }
-
-                    "cancelAlarm" -> {
-                        val id = call.argument<Int>("id")
-                        if (id != null) {
-                            cancelAlarm(id)
-                            result.success("Alarme annulée")
-                        } else {
-                            result.error("INVALID_ARGS", "ID manquant", null)
-                        }
-                    }
-
-                    "cancelAllAlarms" -> {
-                        cancelAllAlarms()
-                        result.success("Toutes les alarmes annulées")
-                    }
-
-                    "checkPermissions" -> {
-                        val canSchedule = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                            canScheduleExactAlarms()
-                        } else {
-                            true
-                        }
-                        result.success(canSchedule)
-                    }
-
-                    "openSettings" -> {
-                        openAlarmSettings()
-                        result.success(null)
-                    }
-
-                    "getNotificationData" -> {
-                        val prefs = getSharedPreferences("notification_data", Context.MODE_PRIVATE)
-                        val moment = prefs.getString("moment", null)
-                        val openBingo = prefs.getBoolean("open_bingo", false)
-
-                        if (openBingo && moment != null) {
-                            prefs.edit().clear().apply()
-                            result.success(mapOf("openBingo" to true, "moment" to moment))
-                        } else {
-                            result.success(null)
-                        }
-                    }
-
-                    "checkBatteryOptimization" -> {
-                        val isIgnoring = isIgnoringBatteryOptimizations()
-                        result.success(isIgnoring)
-                    }
-
-                    "requestBatteryOptimization" -> {
-                        requestIgnoreBatteryOptimizations()
-                        result.success(null)
-                    }
-
-                    else -> result.notImplemented()
                 }
+
+                "cancelAlarm" -> {
+                    val id = call.argument<Int>("id")
+                    if (id != null) {
+                        cancelAlarm(id)
+                        result.success("Alarme annulée")
+                    } else {
+                        result.error("INVALID_ARGS", "ID manquant", null)
+                    }
+                }
+
+                "cancelAllAlarms" -> {
+                    cancelAllAlarms()
+                    result.success("Toutes les alarmes annulées")
+                }
+
+                "checkPermissions" -> {
+                    val canSchedule = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        canScheduleExactAlarms()
+                    } else {
+                        true
+                    }
+                    result.success(canSchedule)
+                }
+
+                "openSettings" -> {
+                    openAlarmSettings()
+                    result.success(null)
+                }
+
+                "getNotificationData" -> {
+                    Log.d("MainActivity", "🔍 getNotificationData appelé")
+                    val data = notificationData
+                    notificationData = null
+                    Log.d("MainActivity", "📦 Données retournées: $data")
+                    result.success(data)
+                }
+
+                "checkBatteryOptimization" -> {
+                    val isIgnoring = isIgnoringBatteryOptimizations()
+                    result.success(isIgnoring)
+                }
+
+                "requestBatteryOptimization" -> {
+                    requestIgnoreBatteryOptimizations()
+                    result.success(null)
+                }
+
+                else -> result.notImplemented()
             }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "📱 onCreate appelé")
+        intent?.let { handleNotificationIntent(it) }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        Log.d("MainActivity", "📱 onNewIntent appelé")
+        handleNotificationIntent(intent)
+        
+        // ✅ Informer Flutter qu'une notification est arrivée
+        flutterMethodChannel?.invokeMethod("onNotificationTapped", null)
+    }
+
+    private fun handleNotificationIntent(intent: Intent) {
+        val notificationId = intent.getIntExtra("notification_id", -1)
+        
+        if (notificationId != -1) {
+            Log.d("MainActivity", "✅ Notification détectée ! ID: $notificationId")
+            
+            val moment = when (notificationId) {
+                1 -> "Matin"
+                2 -> "Midi"
+                3 -> "Soir"
+                4 -> "Couché"
+                else -> "Matin"
+            }
+            
+            notificationData = mapOf(
+                "openBingo" to true,
+                "moment" to moment
+            )
+            
+            Log.d("MainActivity", "💾 Données stockées: $notificationData")
+        } else {
+            Log.d("MainActivity", "ℹ️ Pas de notification détectée")
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.S)

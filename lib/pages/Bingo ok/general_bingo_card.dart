@@ -4,7 +4,7 @@ import 'package:tdahelpe/data/list/bingocard_list.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/services/score_storage_service.dart';
-import 'package:tdahelpe/widget/simpleflipcard.dart';
+import 'package:tdahelpe/widget/specific/simpleflipcard.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hugeicons_pro/hugeicons.dart';
@@ -12,6 +12,7 @@ import 'package:lottie/lottie.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class BingoGamePreview extends StatefulWidget {
   final String titleMoment;
@@ -33,7 +34,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAccess();
     });
@@ -159,7 +160,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Retour')),
+      appBar: AppBar(title: TextDegrade(title: 'Retour', choicetype: 'accueil')),
       body: Consumer<ScoreProvider>(
         builder: (context, scoreP, child) {
           int momentScore;

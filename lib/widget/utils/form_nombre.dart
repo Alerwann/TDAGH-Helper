@@ -77,7 +77,7 @@ class _ParametretirageState extends State<NumberForm> {
                               });
                               if (typechoice == "tache") {
                                 tachesTime.reinitTAche();
-                                scoreP.resetCheckboxesWithLength(1);
+                                scoreP.resetCheckboxesWithLength(0);
                               }
                             }
 

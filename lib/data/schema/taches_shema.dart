@@ -7,7 +7,7 @@ class TachesSchema {
   Map<String, dynamic> toJson() {
     return {
       'tacheName': tacheName,
-      'tacheDuration': tacheDuration.name, // .name donne le string de l'enum
+      'tacheDuration': tacheDuration.name, 
     };
   }
 

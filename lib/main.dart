@@ -1,6 +1,9 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:tdahelpe/Theme/app_theme.dart';
+import 'package:tdahelpe/pages/Bingo%20ok/homepage.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
@@ -14,17 +17,18 @@ import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:tdahelpe/services/notification_service.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
+    print("👀 on est dans le try de début");
     await NotificationService.initialize();
   } catch (e) {
     if (kDebugMode) {
       print(e);
     }
+
   }
 
   runApp(
@@ -59,8 +63,7 @@ class MyApp extends StatefulWidget {
 class _MyScoreProvider extends State<MyApp> {
   int _currentindex = 0;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  bool _hasCheckedNotification = false;
+  static const platform = MethodChannel('alarm_channel');
 
   setCurrentIndex(int index) {
     setState(() {
@@ -71,13 +74,23 @@ class _MyScoreProvider extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    platform.setMethodCallHandler(_handleMethodCall);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkNotificationLaunch();
       _scheduleAlarmsOnStartup();
     });
   }
 
+  Future<void> _handleMethodCall(MethodCall call) async {
+    if (call.method == 'onNotificationTapped') {
+      print("🔔 Notification tapée détectée depuis Kotlin !");
+      await _checkNotificationLaunch();
+    }
+  }
+
   Future<void> _scheduleAlarmsOnStartup() async {
+    print("👀 sxchedul enter");
     try {
       final profil = Provider.of<HeureProfilProvider>(context, listen: false);
 
@@ -113,92 +126,35 @@ class _MyScoreProvider extends State<MyApp> {
   }
 
   Future<void> _checkNotificationLaunch() async {
-    if (_hasCheckedNotification) {
-      print('ℹ️ Notification déjà vérifiée, skip');
-      return;
-    }
+    print("👀 checknotificationlaunch enter");
+
+    // Attendre un peu que tout soit chargé
     await Future.delayed(Duration(milliseconds: 500));
 
-    final notificationData = await NotificationService.getNotificationData();
+    // Vérifier si ouvert depuis notification
+    final isFromNotification =
+        await NotificationService.isOpenedFromNotification();
 
-    if (notificationData != null && notificationData['openBingo'] == true) {
-      final String moment = notificationData['moment'];
+    print("❓ Ouvert depuis notification ? $isFromNotification");
 
-      print('🚀 Navigation demandée vers Bingo: $moment');
-
-      // ✅ AJOUTE : Vérifier si on peut accéder à ce moment
-      final profil = Provider.of<HeureProfilProvider>(context, listen: false);
-
-      if (_isMomentAccessible(moment, profil)) {
-        print('✅ Accès autorisé');
-        _hasCheckedNotification = true;
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (context) => BingoGamePreview(titleMoment: moment),
-          ),
-        );
-      } else {
-        print('⚠️ Accès refusé (hors horaire)');
-        // Optionnel : Afficher un message à l'utilisateur
-        Future.delayed(Duration(milliseconds: 1000), () {
-          ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
-            SnackBar(
-              content: Text('⏰ La période $moment n\'est plus accessible'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        });
-      }
+    if (isFromNotification) {
+      print('🚀 Navigation vers Bingo');
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => HomeBingoPage()),
+      );
     } else {
-      _hasCheckedNotification = true;
+      print('ℹ️ Ouverture normale de l\'app');
     }
   }
 
-  bool _isMomentAccessible(String moment, HeureProfilProvider profil) {
-    final now = DateTime.now();
-
-    switch (moment) {
-      case 'Matin':
-        return now.hour <= profil.midiHours + 1 &&
-            now.hour >= profil.reveilHours - 1;
-      case 'Midi':
-        return now.hour <= profil.soirhours + 1 &&
-            now.hour >= profil.midiHours - 1;
-      case 'Soir':
-        return now.hour <= profil.coucheHours + 1 &&
-            now.hour >= profil.soirhours - 1;
-      case 'Couché':
-        return now.hour >= profil.coucheHours - 1 &&
-            now.hour <= profil.reveilHours + 1;
-      default:
-        return false;
-    }
-  }
-
- 
- 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(181, 212, 149, 216),
-          secondary: const Color.fromARGB(255, 6, 110, 75),
-          primaryContainer: const Color.fromARGB(155, 193, 187, 187),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            elevation: 10,
-            iconSize: 40,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            side: BorderSide(color: Colors.grey, width: 0.5),
-          ),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       home: Scaffold(
         body: [HomeGlobalPage(), AccueilScore(), ProfilPage()][_currentindex],
         bottomNavigationBar: ConvexAppBar(
