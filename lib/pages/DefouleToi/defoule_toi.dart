@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:tdahelpe/pages/DefouleToi/finish_defoule.dart';
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/DefouleToi/modif_timer_game.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
@@ -28,19 +29,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
   final double _radius = 30;
 
   bool _compteurActive = false;
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 237, 85, 2),
-      const Color.fromARGB(255, 244, 176, 4),
-      const Color.fromARGB(255, 255, 85, 59),
-    ],
-  );
 
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
   final CountdownController _controller = CountdownController();
 
   void _randomPoint() {
@@ -56,20 +45,12 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // 🔒 Verrouille l'orientation en portrait
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context); // ✅
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.home,
@@ -77,14 +58,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
             size: 45,
           ),
         ),
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text("Tappe et défoule toi", style: textStyle),
-        ),
+        title: TextDegrade(title: "Défoule toi", choicetype: 'accueil'),
       ),
       body: Consumer<DefouleProvider>(
         builder: (context, defouleP, child) {
@@ -95,10 +69,12 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                 Countdown(
                   controller: _controller,
                   seconds: defouleP.timerDuration,
-                  build: (BuildContext context, double time) => Text(
-                    "Timer : ${time.toString()}",
-                    style: TextStyle(fontSize: 50, color: Colors.red),
-                  ),
+                  build: (BuildContext context, double time) =>
+        
+                      CustomText.center(
+                        "Timer : ${time.toString()}",
+                        Theme.of(context).textTheme.titleMedium,
+                      ),
                   interval: Duration(milliseconds: 100),
                   onFinished: () {
                     Navigator.push(
@@ -167,10 +143,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                                   _score = 0;
                                 });
                               },
-                              child: Text(
-                                "Start",
-                                style: TextStyle(fontSize: 30),
-                              ),
+                              child: Text("Start"),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -186,10 +159,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                                   ),
                                 );
                               },
-                              child: Text(
-                                "Modifier timer",
-                                style: TextStyle(fontSize: 30),
-                              ),
+                              child: Text("Modifier timer"),
                             ),
                           ),
                           SizedBox(height: 20),
@@ -202,14 +172,9 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                                 if (kDebugMode) {
                                   print("✅ Score:  ${defouleP.scoreDefoule}");
                                 }
-                                setState(() {
-                             
-                                });
+                                setState(() {});
                               },
-                              child: Text(
-                                "Remise à 0",
-                                style: TextStyle(fontSize: 30),
-                              ),
+                              child: Text("Remise à 0"),
                             ),
                           ),
                         ],

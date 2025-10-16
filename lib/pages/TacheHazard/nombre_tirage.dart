@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class Parametretirage extends StatefulWidget {
   final VoidCallback? onNavigateToQuetes;
@@ -13,20 +15,6 @@ class Parametretirage extends StatefulWidget {
 }
 
 class _ParametretirageState extends State<Parametretirage> {
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 0, 0, 0),
-      const Color.fromARGB(255, 0, 135, 101),
-      const Color.fromARGB(255, 2, 169, 175),
-    ],
-  );
-
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
-
   int choiceConvient = 0;
   List value = [0, 1];
 
@@ -35,75 +23,65 @@ class _ParametretirageState extends State<Parametretirage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text(
-            "Ajout d' activités",
-            style: textStyle,
-            textAlign: TextAlign.center,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+
+      child: Scaffold(
+        appBar: AppBar(
+          title: TextDegrade(
+            title: "Modification du nombre",
+            choicetype: "parametre",
           ),
         ),
-      ),
-      body: Center(
-        child: Consumer2<TachesProvider, ScoreProvider>(
-          builder: (context, tachesTime, scoreP, child) {
-            return Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(50, 10, 50, 5),
-                  child: Column(
-                    children: [
-                      Text(
-                        "Valide le nombre de tache qui va être tiré",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.w700,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 50),
-                Text(
-                  "Actuellement je vais piocher ${tachesTime.nombreT} tâches.",
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 30),
-                Text(
-                  "Combien de Tâches tu veux piocher?",
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 50),
-
-                Column(
+        body: Center(
+          child: Consumer2<TachesProvider, ScoreProvider>(
+            builder: (context, tachesTime, scoreP, child) {
+              return Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 15,
                   children: [
+                    CustomText.center(
+                      'Actuellement ${tachesTime.nombreT} tâches sont piochées.',
+                      Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    CustomText.center(
+                      "Combien de Tâches tu veux piocher?",
+                      Theme.of(context).textTheme.bodyLarge,
+                    ),
+
+                    SizedBox(height: 5),
+
                     Form(
                       key: _formKey,
                       child: Column(
+                        spacing: 20,
                         children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(50, 0, 50, 10),
-                            child: TextFormField(
+                  
+                     
+                          TextFormField(
                               controller: _numberController,
 
                               keyboardType: TextInputType.numberWithOptions(),
                               inputFormatters: [
-                                FilteringTextInputFormatter
-                                    .digitsOnly, // Seulement des chiffres
+                                FilteringTextInputFormatter.digitsOnly,
                               ],
                               decoration: InputDecoration(
-                                hint: Text("Nombre"),
+                                border: OutlineInputBorder(),
+
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.blue,
+                                    width: 2.0,
+                                  ),
+                                ),
+
                                 label: Text("Nombre de pioches"),
                               ),
                               validator: (value) {
@@ -120,7 +98,7 @@ class _ParametretirageState extends State<Parametretirage> {
                                 return null;
                               },
                             ),
-                          ),
+                       
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
@@ -146,9 +124,9 @@ class _ParametretirageState extends State<Parametretirage> {
                     ),
                   ],
                 ),
-              ],
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

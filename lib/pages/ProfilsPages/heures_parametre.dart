@@ -190,11 +190,9 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
                       momentProfil = profil.soirhours;
                       break;
                     case 'couché':
-                      print("😭");
                       momentProfil = profil.coucheHours;
                       break;
                     case 'réinitialisation':
-                      print("😜à l'initialisation ${profil.reinitHours}");
                       momentProfil = profil.reinitHours;
                       break;
                   }

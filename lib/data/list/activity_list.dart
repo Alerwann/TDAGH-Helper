@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
-import 'package:tdahelpe/pages/Bingo/homepage.dart';
+import 'package:tdahelpe/pages/Bingo%20ok/homepage.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/pages/TimerTooth/home_timer_tooth.dart';

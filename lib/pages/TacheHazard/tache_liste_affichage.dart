@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/data/schema/taches_shema.dart';
-import 'package:tdahelpe/widget/ajout_tache.dart';
-
+import 'package:tdahelpe/pages/TacheHazard/ajout_tache.dart';
+import 'package:tdahelpe/pages/TacheHazard/modifcation_tache.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
-import 'package:tdahelpe/pages/TacheHazard/parametre_tirage.dart';
+import 'package:tdahelpe/pages/TacheHazard/nombre_tirage.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/specific/change_enum_to_string.dart';
+import 'package:tdahelpe/widget/utils/alerdialog.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class TacheListeAffichage extends StatefulWidget {
   const TacheListeAffichage({super.key});
@@ -14,13 +16,10 @@ class TacheListeAffichage extends StatefulWidget {
 }
 
 class _TacheListeAffichageState extends State<TacheListeAffichage> {
-  bool modifName = false;
-  bool modifDuree = false;
-  TacheDuration? tacheDuration;
-  TacheDuration? dureeSelectionnee;
-  String? nameTache;
 
-  final TextEditingController _tacheModifier = TextEditingController();
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,301 +27,119 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
       builder: (context, tacheP, child) {
         return Column(
           children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(30, 10, 30, 5),
-
-              child: Column(
-                children: [
-                  Text(
-                    "Appuie sur la tache ou la durée que veux modifier",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w700,
-                      decoration: TextDecoration.underline,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomText.center(
+                  "Liste enregistrée",
+                  Theme.of(context).textTheme.headlineMedium,
+                ),
+                IconButton(
+                  onPressed: () => PersoAlertDialog.showInfoDialog(
+                    context,
+                    'Informations',
+                    "Modificaiton de la tâche en appuyant dessus.\n Vert-> court \n Jaune -> moyen \n Orange ->long \n Rouge -> Très long",
                   ),
-                ],
-              ),
+                  icon: Icon(Icons.info_outline_rounded),
+                ),
+              ],
             ),
 
             Expanded(
               child: Container(
                 margin: EdgeInsets.all(10),
 
-                child: ListView.builder(
-                  itemCount: tacheP.taches.length,
-                  itemBuilder: (context, index) {
-                    final tache = tacheP.taches[index];
-                    return Card(
-                      margin: EdgeInsets.all(2),
-
-                      child: ListTile(
-                        title: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            TextButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 1,
-                                padding: EdgeInsets.all(0),
-                                backgroundColor: const Color.fromARGB(
-                                  0,
-                                  255,
-                                  255,
-                                  255,
-                                ),
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: ListView.builder(
+                    itemCount: tacheP.taches.length,
+                    itemBuilder: (context, index) {
+                      final tache = tacheP.taches[index];
+                      return Card(
+                        elevation: 0,
+                        margin: EdgeInsets.all(2),
+                        child: ListTile(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ModifcationTache(tacheComplete: tache),
                               ),
-                              onPressed: () {
-                                setState(() {
-                                  modifDuree = false;
-                                  modifName = true;
-                                  nameTache = tache.tacheName;
-                                  tacheDuration = tache.tacheDuration;
-                                });
-                              },
-                              child: Text(
-                                textAlign: TextAlign.center,
-                                "${tache.tacheName} :",
-
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color.fromARGB(255, 95, 1, 82),
-                                ),
-                              ),
-                            ),
-
-                            TextButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0.5,
-                                padding: EdgeInsets.all(0),
-                                backgroundColor: const Color.fromARGB(
-                                  0,
-                                  255,
-                                  255,
-                                  255,
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  modifDuree = true;
-                                  nameTache = tache.tacheName;
-                                  tacheDuration = tache.tacheDuration;
-                                  dureeSelectionnee = TacheDuration.court;
-                                });
-                              },
-                              child: changeEnumtoString(
+                            );
+                          },
+                          title: Text(
+                            "${tache.tacheName} ",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: ChangeEnumToString.changeEnumtoString(
                                 tache.tacheDuration.name,
                               ),
                             ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text('Supprimer ?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: Navigator.of(context).pop,
-                                      child: Text('Non'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        tacheP.supprimerTache(tache.tacheName);
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Oui'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
+                          ),
 
-            if (modifName == true)
-              Form(
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _tacheModifier,
-                        decoration: InputDecoration(
-                          hintText: nameTache,
-
-                          labelText: nameTache,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Supprimer " ${tache.tacheName} "?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: Navigator.of(context).pop,
+                                        child: Text('Non'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          tacheP.supprimerTache(
+                                            tache.tacheName,
+                                          );
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Oui'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                            },
                           ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: Size(200, 50),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            if (modifName == true) {
-                              TachesSchema newTacheCreat = TachesSchema(
-                                tacheName: _tacheModifier.text,
-                                tacheDuration: tacheDuration!,
-                              );
-                              if (nameTache != null) {
-                                setState(() {
-                                  tacheP.modifierTache(
-                                    nameTache!,
-                                    newTacheCreat,
-                                  );
-                                  _tacheModifier.clear();
-                                  modifName = false;
-                                });
-                              }
-                            } else if (modifDuree == true) {
-                              TachesSchema newTacheCreat = TachesSchema(
-                                tacheName: nameTache!,
-                                tacheDuration: dureeSelectionnee!,
-                              );
-                              setState(() {
-                                tacheP.modifierTache(nameTache!, newTacheCreat);
-                                dureeSelectionnee = TacheDuration.court;
-                                modifDuree = false;
-                              });
-                            }
-                          });
-                        },
-                        child: Text("Valider le nom"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-            if (modifDuree == true)
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      'Choisi la bonne durée:',
-                      style: TextStyle(fontSize: 20),
-                    ),
-
-                    Expanded(
-                      child: RadioGroup(
-                        groupValue: dureeSelectionnee,
-                        onChanged: (TacheDuration? value) {
-                          setState(() {
-                            dureeSelectionnee = value!;
-                          });
-                        },
-
-                        child: GridView.count(
-                          controller: ScrollController(keepScrollOffset: false),
-                          crossAxisCount: 2,
-                          childAspectRatio: 4,
-
-                          children: [
-                            SizedBox(
-                              child: RadioListTile<TacheDuration>(
-                                title: Text('Court'),
-                                value: TacheDuration.court,
-                              ),
-                            ),
-
-                            SizedBox(
-                              child: RadioListTile<TacheDuration>(
-                                title: Text('Moyen'),
-                                value: TacheDuration.moyen,
-                              ),
-                            ),
-
-                            RadioListTile<TacheDuration>(
-                              title: Text('Long'),
-                              value: TacheDuration.long,
-                            ),
-
-                            RadioListTile<TacheDuration>(
-                              title: Text('Très long'),
-                              value: TacheDuration.tresLong,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          if (modifDuree == true) {
-                            TachesSchema newTacheCreat = TachesSchema(
-                              tacheName: nameTache!,
-                              tacheDuration: dureeSelectionnee!,
-                            );
-                            setState(() {
-                              tacheP.modifierTache(nameTache!, newTacheCreat);
-                              dureeSelectionnee = TacheDuration.court;
-                              modifDuree = false;
-                            });
-                          }
-                        });
-                      },
-                      child: Text('Valider'),
-                    ),
-                  ],
-                ),
-              ),
-
-            Container(
-              margin: EdgeInsets.all(30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AjoutTache()),
                       );
                     },
-                    child: Text('Ajouter'),
                   ),
-                  SizedBox(width: 15),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        modifName = false;
-                        modifDuree = false;
-                        dureeSelectionnee = null;
-                        nameTache = null;
-                        tacheDuration = null;
-                        _tacheModifier.clear();
-                      });
-                    },
-                    child: Text('Annuler'),
-                  ),
-                ],
+                ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Parametretirage()),
-                );
-              },
-              child: Text("Modifier le nombre de tirage"),
+
+            SizedBox(
+              width: 375,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AjoutTache()),
+                  );
+                },
+                child: Text("Ajouter une tâche", textAlign: TextAlign.center,)
+              ),
+            ),
+            SizedBox(height: 20),
+            SizedBox(
+               width: 375,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Parametretirage()),
+                  );
+                },
+                child: Text("Modifier le nombre de tirage"),
+              ),
             ),
             SizedBox(height: 30),
           ],
@@ -330,35 +147,4 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
       },
     );
   }
-}
-
-Text changeEnumtoString(enumName) {
-  String convertValue = "";
-  Color colorAssigne = Colors.black;
-  switch (enumName) {
-    case 'court':
-      convertValue = 'Court';
-      colorAssigne = Colors.green;
-      break;
-    case 'moyen':
-      convertValue = 'Moyen';
-      colorAssigne = const Color.fromARGB(255, 234, 96, 4);
-      break;
-    case 'long':
-      convertValue = 'Long';
-      colorAssigne = const Color.fromARGB(255, 205, 1, 1);
-      break;
-    case 'tresLong':
-      convertValue = 'Très long';
-      colorAssigne = const Color.fromARGB(255, 139, 1, 1);
-      break;
-  }
-  return Text(
-    convertValue,
-    style: TextStyle(
-      fontSize: 15,
-      fontWeight: FontWeight.bold,
-      color: colorAssigne,
-    ),
-  );
 }

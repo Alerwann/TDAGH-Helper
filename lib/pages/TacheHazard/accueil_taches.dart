@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/pages/TacheHazard/action_choice.dart';
-import 'package:tdahelpe/pages/TacheHazard/quetes_finales.dart';
+import 'package:tdahelpe/pages/TacheHazard/tirage_taches.dart';
 import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class AccueilTaches extends StatefulWidget {
   const AccueilTaches({super.key});
@@ -26,7 +26,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
     color: Colors.white,
   );
   int _currentindex = 0;
-  setCurrentIndex(int index) {
+  void setCurrentIndex(int index) {
     setState(() {
       _currentindex = index;
     });
@@ -38,42 +38,26 @@ class _AccueilTachesState extends State<AccueilTaches> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-           Navigator.pop(context);
+            Navigator.pop(context);
           },
-          icon: Icon(
-            Icons.home,
-            color: const Color.fromARGB(255, 230, 177, 2),
-            size: 45,
-          ),
+          icon: Icon(Icons.home),
         ),
-        title: ShaderMask(
-          shaderCallback: (bounds) {
-            return gradient.createShader(
-              Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            );
-          },
-          child: Text("Fais pas tache".toUpperCase(), style: textStyle),
-        ),
+        title: TextDegrade(title: 'FAIS PAS TACHE', choicetype: 'accueil' ),
       ),
-      body: [
-        ActionChoice(),
-        Quetesfinales(),
-        TacheListeAffichage(),
-      ][_currentindex],
+      body: [Quetesfinales(), TacheListeAffichage()][_currentindex],
       bottomNavigationBar: ConvexAppBar(
-        style: TabStyle.react,
+        style: TabStyle.textIn,
         backgroundColor: Colors.deepPurple,
         color: Colors.white,
         activeColor: Colors.white,
         initialActiveIndex: _currentindex,
         items: [
-          TabItem(icon: Icons.question_mark_rounded, title: 'Choix'),
           TabItem(
-            icon: Icons.play_arrow_sharp,
-            title: 'Tirage', // Texte plus court
+            icon: Icons.casino_rounded,
+            title: 'Tirage', 
           ),
 
-          TabItem(icon: Icons.settings, title: 'Paramètre'),
+          TabItem(icon: Icons.list_alt_rounded, title: 'Liste'),
         ],
         onTap: (int i) => setCurrentIndex(i),
       ),
