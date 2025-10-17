@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ChangeEnumToString {
+<<<<<<< HEAD
   static Color changeEnumtoString(String enumName) {
+=======
+  static Color changeEnumtoString(enumName) {
+>>>>>>> refs/remotes/origin/main
     // String convertValue = "";
     Color colorAssigne = Colors.black;
     switch (enumName) {

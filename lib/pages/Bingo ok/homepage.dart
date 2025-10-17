@@ -34,7 +34,11 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
         title: TextDegrade(title: 'Bingo quotidien', choicetype: 'accueil'),
       ),
 
+<<<<<<< HEAD
       body: SingleChildScrollView(
+=======
+      body: Card(
+>>>>>>> refs/remotes/origin/main
         child: Center(
           child: Consumer<HeureProfilProvider>(
             builder: (context, heureP, child) {
@@ -50,11 +54,19 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
               bool isCoucheActive =
                   now.hour <= heureP.coucheHours + 3 &&
                   now.hour >= heureP.coucheHours - 1;
+<<<<<<< HEAD
         
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 30,
         
+=======
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 30,
+
+>>>>>>> refs/remotes/origin/main
                 children: [
                   MomentButton.buildMomentButton(
                     'Matin',
@@ -63,7 +75,11 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                     isMatinActive,
                     context,
                   ),
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
                   MomentButton.buildMomentButton(
                     'Midi',
                     HugeIconsSolid.apple01,
@@ -79,7 +95,11 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                     isSoirActive,
                     context,
                   ),
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> refs/remotes/origin/main
                   //couché
                   MomentButton.buildMomentButton(
                     'Couché',

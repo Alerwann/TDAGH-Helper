@@ -17,6 +17,10 @@ class MomentButton {
     int scoreByMoment = 0;
 
     return ElevatedButton(
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/main
       onPressed: isActive
           ? () => Navigator.push(
               context,
@@ -32,12 +36,20 @@ class MomentButton {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+<<<<<<< HEAD
               spacing: 10,
               children: [
                 Icon(icon, color: iconColor),
 
                 Text(moment, style: Theme.of(context).textTheme.headlineLarge),
 
+=======
+              children: [
+                Icon(icon, color: iconColor),
+                SizedBox(width: 20),
+                Text(moment, style: Theme.of(context).textTheme.headlineLarge),
+                SizedBox(width: 20),
+>>>>>>> refs/remotes/origin/main
                 Icon(icon, color: iconColor),
               ],
             ),
