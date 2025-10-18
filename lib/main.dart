@@ -28,7 +28,6 @@ void main() async {
     if (kDebugMode) {
       print(e);
     }
-
   }
 
   runApp(
@@ -65,11 +64,7 @@ class _MyScoreProvider extends State<MyApp> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   static const platform = MethodChannel('alarm_channel');
 
-<<<<<<< HEAD
   void setCurrentIndex(int index) {
-=======
-  setCurrentIndex(int index) {
->>>>>>> refs/remotes/origin/main
     setState(() {
       _currentindex = index;
     });

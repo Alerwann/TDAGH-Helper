@@ -54,12 +54,10 @@ class AppTheme {
         bodyMedium: TextStyle(fontSize: 14, color: Colors.black87),
 
         bodySmall: TextStyle(fontSize: 12, color: Colors.grey[600]),
-
-        
       ),
 
       appBarTheme: AppBarTheme(
-        toolbarHeight: 100,
+   
         backgroundColor: primaryColors,
         foregroundColor: Colors.white,
 
@@ -84,7 +82,7 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
 
-          textStyle: TextStyle(color: Colors.white, fontSize: 12)
+          textStyle: TextStyle(color: Colors.white, fontSize: 12),
         ),
       ),
     );

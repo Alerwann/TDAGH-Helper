@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/services/notification_service.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class HeureParametreConfig extends StatefulWidget {
   const HeureParametreConfig({super.key});
@@ -21,16 +22,10 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: 35,
-            color: Colors.black,
-            fontFamily: 'Metamorphous',
-          ),
-          child: AnimatedTextKit(
-            animatedTexts: [WavyAnimatedText('Horaires')],
-            isRepeatingAnimation: true,
-          ),
+        toolbarHeight: 100,
+        title: TextDegrade(
+          title: 'Configutaion des horaires',
+          choicetype: 'parametre',
         ),
       ),
       body: Container(
@@ -40,27 +35,28 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 10,
               children: [
-                // Les 4 menus déroulants
+ 
                 _horairesModif('réveil', 'réveil'),
                 _horairesModif('repas de midi', 'midi'),
                 _horairesModif('repas du soir', 'soir'),
                 _horairesModif('couché', 'couché'),
                 _horairesModif('réinitialisation', 'reinit'),
 
-                SizedBox(height: 20),
+      
 
-                // NOUVEAU : Bouton pour valider et programmer les notifications
+           
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Vérifier les permissions sur Android
+    
                       if (Platform.isAndroid) {
                         bool hasPermission =
                             await NotificationService.checkPermissions();
 
                         if (!hasPermission) {
-                          // Afficher le dialogue d'explication
+                      
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -87,11 +83,10 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
                               ],
                             ),
                           );
-                          return; // Arrêter ici si pas de permission
+                          return; 
                         }
                       }
 
-                      // Si on a les permissions, programmer les notifications
                       final profil = Provider.of<HeureProfilProvider>(
                         context,
                         listen: false,
@@ -130,7 +125,7 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
 
                 SizedBox(height: 10),
 
-                // Bouton réinitialiser (existant)
+   
                 ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -162,14 +157,12 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
     );
   }
 
-  // Ton widget _horairesModif reste INCHANGÉ
   Widget _horairesModif(String moment, String momentsend) {
     return Column(
       children: [
-        Text(
+        CustomText.center(
           'Heure du $moment',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+          Theme.of(context).textTheme.headlineMedium
         ),
         SizedBox(height: 20),
         Row(
@@ -199,10 +192,12 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
 
                   return Center(
                     child: DropdownMenuFormField(
+                      textAlign: TextAlign.center,
+                      textStyle: Theme.of(context).textTheme.bodyMedium,
                       initialSelection: momentProfil,
                       label: Text('Heures'),
-                      width: 200,
-                      menuHeight: 200,
+                      width: 300,
+                      menuHeight: 300,
                       dropdownMenuEntries: List.generate(
                         24,
                         (hours) => DropdownMenuEntry(

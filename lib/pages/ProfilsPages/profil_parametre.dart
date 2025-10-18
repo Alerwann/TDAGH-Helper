@@ -130,7 +130,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                 ),
                                 SizedBox(height: 16),
                                 SizedBox(
-                                  width: 200,
+                                  width: 300,
                                   height: 50,
                                   child: ElevatedButton.icon(
                                     onPressed: () {
@@ -164,7 +164,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                 ),
                                 SizedBox(height: 16),
                                 SizedBox(
-                                  width: 200,
+                                  width: 300,
                                   height: 50,
                                   child: ElevatedButton.icon(
                                     onPressed: () {

@@ -71,15 +71,9 @@ class NotificationService {
         tz.setLocalLocation(tz.getLocation('UTC'));
         if (kDebugMode) print('✅ Fallback ultime sur UTC');
       } catch (e) {
-<<<<<<< HEAD
         if (kDebugMode) {
           print('❌ Échec total de la configuration du fuseau horaire');
         }
-=======
-        if (kDebugMode)
-       {   print('❌ Échec total de la configuration du fuseau horaire');}
-    
->>>>>>> refs/remotes/origin/main
       }
     }
     const AndroidInitializationSettings androidSettings =
@@ -91,14 +85,7 @@ class NotificationService {
           requestAlertPermission: true,
           requestBadgePermission: true,
           requestSoundPermission: true,
-<<<<<<< HEAD
-
           requestCriticalPermission: false,
-=======
-      
-          requestCriticalPermission:
-              false, 
->>>>>>> refs/remotes/origin/main
           defaultPresentAlert: true,
           defaultPresentBadge: true,
           defaultPresentSound: true,
@@ -303,11 +290,7 @@ class NotificationService {
       body: 'N\'oublie pas de valider tes tâches du matin',
       hour: midiHour,
       // hour:    DateTime.now().hour,
-<<<<<<< HEAD
       minute: 0,
-=======
-      minute:0,
->>>>>>> refs/remotes/origin/main
     );
 
     // Planifier notification du soir
