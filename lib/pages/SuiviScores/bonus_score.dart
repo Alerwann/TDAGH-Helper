@@ -5,9 +5,8 @@ import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/pages/TimerTooth/home_timer_tooth.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-
 
 class BonusScore extends StatefulWidget {
   const BonusScore({super.key});
@@ -20,7 +19,12 @@ class _BonusScoreState extends State<BonusScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp("Suivi des points bonus", context, 'accueil', true),
+      appBar: CustomHeightApBcar.customApp(
+        "Suivi des points bonus",
+        context,
+        'accueil',
+        true,
+      ),
       body: Consumer2<ScoreProvider, ProfilProvider>(
         builder: (context, scoreP, profilP, child) {
           final int nbCleantooth = (scoreP.toothScore / 5).floor();

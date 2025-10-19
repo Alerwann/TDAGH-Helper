@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/TacheHazard/tirage_taches.dart';
 import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 
 class AccueilTaches extends StatefulWidget {
   const AccueilTaches({super.key});
@@ -35,7 +35,12 @@ class _AccueilTachesState extends State<AccueilTaches> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp("Fais pas tâche", context, "accueil", true),
+      appBar: CustomHeightApBcar.customApp(
+        "Fais pas tâche",
+        context,
+        "accueil",
+        true,
+      ),
       body: [Quetesfinales(), TacheListeAffichage()][_currentindex],
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.textIn,
@@ -44,10 +49,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
         activeColor: Colors.white,
         initialActiveIndex: _currentindex,
         items: [
-          TabItem(
-            icon: Icons.casino_rounded,
-            title: 'Tirage', 
-          ),
+          TabItem(icon: Icons.casino_rounded, title: 'Tirage'),
 
           TabItem(icon: Icons.list_alt_rounded, title: 'Liste'),
         ],

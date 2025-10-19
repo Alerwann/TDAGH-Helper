@@ -6,9 +6,8 @@ import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-
 
 class TacheScore extends StatefulWidget {
   const TacheScore({super.key});
@@ -39,7 +38,12 @@ class _TacheScoreState extends State<TacheScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp('Score des taches', context, 'accueil', true),
+      appBar: CustomHeightApBcar.customApp(
+        'Score des taches',
+        context,
+        'accueil',
+        true,
+      ),
       body: Consumer3<ScoreProvider, ProfilProvider, TachesProvider>(
         builder: (context, scoreP, profilP, tacheP, child) {
           return SingleChildScrollView(
@@ -69,11 +73,11 @@ class _TacheScoreState extends State<TacheScore> {
                       "Actuellement tu as fais $numberOfTrue tâches.",
                       Theme.of(context).textTheme.headlineMedium,
                     ),
-                     CustomText.center(
+                    CustomText.center(
                       "Il te reste ${tacheP.nombreT - numberOfTrue} pour valider la quête.",
                       Theme.of(context).textTheme.headlineMedium,
                     ),
-                   
+
                     OutlinedButton(
                       onPressed: () {
                         Navigator.push(
@@ -83,10 +87,7 @@ class _TacheScoreState extends State<TacheScore> {
                           ),
                         );
                       },
-                      child: Text(
-                        "Aller valider ses tâches",
-                       
-                      ),
+                      child: Text("Aller valider ses tâches"),
                     ),
                   ],
                 ),

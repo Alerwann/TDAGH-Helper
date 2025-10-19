@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class FonctionnementScore extends StatelessWidget {
@@ -8,7 +8,12 @@ class FonctionnementScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp("Fonctionnement", context, "parametre", true),
+      appBar: CustomHeightApBcar.customApp(
+        "Fonctionnement",
+        context,
+        "parametre",
+        true,
+      ),
       body: Center(
         child: SizedBox(
           width: 350,
@@ -19,7 +24,6 @@ class FonctionnementScore extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 spacing: 15,
                 children: [
-            
                   CustomText.center(
                     "L'heure de la remise à 0 est configurable dans les paramètres de l'application 🤓",
                     Theme.of(context).textTheme.bodyLarge,

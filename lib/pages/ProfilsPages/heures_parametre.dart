@@ -2,7 +2,7 @@ import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/horaire_moment.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 
 class HeureParametreConfig extends StatefulWidget {
   const HeureParametreConfig({super.key});
@@ -17,7 +17,7 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp(
+      appBar: CustomHeightApBcar.customApp(
         "Configuration des horaires",
         context,
         "parametre",
@@ -41,7 +41,6 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
                   'reinit',
                   context,
                 ),
-
 
                 SizedBox(height: 10),
 

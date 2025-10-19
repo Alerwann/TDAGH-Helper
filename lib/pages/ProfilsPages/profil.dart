@@ -1,7 +1,7 @@
 import 'package:tdahelpe/pages/ProfilsPages/heures_parametre.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 import 'package:tdahelpe/widget/utils/imageSet.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,12 @@ class _ProfilPageState extends State<ProfilPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp("Gestion du profil", context, "parametre", false),
+      appBar: CustomHeightApBcar.customApp(
+        "Gestion du profil",
+        context,
+        "parametre",
+        false,
+      ),
 
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 50),
@@ -86,8 +91,6 @@ class _ProfilPageState extends State<ProfilPage> {
                       ),
                     ),
                   ),
-         
-               
                 ],
               ),
             );

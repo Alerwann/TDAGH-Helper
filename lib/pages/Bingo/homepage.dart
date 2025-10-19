@@ -1,10 +1,9 @@
-
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/widget/specific/moment_button.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 
 class HomeBingoPage extends StatefulWidget {
   const HomeBingoPage({super.key});
@@ -14,13 +13,12 @@ class HomeBingoPage extends StatefulWidget {
 }
 
 class _HomeBingoPageState extends State<HomeBingoPage> {
-
   var choiceBingo = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp(
+      appBar: CustomHeightApBcar.customApp(
         "Bingo Quotidien",
         context,
         "accueil",
@@ -36,33 +34,29 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                 spacing: 30,
 
                 children: [
-                  MomentButton.buildMomentButton(
-                    'Matin',
-                    HugeIconsSolid.sun02,
-                    Color.fromARGB(255, 53, 252, 252),
-                    context,
+                  MomentButton(
+                    moment: 'Matin',
+                    icon: HugeIconsSolid.sun02,
+                    iconColor: Color.fromARGB(255, 53, 252, 252),
                   ),
 
-                  MomentButton.buildMomentButton(
-                    'Midi',
-                    HugeIconsSolid.apple01,
-                    Color.fromARGB(255, 255, 0, 0),
-                    context,
+                  MomentButton(
+                    moment: 'Midi',
+                    icon: HugeIconsSolid.apple01,
+                    iconColor: Color.fromARGB(255, 255, 0, 0),
                   ),
                   //soir
-                  MomentButton.buildMomentButton(
-                    'Soir',
-                    HugeIconsSolid.moon02,
-                    Color.fromARGB(255, 255, 226, 63),
-                    context,
+                  MomentButton(
+                    moment: 'Soir',
+                    icon: HugeIconsSolid.moon02,
+                    iconColor: Color.fromARGB(255, 255, 226, 63),
                   ),
 
                   //couché
-                  MomentButton.buildMomentButton(
-                    'Couché',
-                    HugeIconsSolid.star,
-                    Color.fromARGB(255, 255, 255, 0),
-                    context,
+                  MomentButton(
+                    moment: 'Couché',
+                    icon: HugeIconsSolid.star,
+                    iconColor: Color.fromARGB(255, 255, 255, 0),
                   ),
                 ],
               );

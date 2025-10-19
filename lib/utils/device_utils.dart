@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/services/notification_service.dart';
+import 'package:tdahelpe/services/notification_global_service.dart';
 
 class DeviceUtils {
   static bool isBatteryOptimizationNeeded() {

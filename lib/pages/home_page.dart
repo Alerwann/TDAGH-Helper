@@ -9,9 +9,8 @@ import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/device_utils.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-
 
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
@@ -36,7 +35,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
       if (!alreadyShown) {
         final isIgnoring = await _checkBatteryOptimizationStatus();
         if (!isIgnoring) {
-             prefs.setBool('battery_guide_shown', true);
+          prefs.setBool('battery_guide_shown', true);
         }
       }
     }
@@ -52,19 +51,19 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
     return true;
   }
 
-
-
   late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
 
   @override
   Widget build(BuildContext context) {
-
-
     return Consumer2<ProfilProvider, SoundProvider>(
       builder: (context, profil, audioProvider, child) {
-     
         return Scaffold(
-          appBar:  CustomHeightAppcar.customApp( "Bienvenue ${profil.pseudo}", context, "accueil", false),
+          appBar: CustomHeightApBcar.customApp(
+            "Bienvenue ${profil.pseudo}",
+            context,
+            "accueil",
+            false,
+          ),
 
           body: Consumer<SoundProvider>(
             builder: (context, audioProvider, child) {

@@ -8,7 +8,7 @@ import 'package:tdahelpe/pages/SuiviScores/tache_score.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class AccueilScore extends StatefulWidget {
@@ -22,7 +22,7 @@ class _AccueilScoreState extends State<AccueilScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp(
+      appBar: CustomHeightApBcar.customApp(
         "Avancement des quêtes",
         context,
         "accueil",

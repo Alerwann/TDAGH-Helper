@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
+import 'package:tdahelpe/utils/dropdown_moment.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class HoraireMoment {
@@ -20,12 +20,15 @@ class HoraireMoment {
         return now.hour <= profil.coucheHours + 1 &&
             now.hour >= profil.soirhours - 1;
       case 'Couché':
-        if (profil.coucheHours + 4 >= 24) {
-          return now.hour >= profil.coucheHours - 1 &&
-              now.hour <= profil.coucheHours - 16;
+        int heureDebut = profil.coucheHours - 1;
+        int dureeAcces = 4;
+
+        if (heureDebut + dureeAcces >= 24) {
+          int heureFin = (heureDebut + dureeAcces) - 24;
+          return (now.hour >= heureDebut) || (now.hour <= heureFin);
         } else {
-          return now.hour >= profil.coucheHours - 1 &&
-              now.hour <= profil.coucheHours + 4;
+          return now.hour >= heureDebut &&
+              now.hour <= (heureDebut + dureeAcces);
         }
 
       default:
@@ -45,12 +48,33 @@ class HoraireMoment {
         return [profil.soirhours - 1, profil.coucheHours + 1];
       case 'couché':
         if (profil.coucheHours + 4 >= 24) {
-          return [profil.coucheHours - 1, profil.coucheHours - 16];
+          return [profil.coucheHours - 1, profil.coucheHours + 4 - 24];
         } else {
           return [profil.coucheHours - 1, profil.coucheHours + 4];
         }
       default:
         return [25, 25];
+    }
+  }
+
+  static int convertMomentName(String moment, HeureProfilProvider profil) {
+    switch (moment) {
+      case 'réveil':
+        return profil.reveilHours;
+
+      case 'repas de midi':
+        return profil.midiHours;
+
+      case 'repas du soir':
+        return profil.soirhours;
+
+      case 'couché':
+        return profil.coucheHours;
+
+      case 'réinitialisation':
+        return profil.reinitHours;
+      default:
+        return 12;
     }
   }
 
@@ -67,78 +91,8 @@ class HoraireMoment {
           Theme.of(context).textTheme.headlineMedium,
         ),
 
-        Row(
-          children: [
-            Expanded(
-              child: Consumer<HeureProfilProvider>(
-                builder: (context, profil, child) {
-                  int momentProfil = 12;
-
-                  switch (moment) {
-                    case 'réveil':
-                      momentProfil = profil.reveilHours;
-                      break;
-                    case 'repas de midi':
-                      momentProfil = profil.midiHours;
-                      break;
-                    case 'repas du soir':
-                      momentProfil = profil.soirhours;
-                      break;
-                    case 'couché':
-                      momentProfil = profil.coucheHours;
-                      break;
-                    case 'réinitialisation':
-                      momentProfil = profil.reinitHours;
-                      break;
-                  }
-
-                  return Center(
-                    child: DropdownMenuFormField(
-                  
-                      textAlign: TextAlign.center,
-                      textStyle: Theme.of(context).textTheme.bodyMedium,
-                      initialSelection: momentProfil,
-                      label: Text('Heures'),
-                      width: 300,
-                      menuHeight: 300,
-                      dropdownMenuEntries: List.generate(
-                        24,
-                        (hours) => DropdownMenuEntry(
-                          value: hours,
-                          label: hours.toString().padLeft(2, '0'),
-                        ),
-                      ),
-
-                      onSelected: (hours) {
-                        print("on selected ${profil.reinitHours}");
-                        print(
-                          "🎯 onSelected appelé : hours = $hours, momentsend = $momentsend",
-                        );
-                        if (hours != null && hours != momentProfil) {
-                          if (kDebugMode) {
-                            print(
-                              '📝 Widget: changement détecté $momentProfil → $hours',
-                            );
-                          }
-                          profil.setHours(hours, momentsend);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Les alarmes sont mises à jour.'),
-                              duration: Duration(milliseconds: 1000),
-                            ),
-                          );
-                        } else {
-                          if (kDebugMode) {
-                            print('⏭️ Widget: même valeur ($hours), ignoré');
-                          }
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+        Center(
+          child: DropdownMoment(moment: moment, momentsend: momentsend),
         ),
       ],
     );

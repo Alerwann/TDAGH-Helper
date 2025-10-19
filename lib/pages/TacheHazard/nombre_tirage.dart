@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class Parametretirage extends StatefulWidget {
@@ -29,7 +29,12 @@ class _ParametretirageState extends State<Parametretirage> {
       },
 
       child: Scaffold(
-        appBar: CustomHeightAppcar.customApp('Nombre de tirage', context, "parametre", true),
+        appBar: CustomHeightApBcar.customApp(
+          'Nombre de tirage',
+          context,
+          "parametre",
+          true,
+        ),
         body: Center(
           child: Consumer2<TachesProvider, ScoreProvider>(
             builder: (context, tachesTime, scoreP, child) {
@@ -55,45 +60,43 @@ class _ParametretirageState extends State<Parametretirage> {
                       child: Column(
                         spacing: 20,
                         children: [
-                  
-                     
                           TextFormField(
-                              controller: _numberController,
+                            controller: _numberController,
 
-                              keyboardType: TextInputType.numberWithOptions(),
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
+                            keyboardType: TextInputType.numberWithOptions(),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
 
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.blue,
-                                    width: 2.0,
-                                  ),
-                                ),
-
-                                label: Text("Nombre de pioches"),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Veuillez entrer un nombre';
-                                }
-                                if (int.tryParse(value) == null) {
-                                  return 'Veuillez entrer un nombre valide';
-                                }
-                                if (int.tryParse(value)! >
-                                    tachesTime.taches.length) {
-                                  return "Nombre de tache maximal => ${tachesTime.taches.length}";
-                                }
-                                return null;
-                              },
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.blue,
+                                  width: 2.0,
+                                ),
+                              ),
+
+                              label: Text("Nombre de pioches"),
                             ),
-                       
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Veuillez entrer un nombre';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Veuillez entrer un nombre valide';
+                              }
+                              if (int.tryParse(value)! >
+                                  tachesTime.taches.length) {
+                                return "Nombre de tache maximal => ${tachesTime.taches.length}";
+                              }
+                              return null;
+                            },
+                          ),
+
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {

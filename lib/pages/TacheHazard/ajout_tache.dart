@@ -6,11 +6,10 @@ import 'package:tdahelpe/data/schema/taches_shema.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class AjoutTache extends StatefulWidget {
-
   const AjoutTache({super.key});
 
   @override
@@ -24,11 +23,16 @@ class _AjoutTacheState extends State<AjoutTache> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-       onTap: () {
+      onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: CustomHeightAppcar.customApp("Ajout d'activités", context, 'parametre', true),
+        appBar: CustomHeightApBcar.customApp(
+          "Ajout d'activités",
+          context,
+          'parametre',
+          true,
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(12),
           child: Center(
@@ -45,7 +49,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                           "Nom de la nouvelle tache :",
                           Theme.of(context).textTheme.headlineMedium,
                         ),
-          
+
                         TextFormField(
                           controller: _TextController,
                           decoration: InputDecoration(
@@ -57,13 +61,13 @@ class _AjoutTacheState extends State<AjoutTache> {
                             ),
                           ),
                         ),
-          
+
                         SizedBox(height: 10),
                         CustomText.center(
                           "Estimation de la durée :",
                           Theme.of(context).textTheme.headlineMedium,
                         ),
-          
+
                         SizedBox(
                           height: 150,
                           child: Card(
@@ -74,14 +78,14 @@ class _AjoutTacheState extends State<AjoutTache> {
                                   dureeSelectionnee = value;
                                 });
                               },
-          
+
                               child: GridView.count(
                                 controller: ScrollController(
                                   keepScrollOffset: false,
                                 ),
                                 crossAxisCount: 2,
                                 childAspectRatio: 3,
-          
+
                                 children: [
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
@@ -89,19 +93,19 @@ class _AjoutTacheState extends State<AjoutTache> {
                                       value: TacheDuration.court,
                                     ),
                                   ),
-          
+
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
                                       title: Text('Moyen'),
                                       value: TacheDuration.moyen,
                                     ),
                                   ),
-          
+
                                   RadioListTile<TacheDuration>(
                                     title: Text('Long'),
                                     value: TacheDuration.long,
                                   ),
-          
+
                                   RadioListTile<TacheDuration>(
                                     title: Text('Très long'),
                                     value: TacheDuration.tresLong,
@@ -111,9 +115,9 @@ class _AjoutTacheState extends State<AjoutTache> {
                             ),
                           ),
                         ),
-          
+
                         SizedBox(height: 30),
-          
+
                         ElevatedButton(
                           onPressed: () {
                             if (_TextController.text.trim().isEmpty) {
@@ -126,28 +130,30 @@ class _AjoutTacheState extends State<AjoutTache> {
                               );
                               return;
                             }
-          
+
                             if (dureeSelectionnee == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Veuillez sélectionner une durée'),
+                                  content: Text(
+                                    'Veuillez sélectionner une durée',
+                                  ),
                                 ),
                               );
                               return;
                             }
-          
+
                             TachesSchema tacheNew = TachesSchema(
                               tacheName: _TextController.text.trim(),
                               tacheDuration: dureeSelectionnee!,
                             );
-          
+
                             tache.ajouterTache(tacheNew);
-          
+
                             _TextController.clear();
                             setState(() {
                               dureeSelectionnee = null;
                             });
-          
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Tâche ajoutée avec succès !'),
@@ -155,7 +161,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                             );
                             tache.reinitTAche();
                             scoreP.resetCheckboxesWithLength(1);
-          
+
                             Navigator.pop(context);
                           },
                           child: Text("Valider"),

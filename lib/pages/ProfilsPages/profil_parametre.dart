@@ -2,8 +2,7 @@ import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
-
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 
 import '../../widget/utils/imageSet.dart';
 
@@ -60,7 +59,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: CustomHeightAppcar.customApp(
+        appBar: CustomHeightApBcar.customApp(
           "Configuration du profil",
           context,
           "parametre",

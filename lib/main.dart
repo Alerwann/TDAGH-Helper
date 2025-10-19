@@ -14,7 +14,7 @@ import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
-import 'package:tdahelpe/services/notification_service.dart';
+import 'package:tdahelpe/services/notification_global_service.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 

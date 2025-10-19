@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class ModifTimerGame extends StatefulWidget {
@@ -31,7 +31,7 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp(
+      appBar: CustomHeightApBcar.customApp(
         "Modification du timer",
         context,
         "parametre",
@@ -110,7 +110,7 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
 
                                   _numberController.clear();
                                 });
-                                     ScaffoldMessenger.of(context).showSnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'Timer mis à jour avec succès !',

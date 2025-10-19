@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:tdahelpe/pages/Bingo/homepage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-
 
 class BingoScore extends StatefulWidget {
   const BingoScore({super.key});
@@ -18,7 +17,12 @@ class _BingoScoreState extends State<BingoScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp("Score du Bingo", context, "accueil", true),
+      appBar: CustomHeightApBcar.customApp(
+        "Score du Bingo",
+        context,
+        "accueil",
+        true,
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),
         child: Consumer<ScoreProvider>(

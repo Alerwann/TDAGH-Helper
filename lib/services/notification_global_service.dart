@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:tdahelpe/services/android_notifiaction_service.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -99,36 +100,22 @@ class NotificationService {
     await _notifications.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        if (kDebugMode) {
-          print('📱 CALLBACK iOS: Notification response reçue !');
-        }
-        if (kDebugMode) {
-          if (kDebugMode) {}
-          if (kDebugMode) {
-            print('📱 CALLBACK iOS: ID = ${response.id}');
-          }
-        }
-        if (kDebugMode) {
-          print('📱 CALLBACK iOS: Payload = ${response.payload}');
-        }
-        if (kDebugMode) {
-          print('📱 CALLBACK iOS: Action = ${response.actionId}');
-        }
+        print('📱 CALLBACK iOS: Notification response reçue !');
+
+        print('📱 CALLBACK iOS: ID = ${response.id}');
+
+        print('📱 CALLBACK iOS: Payload = ${response.payload}');
 
         final String? payload = response.payload;
 
         if (payload != null) {
-          if (kDebugMode) {
-            print('📱 CALLBACK iOS: Stockage du moment: $payload');
-          }
+          print('📱 CALLBACK iOS: Stockage du moment: $payload');
+
           await _storeNotificationData(payload);
-          if (kDebugMode) {
-            print('📱 CALLBACK iOS: Moment stocké avec succès');
-          }
+
+          print('📱 CALLBACK iOS: Moment stocké avec succès');
         } else {
-          if (kDebugMode) {
-            print('⚠️ CALLBACK iOS: Payload est null !');
-          }
+          print('⚠️ CALLBACK iOS: Payload est null !');
         }
       },
     );
@@ -140,89 +127,16 @@ class NotificationService {
               AndroidFlutterLocalNotificationsPlugin
             >()
             ?.requestNotificationsPermission();
-        if (kDebugMode) {
-          print('✅ Permission notifications demandée');
-        }
+
+        print('✅ Permission notifications demandée');
       } catch (e) {
-        if (kDebugMode) {
-          print('⚠️ Erreur demande permission: $e');
-        }
+        print('⚠️ Erreur demande permission: $e');
       }
 
-      try {
-        final bool? canSchedule = await platform.invokeMethod(
-          'checkPermissions',
-        );
-        if (kDebugMode) {
-          if (canSchedule == true) {
-            print('✅ Permission SCHEDULE_EXACT_ALARM accordée');
-          } else {
-            print('⚠️ Permission SCHEDULE_EXACT_ALARM manquante');
-            print(
-              '💡 L\'utilisateur doit l\'activer manuellement dans les paramètres',
-            );
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('⚠️ Erreur vérification SCHEDULE_EXACT_ALARM: $e');
-        }
-      }
+      checkPermissions();
     }
 
-    if (kDebugMode) {
-      print('✅ Notifications complètement initialisées');
-    }
-  }
-
-  static Future<bool> hasAllPermissions() async {
-    if (Platform.isAndroid) {
-      try {
-        // Vérifier SCHEDULE_EXACT_ALARM via Kotlin
-        final bool? canSchedule = await platform.invokeMethod(
-          'checkPermissions',
-        );
-
-        if (canSchedule == false) {
-          if (kDebugMode) {
-            print('❌ Permission SCHEDULE_EXACT_ALARM manquante');
-          }
-          return false;
-        }
-
-        if (kDebugMode) {
-          print('✅ Toutes les permissions Android accordées');
-        }
-        return true;
-      } catch (e) {
-        if (kDebugMode) {
-          print('⚠️ Erreur vérification permissions: $e');
-        }
-        return false;
-      }
-    }
-
-    // Sur iOS, pas besoin de cette permission
-    return true;
-  }
-
-  static Future<void> requestMissingPermissions() async {
-    if (Platform.isAndroid) {
-      try {
-        final bool? canSchedule = await platform.invokeMethod(
-          'checkPermissions',
-        );
-
-        if (canSchedule == false) {
-          // Ouvrir les paramètres pour que l'utilisateur active manuellement
-          await platform.invokeMethod('openSettings');
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('⚠️ Erreur demande permissions: $e');
-        }
-      }
-    }
+    print('✅ Notifications complètement initialisées');
   }
 
   static Future<bool> checkPermissions() async {
@@ -239,7 +153,7 @@ class NotificationService {
         return false;
       }
     }
-    return true; // iOS n'a pas besoin de cette permission
+    return true;
   }
 
   static Future<void> openSettings() async {
@@ -262,18 +176,14 @@ class NotificationService {
   }) async {
     if (kDebugMode) {
       print('🔔 scheduleAllNotifications appelé avec:');
-    }
-    if (kDebugMode) {
-      print('   Réveil: $reveilHour h');
-    }
-    if (kDebugMode) {
-      print('   Midi: $midiHour h');
-    }
-    if (kDebugMode) {
-      print('   Soir: $soirHour h');
-    }
-    if (kDebugMode) {
-      print('   Couché: $coucheHour h');
+  
+      print('🔔  Réveil: $reveilHour h');
+
+      print('🔔   Midi: $midiHour h');
+  
+      print('🔔   Soir: $soirHour h');
+
+      print('🔔  Couché: $coucheHour h');
     }
     await _scheduleNotification(
       id: morningNotificationId,
@@ -344,91 +254,10 @@ class NotificationService {
     });
   }
 
-  static Future<void> _scheduleNotificationIOS(
-    int id,
-    String title,
-    String body,
-    int hour,
-    int minute,
-  ) async {
-    if (kDebugMode) {
-      print('📱 iOS - Planification notification #$id');
-    }
-    if (kDebugMode) {
-      print('   Heure demandée : $hour:$minute');
-    }
-
-    final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
-
-    String moment;
-    switch (id) {
-      case morningNotificationId:
-        moment = 'Matin';
-        break;
-      case midiNotificationId:
-        moment = 'Midi';
-        break;
-      case soirNotificationId:
-        moment = 'Soir';
-        break;
-      case coucheNotificationId:
-        moment = 'Couché';
-        break;
-      default:
-        moment = 'Matin';
-    }
-
-    final DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    final NotificationDetails notificationDetails = NotificationDetails(
-      iOS: iosDetails,
-    );
-
-    await _notifications.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledDate,
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exact,
-      matchDateTimeComponents: DateTimeComponents.time,
-      payload: moment, // On garde le payload pour essayer
-    );
-  }
-
-  static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
-      tz.local,
-      now.year,
-      now.month,
-      now.day,
-      hour,
-      minute,
-    );
-
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    if (kDebugMode) {
-      print('⏰ Maintenant : $now');
-    }
-    if (kDebugMode) {
-      print('⏰ Notification prévue : $scheduledDate');
-    }
-    return scheduledDate;
-  }
-
   static Future<void> cancelNotification(int id) async {
     if (Platform.isAndroid) {
       await platform.invokeMethod('cancelAlarm', {'id': id});
     } else if (Platform.isIOS) {
-      // Utiliser flutter_local_notifications pour iOS
       await _notifications.cancel(id);
     }
   }
@@ -461,26 +290,79 @@ class NotificationService {
 
   static Future<bool> isOpenedFromNotification() async {
     if (Platform.isAndroid) {
-      return _isOpenedFromNotificationAndroid();
+      return AndroidNotifiactionService.isOpenedFromNotificationAndroid();
     } else if (Platform.isIOS) {
       return _isOpenedFromNotificationIOS();
     }
     return false;
   }
 
-  static Future<bool> _isOpenedFromNotificationAndroid() async {
-    try {
-      final result = await platform.invokeMethod('getNotificationData');
-      return result != null;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur Android: $e');
-      }
-      return false;
+  static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    if (kDebugMode) {
+      print('⏰ Maintenant : $now');
+    }
+    if (kDebugMode) {
+      print('⏰ Notification prévue : $scheduledDate');
+    }
+    return scheduledDate;
   }
 
-  static Future<bool> _isOpenedFromNotificationIOS() async {
+  static Future<void> _scheduleNotificationIOS(
+    int id,
+    String title,
+    String body,
+    int hour,
+    int minute,
+  ) async {
+    if (kDebugMode) {
+      print('📱 iOS - Planification notification #$id');
+    }
+    if (kDebugMode) {
+      print('   Heure demandée : $hour:$minute');
+    }
+
+    final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
+
+
+
+    final DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    final NotificationDetails notificationDetails = NotificationDetails(
+      iOS: iosDetails,
+    );
+
+    await _notifications.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exact,
+      matchDateTimeComponents: DateTimeComponents.time,
+      // payload: moment, 
+      // On garde le payload pour essayer
+    );
+  }
+
+    static Future<bool> _isOpenedFromNotificationIOS() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final shouldOpen = prefs.getBool('pending_notification_open') ?? false;

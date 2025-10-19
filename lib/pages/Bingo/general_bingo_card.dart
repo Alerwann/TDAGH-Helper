@@ -9,7 +9,7 @@ import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 
 class BingoGamePreview extends StatefulWidget {
   final String titleMoment;
@@ -129,7 +129,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     }
 
     return Scaffold(
-      appBar: CustomHeightAppcar.customApp(
+      appBar: CustomHeightApBcar.customApp(
         widget.titleMoment,
         context,
         "accueil",

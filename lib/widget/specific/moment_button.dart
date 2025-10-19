@@ -5,15 +5,21 @@ import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/utils/horaire_moment.dart';
 
-class MomentButton {
-  static Widget buildMomentButton(
-    String moment,
-    IconData icon,
-    Color iconColor,
-    BuildContext context,
-  ) {
-    int hourMomentdeb = 12;
-    int hourMomentfin = 12;
+class MomentButton extends StatelessWidget {
+  final String moment;
+  final IconData icon;
+  final Color iconColor;
+
+  const MomentButton({
+    super.key,
+
+    required this.icon,
+    required this.iconColor,
+    required this.moment,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     int scoreByMoment = 0;
 
     return ElevatedButton(
@@ -41,20 +47,13 @@ class MomentButton {
             ),
             Consumer<HeureProfilProvider>(
               builder: (context, profil, child) {
-                hourMomentdeb = HoraireMoment.momentPhrase(moment, context)[0];
-                hourMomentfin = HoraireMoment.momentPhrase(moment, context)[1];
-
+                final horaires = HoraireMoment.momentPhrase(moment, context);
                 return HoraireMoment.isMomentAccessible(moment, context)
-                    ? Text(
-                        "Fin d'accès à $hourMomentfin H",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : Text(
-                        "Ouverture à $hourMomentdeb H",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      );
+                    ? Text("Fin d'accès à ${horaires[1]} H")
+                    : Text("Ouverture à ${horaires[0]} H");
               },
             ),
+
             Consumer<ScoreProvider>(
               builder: (context, scoreP, child) {
                 switch (moment.toLowerCase()) {
