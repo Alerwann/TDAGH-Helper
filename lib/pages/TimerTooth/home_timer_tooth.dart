@@ -168,34 +168,28 @@ class _HomeTimertoothState extends State<HomeTimertooth>
               await audioProvider.stopSound();
               Navigator.pop(context);
             },
-            icon: Icon(
-              Icons.home,
-              color: const Color.fromARGB(255, 230, 177, 2),
-              size: 45,
-            ),
+            icon: Icon(Icons.home),
           ),
         ),
         body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 40),
           child: Consumer2<SoundProvider, ScoreProvider>(
             builder: (context, audioProvider, scoreP, child) {
-       
               if (!audioProvider.isReady) {
-                return SingleChildScrollView(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 20),
-                        Text('Audio en cours d\'initialisation...'),
-                      ],
-                    ),
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 20),
+                      Text('Audio en cours d\'initialisation...'),
+                    ],
                   ),
                 );
               }
               return Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        
                   spacing: 10,
 
                   children: [

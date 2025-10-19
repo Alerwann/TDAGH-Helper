@@ -43,10 +43,14 @@ class _ParametretirageState extends State<NumberForm> {
 
                             keyboardType: TextInputType.numberWithOptions(),
                             inputFormatters: [
-                              FilteringTextInputFormatter
-                                  .digitsOnly, // Seulement des chiffres
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
-                            decoration: InputDecoration(hint: Text("Nombre")),
+                            decoration: InputDecoration(
+                              labelText: 'Nombre',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Veuillez entrer un nombre';
@@ -80,6 +84,7 @@ class _ParametretirageState extends State<NumberForm> {
                                 scoreP.resetCheckboxesWithLength(0);
                               }
                             }
+                        
 
                             Navigator.pop(context);
                           },

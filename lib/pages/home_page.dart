@@ -9,8 +9,9 @@ import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/device_utils.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
+
 
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
@@ -35,8 +36,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
       if (!alreadyShown) {
         final isIgnoring = await _checkBatteryOptimizationStatus();
         if (!isIgnoring) {
-          _showBatteryOptimizationDialog();
-          prefs.setBool('battery_guide_shown', true);
+             prefs.setBool('battery_guide_shown', true);
         }
       }
     }
@@ -52,36 +52,19 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
     return true;
   }
 
-  void _showBatteryOptimizationDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('⚠️ Notifications importantes'),
-        content: Text('Sur votre appareil...'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              /* ... */
-            },
-            child: Text('Autoriser'),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
 
   @override
   Widget build(BuildContext context) {
+
+
     return Consumer2<ProfilProvider, SoundProvider>(
       builder: (context, profil, audioProvider, child) {
+     
         return Scaffold(
-          appBar: AppBar(
-            title: TextDegrade(title: "Bienvenue ${profil.pseudo}",
-              choicetype: 'accueil',
-            )
-          ),
+          appBar:  CustomHeightAppcar.customApp( "Bienvenue ${profil.pseudo}", context, "accueil", false),
 
           body: Consumer<SoundProvider>(
             builder: (context, audioProvider, child) {

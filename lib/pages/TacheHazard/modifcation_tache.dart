@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/data/schema/taches_shema.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class ModifcationTache extends StatefulWidget {
   final TachesSchema tacheComplete;
@@ -37,19 +37,18 @@ class _ModifcationTacheState extends State<ModifcationTache> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: TextDegrade(title: 'Modifications', choicetype: "parametre"),
-        ),
+        appBar: CustomHeightAppcar.customApp("Modifications de la tache", context, "parametre", true),
         body: Scrollbar(
           child: SingleChildScrollView(
+              padding: EdgeInsets.all(15),
             child: Consumer<TachesProvider>(
               builder: (context, tacheP, child) {
                 return Container(
                   margin: EdgeInsets.only(top: 30),
-                  padding: EdgeInsets.all(15),
+                
                   child: Form(
                     child: Column(
-                      spacing: 05,
+                      spacing: 15,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomText.center(

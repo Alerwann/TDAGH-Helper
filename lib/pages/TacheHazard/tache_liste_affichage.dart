@@ -5,7 +5,7 @@ import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:tdahelpe/pages/TacheHazard/nombre_tirage.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/widget/specific/change_enum_to_string.dart';
-import 'package:tdahelpe/widget/utils/alerdialog.dart';
+import 'package:tdahelpe/utils/alerdialog.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class TacheListeAffichage extends StatefulWidget {
@@ -38,7 +38,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                   onPressed: () => PersoAlertDialog.showInfoDialog(
                     context,
                     'Informations',
-                    "Modificaiton de la tâche en appuyant dessus.\n Vert-> court \n Jaune -> moyen \n Orange ->long \n Rouge -> Très long",
+                    "Modificaiton de la tâche en appuyant dessus.\nExplication des couleurs \nVert-> court \nJaune -> moyen \nOrange ->long \nRouge -> Très long",
                   ),
                   icon: Icon(Icons.info_outline_rounded),
                 ),

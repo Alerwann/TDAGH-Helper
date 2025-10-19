@@ -8,8 +8,8 @@ import 'package:tdahelpe/pages/SuiviScores/tache_score.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class AccueilScore extends StatefulWidget {
   const AccueilScore({super.key});
@@ -22,13 +22,14 @@ class _AccueilScoreState extends State<AccueilScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextDegrade(
-          title: "Avancement des quêtes",
-          choicetype: 'accueil',
-        ),
+      appBar: CustomHeightAppcar.customApp(
+        "Avancement des quêtes",
+        context,
+        "accueil",
+        false,
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(15),
         child: Center(
           child: Consumer3<ScoreProvider, BonusLevelProvider, ProfilProvider>(
             builder: (context, scoreP, bonusP, profilP, child) {
@@ -37,11 +38,7 @@ class _AccueilScoreState extends State<AccueilScore> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText.center(
-                    "${profilP.pseudo.toUpperCase()} est : ",
-                    Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  CustomText.center(
-                    "${bonusP.getCurrentGrade(scoreP.niveauPersonnal)?.gradeName ?? 'Aucun'} de niveau ${scoreP.niveauPersonnal}",
+                    "${bonusP.getCurrentGrade(scoreP.niveauPersonnal)?.gradeName ?? 'Aucun'} ${profilP.pseudo.toUpperCase()} de niveau ${scoreP.niveauPersonnal}",
                     Theme.of(context).textTheme.titleMedium,
                   ),
 
@@ -67,10 +64,6 @@ class _AccueilScoreState extends State<AccueilScore> {
                   CustomText.center(
                     "Aujourd'hui l'XP acquis : ${scoreP.globalScore}",
                     Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  CustomText.center(
-                    "Accès aux détails",
-                    Theme.of(context).textTheme.headlineMedium,
                   ),
 
                   SizedBox(

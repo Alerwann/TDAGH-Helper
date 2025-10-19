@@ -6,8 +6,8 @@ import 'package:tdahelpe/data/schema/taches_shema.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class AjoutTache extends StatefulWidget {
 
@@ -28,10 +28,9 @@ class _AjoutTacheState extends State<AjoutTache> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: TextDegrade(title: "Ajout d'activités", choicetype: "parametre"),
-        ),
+        appBar: CustomHeightAppcar.customApp("Ajout d'activités", context, 'parametre', true),
         body: SingleChildScrollView(
+          padding: EdgeInsets.all(12),
           child: Center(
             child: Padding(
               padding: EdgeInsetsGeometry.symmetric(horizontal: 10),

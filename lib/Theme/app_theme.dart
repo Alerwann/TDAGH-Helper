@@ -49,7 +49,7 @@ class AppTheme {
           color: Colors.black87,
         ),
 
-        bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
+        bodyLarge: TextStyle(fontSize: 20, color: Colors.black87),
 
         bodyMedium: TextStyle(fontSize: 14, color: Colors.black87),
 
@@ -81,7 +81,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-
+          
           textStyle: TextStyle(color: Colors.white, fontSize: 12),
         ),
       ),

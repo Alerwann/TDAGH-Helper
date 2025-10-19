@@ -1,12 +1,8 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/services/notification_service.dart';
-import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
+import 'package:tdahelpe/utils/horaire_moment.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 
 class HeureParametreConfig extends StatefulWidget {
   const HeureParametreConfig({super.key});
@@ -21,12 +17,11 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-        title: TextDegrade(
-          title: 'Configutaion des horaires',
-          choicetype: 'parametre',
-        ),
+      appBar: CustomHeightAppcar.customApp(
+        "Configuration des horaires",
+        context,
+        "parametre",
+        true,
       ),
       body: Container(
         margin: EdgeInsets.all(30),
@@ -37,95 +32,19 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 10,
               children: [
- 
-                _horairesModif('réveil', 'réveil'),
-                _horairesModif('repas de midi', 'midi'),
-                _horairesModif('repas du soir', 'soir'),
-                _horairesModif('couché', 'couché'),
-                _horairesModif('réinitialisation', 'reinit'),
-
-      
-
-           
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-    
-                      if (Platform.isAndroid) {
-                        bool hasPermission =
-                            await NotificationService.checkPermissions();
-
-                        if (!hasPermission) {
-                      
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('Permission requise'),
-                              content: Text(
-                                'Pour que les notifications fonctionnent, tu dois :\n\n'
-                                '1. Autoriser les "Alarmes et rappels"\n'
-                                '2. Désactiver l\'optimisation batterie\n'
-                                '3. Activer le démarrage automatique\n\n'
-                                'Clique sur "Ouvrir" pour accéder aux paramètres.',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text('Annuler'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    NotificationService.openSettings();
-                                  },
-                                  child: Text('Ouvrir'),
-                                ),
-                              ],
-                            ),
-                          );
-                          return; 
-                        }
-                      }
-
-                      final profil = Provider.of<HeureProfilProvider>(
-                        context,
-                        listen: false,
-                      );
-
-                      await NotificationService.scheduleAllNotifications(
-                        reveilHour: profil.reveilHours,
-                        midiHour: profil.midiHours,
-                        soirHour: profil.soirhours,
-                        coucheHour: profil.coucheHours,
-                      );
-
-                      // Message de confirmation
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            '✅ Notifications programmées avec succès !',
-                          ),
-                          duration: Duration(seconds: 2),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-
-                      FocusScope.of(context).requestFocus(FocusNode());
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(
-                    'Valider les horaires',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                HoraireMoment.horairesModif('réveil', 'réveil', context),
+                HoraireMoment.horairesModif('repas de midi', 'midi', context),
+                HoraireMoment.horairesModif('repas du soir', 'soir', context),
+                HoraireMoment.horairesModif('couché', 'couché', context),
+                HoraireMoment.horairesModif(
+                  'réinitialisation',
+                  'reinit',
+                  context,
                 ),
+
 
                 SizedBox(height: 10),
 
-   
                 ElevatedButton(
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -154,84 +73,6 @@ class _HeureParametreConfigState extends State<HeureParametreConfig> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _horairesModif(String moment, String momentsend) {
-    return Column(
-      children: [
-        CustomText.center(
-          'Heure du $moment',
-          Theme.of(context).textTheme.headlineMedium
-        ),
-        SizedBox(height: 20),
-        Row(
-          children: [
-            Expanded(
-              child: Consumer<HeureProfilProvider>(
-                builder: (context, profil, child) {
-                  int momentProfil = 12;
-
-                  switch (moment) {
-                    case 'réveil':
-                      momentProfil = profil.reveilHours;
-                      break;
-                    case 'repas de midi':
-                      momentProfil = profil.midiHours;
-                      break;
-                    case 'repas du soir':
-                      momentProfil = profil.soirhours;
-                      break;
-                    case 'couché':
-                      momentProfil = profil.coucheHours;
-                      break;
-                    case 'réinitialisation':
-                      momentProfil = profil.reinitHours;
-                      break;
-                  }
-
-                  return Center(
-                    child: DropdownMenuFormField(
-                      textAlign: TextAlign.center,
-                      textStyle: Theme.of(context).textTheme.bodyMedium,
-                      initialSelection: momentProfil,
-                      label: Text('Heures'),
-                      width: 300,
-                      menuHeight: 300,
-                      dropdownMenuEntries: List.generate(
-                        24,
-                        (hours) => DropdownMenuEntry(
-                          value: hours,
-                          label: hours.toString().padLeft(2, '0'),
-                        ),
-                      ),
-
-                      onSelected: (hours) {
-                        print("on selected ${profil.reinitHours}");
-                        print(
-                          "🎯 onSelected appelé : hours = $hours, momentsend = $momentsend",
-                        );
-                        if (hours != null && hours != momentProfil) {
-                          if (kDebugMode) {
-                            print(
-                              '📝 Widget: changement détecté $momentProfil → $hours',
-                            );
-                          }
-                          profil.setHours(hours, momentsend);
-                        } else {
-                          if (kDebugMode) {
-                            print('⏭️ Widget: même valeur ($hours), ignoré');
-                          }
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

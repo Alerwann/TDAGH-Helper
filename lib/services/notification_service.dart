@@ -459,8 +459,6 @@ class NotificationService {
     }
   }
 
-  // Remplace toute la section getNotificationData par ceci :
-
   static Future<bool> isOpenedFromNotification() async {
     if (Platform.isAndroid) {
       return _isOpenedFromNotificationAndroid();

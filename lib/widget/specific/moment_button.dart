@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/pages/Bingo%20ok/general_bingo_card.dart';
+import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/utils/horaire_moment.dart';
 
 class MomentButton {
   static Widget buildMomentButton(
     String moment,
     IconData icon,
     Color iconColor,
-    bool isActive,
     BuildContext context,
   ) {
     int hourMomentdeb = 12;
@@ -17,7 +17,7 @@ class MomentButton {
     int scoreByMoment = 0;
 
     return ElevatedButton(
-      onPressed: isActive
+      onPressed: HoraireMoment.isMomentAccessible(moment, context)
           ? () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -32,41 +32,19 @@ class MomentButton {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-
               spacing: 10,
               children: [
                 Icon(icon, color: iconColor),
-
                 Text(moment, style: Theme.of(context).textTheme.headlineLarge),
-
                 Icon(icon, color: iconColor),
               ],
             ),
             Consumer<HeureProfilProvider>(
               builder: (context, profil, child) {
-                switch (moment.toLowerCase()) {
-                  case 'matin':
-                    hourMomentdeb = profil.reveilHours - 1;
-                    hourMomentfin = profil.midiHours + 1;
+                hourMomentdeb = HoraireMoment.momentPhrase(moment, context)[0];
+                hourMomentfin = HoraireMoment.momentPhrase(moment, context)[1];
 
-                    break;
-                  case 'midi':
-                    hourMomentdeb = profil.midiHours - 1;
-                    hourMomentfin = profil.soirhours + 1;
-
-                    break;
-                  case 'soir':
-                    hourMomentdeb = profil.soirhours - 1;
-                    hourMomentfin = profil.coucheHours + 1;
-
-                    break;
-                  case 'couché':
-                    hourMomentdeb = profil.coucheHours - 1;
-                    hourMomentfin = profil.coucheHours + 3 >=24 ? profil.coucheHours-24 : profil.coucheHours;
-
-                    break;
-                }
-                return isActive
+                return HoraireMoment.isMomentAccessible(moment, context)
                     ? Text(
                         "Fin d'accès à $hourMomentfin H",
                         style: Theme.of(context).textTheme.bodyMedium,

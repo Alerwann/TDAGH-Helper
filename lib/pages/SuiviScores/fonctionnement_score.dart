@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class FonctionnementScore extends StatelessWidget {
   const FonctionnementScore({super.key});
@@ -8,9 +8,7 @@ class FonctionnementScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextDegrade(title: "Règles de l'xp", choicetype: "parametre"),
-      ),
+      appBar: CustomHeightAppcar.customApp("Fonctionnement", context, "parametre", true),
       body: Center(
         child: SizedBox(
           width: 350,
@@ -23,7 +21,7 @@ class FonctionnementScore extends StatelessWidget {
                 children: [
             
                   CustomText.center(
-                    "Tous les jours à 4h du 🌞 matin, l'Xp quotidienne se remet à 0.",
+                    "L'heure de la remise à 0 est configurable dans les paramètres de l'application 🤓",
                     Theme.of(context).textTheme.bodyLarge,
                   ),
                   CustomText.center(

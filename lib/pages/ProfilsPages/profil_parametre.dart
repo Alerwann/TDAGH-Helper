@@ -1,9 +1,9 @@
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
+
 
 import '../../widget/utils/imageSet.dart';
 
@@ -56,160 +56,153 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
+      onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: TextDegrade(
-            title: 'Configuration du Profil',
-            choicetype: 'parametre',
-          ),
+        appBar: CustomHeightAppcar.customApp(
+          "Configuration du profil",
+          context,
+          "parametre",
+          true,
         ),
         body: SingleChildScrollView(
-          child: ConstrainedBox(
-             constraints: BoxConstraints(
-              minHeight:
-                  MediaQuery.of(context).size.height -
-                  kToolbarHeight -
-                  MediaQuery.of(context).padding.top,
-            ),
-            child: Center(
-              
-              child: Consumer<ProfilProvider>(
-                builder: (context, profil, child) {
-                  return Column(
-                    spacing: 50,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(75),
-                            child: ImageSet(sizewidth: 150, 0),
+          padding: EdgeInsets.all(15),
+          child: Center(
+            child: Consumer<ProfilProvider>(
+              builder: (context, profil, child) {
+                return Column(
+                  spacing: 50,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(75),
+                          child: ImageSet(sizewidth: 150, 0),
+                        ),
+                        Positioned(
+                          bottom: -25,
+                          right: -10,
+                          child: IconButton(
+                            onPressed: pickImage,
+                            icon: Icon(Icons.camera_alt, size: 40),
                           ),
-                          Positioned(
-                            bottom: -25,
-                            right: -10,
-                            child: IconButton(
-                              onPressed: pickImage,
-                              icon: Icon(Icons.camera_alt, size: 40),
-                            ),
-                          ),
-                        ],
-                      ),
-                  
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
-                        child: Form(
-                          key: _formKey,
-                  
-                          child: SizedBox(
-                            width: 300,
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                    hintText: profil.pseudo,
-                                    prefixIcon: Icon(Icons.person),
-                                    labelText: 'Pseudo',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
+                        ),
+                      ],
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Form(
+                        key: _formKey,
+
+                        child: SizedBox(
+                          width: 300,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: profil.pseudo,
+                                  prefixIcon: Icon(Icons.person),
+                                  labelText: 'Pseudo',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "Champs du pseudo vide";
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Champs du pseudo vide";
+                                  }
+                                  return null;
+                                },
+                                maxLength: 20,
+                                controller: _pseudoController,
+                              ),
+                              SizedBox(height: 16),
+                              SizedBox(
+                                width: 300,
+                                height: 50,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      Provider.of<ProfilProvider>(
+                                        context,
+                                        listen: false,
+                                      ).setPseudo(_pseudoController.text);
+                                      FocusScope.of(
+                                        context,
+                                      ).requestFocus(FocusNode());
                                     }
-                                    return null;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Pseudo mis à jour avec succès !',
+                                        ),
+                                      ),
+                                    );
                                   },
-                                  maxLength: 20,
-                                  controller: _pseudoController,
-                             
-                                ),
-                                SizedBox(height: 16),
-                                SizedBox(
-                                  width: 300,
-                                  height: 50,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        Provider.of<ProfilProvider>(
-                                          context,
-                                          listen: false,
-                                        ).setPseudo(_pseudoController.text);
-                                        FocusScope.of(
-                                          context,
-                                        ).requestFocus(FocusNode());
-                                      }
-                  
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Pseudo mis à jour avec succès !',
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    label: Text(
-                                      'Enregistrer le pseudo',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    icon: Icon(
-                                      Icons.check_box,
-                                      color: Colors.green,
-                                    ),
+                                  label: Text(
+                                    'Enregistrer le pseudo',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  icon: Icon(
+                                    Icons.check_box,
+                                    color: Colors.green,
                                   ),
                                 ),
-                                SizedBox(height: 16),
-                                SizedBox(
-                                  width: 300,
-                                  height: 50,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: Text('Réinitialiser ?'),
-                                          content: Text(
-                                            'Toutes tes données seront perdues.',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: Navigator.of(context).pop,
-                                              child: Text('Annuler'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                                Provider.of<ProfilProvider>(
-                                                  context,
-                                                  listen: false,
-                                                ).resetAll().then((_) {
-                                                  _pseudoController.text =
-                                                      'Inconnu';
-                                                });
-                                              },
-                                              child: Text('Confirmer'),
-                                            ),
-                                          ],
+                              ),
+                              SizedBox(height: 16),
+                              SizedBox(
+                                width: 300,
+                                height: 50,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text('Réinitialiser ?'),
+                                        content: Text(
+                                          'Toutes tes données seront perdues.',
                                         ),
-                                      );
-                                    },
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    label: Text('Réinitialiser'),
-                                  ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: Navigator.of(
+                                              context,
+                                            ).pop,
+                                            child: Text('Annuler'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Provider.of<ProfilProvider>(
+                                                context,
+                                                listen: false,
+                                              ).resetAll().then((_) {
+                                                _pseudoController.text =
+                                                    'Inconnu';
+                                              });
+                                            },
+                                            child: Text('Confirmer'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  label: Text('Réinitialiser'),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

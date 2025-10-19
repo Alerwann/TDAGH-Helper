@@ -6,8 +6,9 @@ import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
+
 
 class TacheScore extends StatefulWidget {
   const TacheScore({super.key});
@@ -38,12 +39,11 @@ class _TacheScoreState extends State<TacheScore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: TextDegrade(title: "T'es pas tâche", choicetype: 'parametre'),
-      ),
+      appBar: CustomHeightAppcar.customApp('Score des taches', context, 'accueil', true),
       body: Consumer3<ScoreProvider, ProfilProvider, TachesProvider>(
         builder: (context, scoreP, profilP, tacheP, child) {
           return SingleChildScrollView(
+            padding: EdgeInsets.all(15),
             child: Center(
               child: Container(
                 padding: EdgeInsets.all(25),

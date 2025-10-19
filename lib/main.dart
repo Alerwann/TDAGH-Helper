@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tdahelpe/Theme/app_theme.dart';
-import 'package:tdahelpe/pages/Bingo%20ok/homepage.dart';
+import 'package:tdahelpe/pages/Bingo/homepage.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
@@ -22,7 +22,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    print("👀 on est dans le try de début");
     await NotificationService.initialize();
   } catch (e) {
     if (kDebugMode) {
@@ -73,7 +72,10 @@ class _MyScoreProvider extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     platform.setMethodCallHandler(_handleMethodCall);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkNotificationLaunch();
@@ -89,7 +91,6 @@ class _MyScoreProvider extends State<MyApp> {
   }
 
   Future<void> _scheduleAlarmsOnStartup() async {
-    print("👀 sxchedul enter");
     try {
       final profil = Provider.of<HeureProfilProvider>(context, listen: false);
 
@@ -125,8 +126,6 @@ class _MyScoreProvider extends State<MyApp> {
   }
 
   Future<void> _checkNotificationLaunch() async {
-    print("👀 checknotificationlaunch enter");
-
     // Attendre un peu que tout soit chargé
     await Future.delayed(Duration(milliseconds: 500));
 

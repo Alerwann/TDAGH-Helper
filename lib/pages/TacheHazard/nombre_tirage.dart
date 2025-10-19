@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class Parametretirage extends StatefulWidget {
   final VoidCallback? onNavigateToQuetes;
@@ -29,12 +29,7 @@ class _ParametretirageState extends State<Parametretirage> {
       },
 
       child: Scaffold(
-        appBar: AppBar(
-          title: TextDegrade(
-            title: "Modification du nombre",
-            choicetype: "parametre",
-          ),
-        ),
+        appBar: CustomHeightAppcar.customApp('Nombre de tirage', context, "parametre", true),
         body: Center(
           child: Consumer2<TachesProvider, ScoreProvider>(
             builder: (context, tachesTime, scoreP, child) {

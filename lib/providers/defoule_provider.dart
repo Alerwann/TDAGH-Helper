@@ -35,12 +35,12 @@ class DefouleProvider extends ChangeNotifier {
 
   Future<void> resetScore() async {
     if (kDebugMode) {
-      print("👀 provider Remise à 0 - AVANT");
+ 
     }
     _scoreDefoule = 0;
     await DefouleService.resetScoreDefoulee();
     if (kDebugMode) {
-      print("👀 provider Remise à 0 - APRÈS sauvegarde");
+    
     }
     notifyListeners();
   }

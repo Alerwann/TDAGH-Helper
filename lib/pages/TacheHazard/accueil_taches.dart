@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/pages/TacheHazard/tirage_taches.dart';
 import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:tdahelpe/widget/utils/text_degrade.dart';
+import 'package:tdahelpe/widget/utils/custom_height_appcar.dart';
 
 class AccueilTaches extends StatefulWidget {
   const AccueilTaches({super.key});
@@ -35,15 +35,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.home),
-        ),
-        title: TextDegrade(title: 'FAIS PAS TACHE', choicetype: 'accueil' ),
-      ),
+      appBar: CustomHeightAppcar.customApp("Fais pas tâche", context, "accueil", true),
       body: [Quetesfinales(), TacheListeAffichage()][_currentindex],
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.textIn,

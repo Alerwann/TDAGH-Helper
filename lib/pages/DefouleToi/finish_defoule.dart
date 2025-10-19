@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/main.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -6,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class FinishDefoule extends StatefulWidget {
   final int score;
@@ -18,24 +19,10 @@ class FinishDefoule extends StatefulWidget {
 class _FinishDefouleState extends State<FinishDefoule> {
   bool bestRecord = false;
   bool enregistreRecord = true;
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 237, 85, 2),
-      const Color.fromARGB(255, 244, 176, 4),
-      const Color.fromARGB(255, 255, 85, 59),
-    ],
-  );
-
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
 
   @override
   void initState() {
     super.initState();
-   
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final defouleP = Provider.of<DefouleProvider>(context, listen: false);
@@ -57,26 +44,16 @@ class _FinishDefouleState extends State<FinishDefoule> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => MyApp()),
+                  (route) => false,
                 );
               },
-              icon: Icon(
-                Icons.home,
-                color: const Color.fromARGB(255, 230, 177, 2),
-                size: 45,
-              ),
+              icon: Icon(Icons.home),
             ),
             automaticallyImplyLeading: false,
-            title: ShaderMask(
-              shaderCallback: (bounds) {
-                return gradient.createShader(
-                  Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-                );
-              },
-              child: Text("Tappe et défoule toi", style: textStyle),
-            ),
+            title: TextDegrade(title: "Résultats", choicetype: 'accueil'),
           ),
           body: Center(
             child: Column(
@@ -84,10 +61,9 @@ class _FinishDefouleState extends State<FinishDefoule> {
               children: [
                 Container(
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                  child: Text(
+                  child: CustomText.center(
                     "Tu as  un score de : ${widget.score} tapes !",
-                    style: TextStyle(fontSize: 25),
-                    textAlign: TextAlign.center,
+                    Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
 
@@ -117,9 +93,9 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   child: ElevatedButton(
                     onPressed: () async {
                       await defouleP.resetScore();
-                      if (kDebugMode) {
+            
                         print("✅ Score:  ${defouleP.scoreDefoule}");
-                      }
+                 
                     },
                     child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
                   ),
@@ -138,9 +114,9 @@ class _FinishDefouleState extends State<FinishDefoule> {
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: Column(
           children: [
-            Text(
+            CustomText.center(
               "Tu as batut le record",
-              style: TextStyle(fontSize: 25, color: Colors.red),
+              Theme.of(context).textTheme.headlineMedium,
             ),
             Text("🤗", style: TextStyle(fontSize: 60)),
           ],
@@ -151,11 +127,11 @@ class _FinishDefouleState extends State<FinishDefoule> {
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: Column(
           children: [
-            Text(
+            CustomText.center(
               "Le record est de $recordTape tapes.",
-              style: TextStyle(fontSize: 25),
+              Theme.of(context).textTheme.headlineMedium,
             ),
-            Text("😭", style: TextStyle(fontSize: 60)),
+            Text("😭", style: TextStyle(fontSize: 40)),
           ],
         ),
       );

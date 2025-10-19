@@ -68,8 +68,7 @@ class HeureProfilProvider extends ChangeNotifier {
         if (kDebugMode) {
           print('⚠️ Permissions manquantes pour programmer les alarmes');
         }
-        // Optionnel : demander à l'utilisateur d'aller dans les paramètres
-        // await NotificationService.requestMissingPermissions();
+       
       }
 
       await NotificationService.scheduleAllNotifications(
@@ -112,7 +111,7 @@ class HeureProfilProvider extends ChangeNotifier {
   }
 
   Future<void> setHours(int hours, String moment) async {
-    // Normaliser une seule fois
+
     final momentLower = moment.toLowerCase();
 
     // Récupérer la valeur actuelle
@@ -140,7 +139,6 @@ class HeureProfilProvider extends ChangeNotifier {
         return;
     }
 
-    // Si la valeur n'a pas changé, ne rien faire
     if (currentValue == hours) {
       if (kDebugMode) {
         print('⏭️ $moment : même valeur ($hours), pas de modification');
@@ -152,7 +150,7 @@ class HeureProfilProvider extends ChangeNotifier {
       print('🔧 setHours appelé : $moment = $hours');
     }
 
-    // Mettre à jour la valeur et sauvegarder
+
     switch (momentLower) {
       case 'réveil':
         _reveilHours = hours;
