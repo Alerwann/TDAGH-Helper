@@ -49,22 +49,5 @@ class AndroidNotifiactionService {
 
 
   
-  // static Future<void> requestMissingPermissions(MethodChannel platform) async {
-  //   if (Platform.isAndroid) {
-  //     try {
-  //       final bool? canSchedule = await platform.invokeMethod(
-  //         'checkPermissions',
-  //       );
 
-  //       if (canSchedule == false) {
-  //         // Ouvrir les paramètres pour que l'utilisateur active manuellement
-  //         await platform.invokeMethod('openSettings');
-  //       }
-  //     } catch (e) {
-  //       if (kDebugMode) {
-  //         print('⚠️ Erreur demande permissions: $e');
-  //       }
-  //     }
-  //   }
-  // }
 }

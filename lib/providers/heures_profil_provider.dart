@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/services/android_notifiaction_service.dart';
 import 'package:tdahelpe/services/horaire_storage_service.dart';
-import 'package:tdahelpe/services/notification_global_service.dart';
+import 'package:tdahelpe/services/notifications/notification_service.dart';
 
 class HeureProfilProvider extends ChangeNotifier {
   int _reveilHours = 7;

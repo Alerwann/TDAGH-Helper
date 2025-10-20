@@ -1,7 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/services/notification_global_service.dart';
+import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 
 class DeviceUtils {
   static bool isBatteryOptimizationNeeded() {
@@ -18,7 +18,7 @@ class DeviceUtils {
 
   static void testAndroid(BuildContext context) async {
     if (Platform.isAndroid) {
-      bool hasPermission = await NotificationService.checkPermissions();
+      bool hasPermission = await AndroidNotificationHandler.checkPermissions();
 
       if (!hasPermission) {
         showDialog(
@@ -40,7 +40,7 @@ class DeviceUtils {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  NotificationService.openSettings();
+                 AndroidNotificationHandler.openSettings();
                 },
                 child: Text('Ouvrir'),
               ),

@@ -14,7 +14,7 @@ import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
-import 'package:tdahelpe/services/notification_global_service.dart';
+import 'package:tdahelpe/services/notifications/notification_service.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 
@@ -125,18 +125,32 @@ class _MyScoreProvider extends State<MyApp> {
     }
   }
 
-  Future<void> _checkNotificationLaunch() async {
-    // Attendre un peu que tout soit chargé
+Future<void> _checkNotificationLaunch() async {
+    print('👂 Mise en place de l\'écoute des notifications...');
+
+    // Écouter le stream pour les futures notifications
+    NotificationService.notificationStream.listen((moment) {
+      print('🎯 Notification reçue pour le moment: $moment');
+      print('🚀 Navigation vers Bingo');
+
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => HomeBingoPage()),
+      );
+    });
+
+    // Vérifier aussi si l'app a été ouverte depuis une notification
+    // (au cas où le stream n'a pas encore été écouté)
     await Future.delayed(Duration(milliseconds: 500));
 
-    // Vérifier si ouvert depuis notification
     final isFromNotification =
         await NotificationService.isOpenedFromNotification();
 
-    print("❓ Ouvert depuis notification ? $isFromNotification");
+    print(
+      "❓ Ouvert depuis notification (vérification initiale) ? $isFromNotification",
+    );
 
     if (isFromNotification) {
-      print('🚀 Navigation vers Bingo');
+      print('🚀 Navigation vers Bingo (vérification initiale)');
       navigatorKey.currentState?.push(
         MaterialPageRoute(builder: (context) => HomeBingoPage()),
       );
