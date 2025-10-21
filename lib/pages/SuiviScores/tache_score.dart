@@ -80,7 +80,7 @@ class _TacheScoreState extends State<TacheScore> {
 
                     OutlinedButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => AccueilTaches(),

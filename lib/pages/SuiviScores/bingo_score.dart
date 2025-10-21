@@ -59,7 +59,7 @@ class _BingoScoreState extends State<BingoScore> {
                 SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => HomeBingoPage()),
                     );

@@ -1,4 +1,5 @@
-import 'package:tdahelpe/pages/ProfilsPages/heures_parametre.dart';
+// import 'package:tdahelpe/pages/ProfilsPages/heures_parametre.dart';
+import 'package:tdahelpe/pages/ProfilsPages/modif_horaire.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
@@ -74,7 +75,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HeureParametreConfig(),
+                            builder: (context) => ModifHoraire(),
                           ),
                         );
                       },

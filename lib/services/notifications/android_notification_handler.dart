@@ -159,4 +159,33 @@ class AndroidNotificationHandler {
       return false;
     }
   }
+
+    static Future<bool> hasAllPermissions() async {
+    if (Platform.isAndroid) {
+      try {
+        final bool? canSchedule = await platform.invokeMethod(
+          'checkPermissions',
+        );
+
+        if (canSchedule == false) {
+          if (kDebugMode) {
+            print('❌ Permission SCHEDULE_EXACT_ALARM manquante');
+          }
+          return false;
+        }
+
+        if (kDebugMode) {
+          print('✅ Toutes les permissions Android accordées');
+        }
+        return true;
+      } catch (e) {
+        if (kDebugMode) {
+          print('⚠️ Erreur vérification permissions: $e');
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
 }

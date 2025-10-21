@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:tdahelpe/services/android_notifiaction_service.dart';
 import 'package:tdahelpe/services/horaire_storage_service.dart';
+import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/notification_service.dart';
 
 class HeureProfilProvider extends ChangeNotifier {
@@ -63,7 +63,7 @@ class HeureProfilProvider extends ChangeNotifier {
   Future<void> _scheduleNotificationsWithLoadedHours() async {
     try {
       // ✅ Vérifier TOUTES les permissions nécessaires
-      bool hasPermissions = await AndroidNotifiactionService.hasAllPermissions();
+      bool hasPermissions = await AndroidNotificationHandler.hasAllPermissions();
 
       if (!hasPermissions) {
         if (kDebugMode) {

@@ -1,8 +1,7 @@
 import 'package:tdahelpe/main.dart';
-import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
+import 'package:tdahelpe/pages/DefouleToi/game_page.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
@@ -77,9 +76,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeDefouleToi(),
-                        ),
+                        MaterialPageRoute(builder: (context) => GamePage()),
                       );
                     },
                     child: Text("Réessayer", style: TextStyle(fontSize: 20)),
@@ -93,9 +90,8 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   child: ElevatedButton(
                     onPressed: () async {
                       await defouleP.resetScore();
-            
-                        print("✅ Score:  ${defouleP.scoreDefoule}");
-                 
+
+                      print("✅ Score:  ${defouleP.scoreDefoule}");
                     },
                     child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
                   ),

@@ -37,9 +37,9 @@ class BonusLevelProvider extends ChangeNotifier {
   BonusLevel? getCurrentGrade(int currentLevel) {
     int gradeIndex = currentLevel ~/ 5;
 
-    // Vérifier qu'on ne dépasse pas le nombre de grades
+    
     if (gradeIndex >= _levels.length) {
-      // Si on dépasse, retourner le dernier grade
+
       return _levels.isNotEmpty ? _levels.last : null;
     }
 

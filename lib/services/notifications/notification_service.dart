@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:tdahelpe/services/android_notifiaction_service.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/notification_constants.dart';
 import 'package:tdahelpe/services/notifications/notification_storage.dart';
-import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:tdahelpe/services/notifications/timezone_config.dart';
+
 
 class NotificationService {
   static final StreamController<String> _notificationStream =
@@ -21,28 +21,12 @@ class NotificationService {
   static const platform = MethodChannel('alarm_channel');
 
   static Future<void> initialize() async {
-    tz_data.initializeTimeZones();
+    await TimezoneConfig.initialize();
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final List<DarwinNotificationCategory> darwinCategories = [
-      DarwinNotificationCategory(
-        'tdahelpe_category', // Identifiant unique
-        actions: <DarwinNotificationAction>[
-          DarwinNotificationAction.plain(
-            'open_action', // Identifiant de l'action
-            'Ouvrir',
-            options: <DarwinNotificationActionOption>{
-              DarwinNotificationActionOption.foreground,
-            },
-          ),
-        ],
-        options: <DarwinNotificationCategoryOption>{
-          DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
-        },
-      ),
-    ];
+
 
     final DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
@@ -53,7 +37,7 @@ class NotificationService {
           defaultPresentAlert: true,
           defaultPresentBadge: true,
           defaultPresentSound: true,
-          notificationCategories: darwinCategories,
+          notificationCategories: IosNotificationHandler.createCategories(),
         );
 
     final InitializationSettings initializationSettings =
@@ -66,7 +50,7 @@ class NotificationService {
         final String? payload = response.payload;
 
         if (payload != null) {
-         ;
+
           await NotificationStorage.storeNotificationTap(payload);
 
           _notificationStream.add(payload);
@@ -77,15 +61,24 @@ class NotificationService {
     );
 
     if (Platform.isAndroid) {
-      AndroidNotificationHandler.requestPermissions(_notifications);
+     await AndroidNotificationHandler.requestPermissions(_notifications);
 
-      AndroidNotificationHandler.checkPermissions();
+     await AndroidNotificationHandler.checkPermissions();
     }
 
     if (Platform.isIOS) {
       IosNotificationHandler.requestPermissions(plugin: _notifications);
-      IosNotificationHandler.checkLaunchNotification(plugin: _notifications);
-    
+        final String? launchPayload =
+          await IosNotificationHandler.checkLaunchNotification(
+            plugin: _notifications,
+          );
+
+      if (launchPayload != null) {
+        await NotificationStorage.storeNotificationTap(launchPayload);
+        _notificationStream.add(launchPayload);
+        print('📱 iOS: Notification de lancement traitée');
+      }
+
     }
 
     print('✅ Notifications complètement initialisées');
@@ -189,10 +182,24 @@ class NotificationService {
 
   static Future<bool> isOpenedFromNotification() async {
     if (Platform.isAndroid) {
-      return AndroidNotifiactionService.isOpenedFromNotificationAndroid();
+      return isOpenedFromNotificationAndroid();
     } else if (Platform.isIOS) {
       return NotificationStorage.wasOpenedFromNotification();
     }
     return false;
+  }
+
+
+
+  static Future<bool> isOpenedFromNotificationAndroid() async {
+    try {
+      final result = await platform.invokeMethod('getNotificationData');
+      return result != null;
+    } catch (e) {
+
+        print('❌ Erreur Android: $e');
+
+      return false;
+    }
   }
 }

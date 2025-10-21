@@ -20,7 +20,7 @@ class CustomHeightApBcar {
     );
 
     textPainter.layout(maxWidth: screenWidth);
-    print("❓ textpaint maxline: ${textPainter.didExceedMaxLines}");
+ 
 
     while (textPainter.didExceedMaxLines) {
       maxLines += 1;
