@@ -10,6 +10,7 @@ import 'package:tdahelpe/services/notifications/timezone_config.dart';
 
 
 class NotificationService {
+
   static final StreamController<String> _notificationStream =
       StreamController<String>.broadcast();
 
@@ -188,8 +189,6 @@ class NotificationService {
     }
     return false;
   }
-
-
 
   static Future<bool> isOpenedFromNotificationAndroid() async {
     try {

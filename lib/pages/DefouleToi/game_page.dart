@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/DefouleToi/finish_defoule.dart';
 
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -61,18 +62,12 @@ class _GamePageState extends State<GamePage> {
                       ),
                   interval: Duration(milliseconds: 100),
                   onFinished: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FinishDefoule(score: _score),
-                      ),
-                    );
+                    AppNavigator.replaceTo(FinishDefoule(score: _score));
                   },
                 ),
                 !_compteurActive
                     ? ElevatedButton(
                         onPressed: () {
-                 
                           _controller.restart();
                           setState(() {
                             _compteurActive = true;

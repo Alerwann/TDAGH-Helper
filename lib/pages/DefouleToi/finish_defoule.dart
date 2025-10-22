@@ -1,4 +1,4 @@
-import 'package:tdahelpe/main.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/DefouleToi/game_page.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +44,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
-                  (route) => false,
-                );
+                 AppNavigator.goToRoot();
               },
               icon: Icon(Icons.arrow_back_rounded),
             ),
@@ -77,10 +73,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   margin: EdgeInsets.all(15),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => GamePage()),
-                      );
+                      AppNavigator.replaceTo(GamePage());
                     },
                     child: Text("Réessayer", style: TextStyle(fontSize: 20)),
                   ),

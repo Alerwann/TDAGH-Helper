@@ -256,19 +256,23 @@ Future<int> getScoreByMoment(String moment) async {
 
     bool success;
 
-    if (_currentStep == _isChecked.length && _currentStep > 0) {
+if (_currentStep == _isChecked.length && _currentStep > 0) {
       success = await incrementglobal('taches');
+      if (!success) {
+        _isChecked = oldIsChecked;
+        _currentStep = oldCurrentStep;
+        return false;
+      }
     } else {
       success = await resetTacheScore();
+      if (!success) {
+        _isChecked = oldIsChecked;
+        _currentStep = oldCurrentStep;
+        return false;
+      }
     }
 
-    if (!success) {
-      _isChecked = oldIsChecked;
-      _currentStep = oldCurrentStep;
-      _scores['taches'] = oldTacheScore;
-      return false;
-    }
-
+   
     final saveSuccess = await ScoreStorageService.saveTacheState(_isChecked);
 
     if (!saveSuccess) {
