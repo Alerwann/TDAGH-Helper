@@ -33,6 +33,8 @@ class _TirageFinalState extends State<TirageFinal>
   int nbCycles = 0;
 
   bool _activeAnimation = false;
+  late AnimationStatusListener _slideListener;
+  late AnimationStatusListener _animationListener;
 
   @override
   void initState() {
@@ -47,6 +49,7 @@ class _TirageFinalState extends State<TirageFinal>
       duration: Duration(milliseconds: 500),
       vsync: this,
     );
+
     _slideAnimation = Tween<double>(
       begin: 0,
       end: -300,
@@ -59,7 +62,7 @@ class _TirageFinalState extends State<TirageFinal>
 
     _animation = Tween<double>(begin: -5, end: 10).animate(controllerAnimation);
 
-    _slideScaleController.addStatusListener((status) {
+    _slideListener = (AnimationStatus status) {
       if (status == AnimationStatus.completed) {
         if (currentCycle < nbCycles) {
           controllerAnimation.forward();
@@ -67,9 +70,11 @@ class _TirageFinalState extends State<TirageFinal>
           Navigator.pop(context);
         }
       }
-    });
+    };
 
-    _animation.addStatusListener((status) {
+    _slideScaleController.addStatusListener(_slideListener);
+
+    _animationListener = (AnimationStatus status) {
       if (status == AnimationStatus.completed) {
         repetitionTremblemement++;
         if (repetitionTremblemement < 6) {
@@ -92,7 +97,9 @@ class _TirageFinalState extends State<TirageFinal>
           indfinal = listIndex[currentCycle - 1];
         }
       }
-    });
+    };
+
+    _animation.addStatusListener(_animationListener);
   }
 
   @override
@@ -172,18 +179,20 @@ class _TirageFinalState extends State<TirageFinal>
 
   @override
   void dispose() {
+    _slideScaleController.removeStatusListener(_slideListener);
+    _animation.removeStatusListener(_animationListener);
     controllerAnimation.dispose();
     _slideScaleController.dispose();
     super.dispose();
   }
 
-  List tabIndice(int nbChoiceadd,int tacheLength) {
+  List tabIndice(int nbChoiceadd, int tacheLength) {
     int randomIndex;
     List listeIndex = [];
     List listToreturn = [];
 
-      if (nbChoiceadd > tacheLength) {
-      nbChoiceadd = tacheLength; 
+    if (nbChoiceadd > tacheLength) {
+      nbChoiceadd = tacheLength;
     }
 
     while (listToreturn.length < nbChoiceadd) {

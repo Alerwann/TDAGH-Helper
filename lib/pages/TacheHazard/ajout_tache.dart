@@ -160,7 +160,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                                 content: Text('Tâche ajoutée avec succès !'),
                               ),
                             );
-                            tache.reinitTAche();
+                            tache.reinitTache();
                             scoreP.resetCheckboxesWithLength(1);
 
                             Navigator.pop(context);

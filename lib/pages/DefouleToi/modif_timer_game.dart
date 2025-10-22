@@ -98,28 +98,45 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
                             maxLength: 3,
                             controller: _numberController,
                           ),
+
+                          // Enregistrer le nouveau compteur
+                          
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 final nbSaisi = int.parse(
                                   _numberController.text,
                                 );
 
-                                setState(() {
-                                  defoulP.saveTimerDuration(nbSaisi);
-                                  defoulP.resetScore();
+                                final saveSuccess = await defoulP
+                                    .saveTimerDuration(nbSaisi);
+                                final resetSuccess = await defoulP.resetScore();
 
-                                  _numberController.clear();
-                                });
+                                _numberController.clear();
+
+                                final success = saveSuccess && resetSuccess;
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Timer mis à jour avec succès !',
+                                      success
+                                          ? '✅ Timer mis à jour avec succès !'
+                                          : '⚠️ Erreur lors de la mise à jour',
                                     ),
+                                    backgroundColor: success
+                                        ? Colors.green
+                                        : Colors.orange,
+                                    duration: Duration(seconds: 2),
                                   ),
                                 );
 
-                                Navigator.pop(context);
+                                if (success) {
+                                  Navigator.pop(context);
+                                }
+
+                                if (mounted) {
+                                  setState(() {});
+                                }
                               }
                             },
                             child: Text("Valider"),

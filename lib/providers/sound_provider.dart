@@ -37,9 +37,16 @@ class SoundProvider extends ChangeNotifier {
 
 Future<void> playSound(String assetKey, String typeMemory) async {
     if (!_isReady) return;
-    await _audioController!.playSound(assetKey, typeMemory);
-    _isPlaying = true; 
-    notifyListeners();
+
+    try {
+      await _audioController!.playSound(assetKey, typeMemory);
+      _isPlaying = true;
+      notifyListeners();
+    } catch (e) {
+      _isPlaying = false; 
+      notifyListeners();
+      rethrow; 
+    }
   }
 
   Future<void> pauseSound() async {

@@ -51,6 +51,8 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                 ),
 
                 SizedBox(height: 10),
+
+                // bouton Start
                 SizedBox(
                   width: 260,
                   height: 60,
@@ -64,7 +66,8 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                     child: Text("Start"),
                   ),
                 ),
-
+                
+                // bouton modifier timer
                 SizedBox(
                   width: 260,
                   height: 60,
@@ -81,14 +84,34 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                   ),
                 ),
                 SizedBox(height: 10),
+
+                // réinitialisation timer
                 SizedBox(
                   width: 260,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await defouleP.resetScore();
+                      final success = await defouleP.resetScore();
 
-                      print("✅ Score:  ${defouleP.scoreDefoule}");
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('✅ Score réinitialisé'),
+                            backgroundColor: Colors.green,
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '⚠️ Impossible de réinitialiser le score',
+                            ),
+                            backgroundColor: Colors.orange,
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
 
                       setState(() {});
                     },

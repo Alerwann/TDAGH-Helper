@@ -110,7 +110,7 @@ class _ParametretirageState extends State<Parametretirage> {
                                   _numberController.clear();
                                   choiceConvient = 0;
                                 });
-                                tachesTime.reinitTAche();
+                                tachesTime.reinitTache();
                                 scoreP.resetCheckboxesWithLength(1);
 
                                 Navigator.pop(context);

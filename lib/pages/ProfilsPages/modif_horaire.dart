@@ -28,7 +28,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
       final heureP = Provider.of<HeureProfilProvider>(context, listen: false);
       matinController.text = heureP.reveilHours.toString();
       midiController.text = heureP.midiHours.toString();
-      soirController.text = heureP.soirhours.toString();
+      soirController.text = heureP.soirHours.toString();
       coucheController.text = heureP.coucheHours.toString();
       reinitController.text = heureP.reinitHours.toString();
     });
@@ -153,7 +153,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
                                             .toString();
                                         midiController.text = heureP.midiHours
                                             .toString();
-                                        soirController.text = heureP.soirhours
+                                        soirController.text = heureP.soirHours
                                             .toString();
                                         coucheController.text = heureP
                                             .coucheHours

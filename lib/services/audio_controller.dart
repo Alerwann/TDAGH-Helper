@@ -51,40 +51,26 @@ class AudioController {
   }
 
 Future<void> playSound(String assetKey, String typeMemory) async {
-    // LIGNE 1
-
     if (!_isInitialized || _audioPlayer == null) {
-      // LIGNE 2
-      _log.warning('AudioController not initialized, initializing now...');
       await initialize();
+      if (!_isInitialized) {
+        _log.severe('Impossible d\'initialiser l\'audio');
+        return;
+      }
     }
 
-    // LIGNE 3
-
     try {
+
+      await _audioPlayer!.stop();
+
       if (typeMemory == "interne") {
-        // LIGNE 4
         await _audioPlayer!.play(DeviceFileSource(assetKey));
-        // LIGNE 5
       } else if (typeMemory == "appli") {
-        // LIGNE 6
         await _audioPlayer!.play(AssetSource(assetKey));
-        // LIGNE 7
       }
     } catch (e) {
-      // LIGNE 8
-      _log.severe('Error playing sound: $e');
-
-      try {
-        if (typeMemory == "interne") {
-          await _audioPlayer!.play(DeviceFileSource(assetKey));
-        } else if (typeMemory == "appli") {
-          await _audioPlayer!.play(AssetSource(assetKey));
-        }
-      } catch (e2) {
-        // LIGNE 9
-        _log.severe('Error playing sound: $e2');
-      }
+      _log.severe('Erreur lecture audio: $e');
+  
     }
   }
 

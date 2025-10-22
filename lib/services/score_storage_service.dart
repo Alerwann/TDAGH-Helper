@@ -2,219 +2,263 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ScoreStorageService {
-  static const String _morningScoreKey = 'morning_score';
-  static const String _midiScoreKey = 'midi_score';
-  static const String _afternoonScoreKey = 'afternoon_score';
-  static const String _eveningScoreKey = 'evening_score';
-
-  static const String _globalBingoScore = 'global_bingo_score';
+  // ✅ Map pour associer les moments aux clés
+  static const Map<String, String> _scoreKeys = {
+    'matin': 'morning_score',
+    'midi': 'midi_score',
+    'soir': 'afternoon_score',
+    'couché': 'evening_score',
+    'taches': 'taches_score',
+    'bingoGlobal': 'global_bingo_score',
+  };
 
   static const String _cardsStateKey = 'cards_state';
-
-  static const String _tacheScoreKey = 'taches_score';
   static const String _tacheStateKey = 'taches_state';
-
   static const String _lastResetDateKey = 'last_reset_date';
+  static const String _xpGlobalKey = 'xp_global';
+  static const String _toothScoreKey = 'tooth_score';
+  static const String _defouleScoreKey = 'defoule_score';
 
-  static const String _xpGlobal = 'xp_global';
+  // ========== SCORES ==========
 
-  static const String _toothScore = 'tooth_score';
+  /// Sauvegarder un score pour un moment donné
+  /// Retourne true si succès, false si échec
+  static Future<bool> saveScore(String moment, int score) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _scoreKeys[moment.toLowerCase()];
 
-  static const String _defouleScore = 'defoule_score';
+      if (key == null) {
+        return false; // Moment invalide
+      }
 
-  static Future<void> saveScore(String moment, int score) async {
-    final prefs = await SharedPreferences.getInstance();
-    String key;
-
-    switch (moment.toLowerCase()) {
-      case 'matin':
-        key = _morningScoreKey;
-        break;
-      case 'midi':
-        key = _midiScoreKey;
-        break;
-      case 'soir':
-        key = _afternoonScoreKey;
-        break;
-      case 'couché':
-        key = _eveningScoreKey;
-        break;
-      case 'taches':
-        key = _tacheScoreKey;
-        break;
-      case 'bingoGlobal':
-        key = _globalBingoScore;
-        break;
-
-      default:
-        return;
+      await prefs.setInt(key, score);
+      return true;
+    } catch (e) {
+      return false;
     }
-
-    await prefs.setInt(key, score);
   }
 
+  /// Récupérer un score pour un moment donné
   static Future<int> getScore(String moment) async {
-    final prefs = await SharedPreferences.getInstance();
-    String key;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _scoreKeys[moment.toLowerCase()];
 
-    switch (moment.toLowerCase()) {
-      case 'matin':
-        key = _morningScoreKey;
-        break;
-      case 'midi':
-        key = _midiScoreKey;
-        break;
-      case 'soir':
-        key = _afternoonScoreKey;
-        break;
-      case 'couché':
-        key = _eveningScoreKey;
-        break;
-      case 'taches':
-        key = _tacheScoreKey;
-        break;
-      case 'bingoGlobal':
-        key = _globalBingoScore;
-        break;
-      default:
-        return 0;
+      if (key == null) {
+        return 0; // Moment invalide
+      }
+
+      return prefs.getInt(key) ?? 0;
+    } catch (e) {
+      return 0;
     }
-
-    return prefs.getInt(key) ?? 0;
   }
 
-  static Future<void> saveCardsState(
+  // ========== XP GLOBAL ==========
+
+  static Future<bool> saveXpGlobal(int score) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_xpGlobalKey, score);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<int> getXpGlobal() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_xpGlobalKey) ?? 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // ========== TOOTH SCORE ==========
+
+  static Future<bool> saveToothScore(int score) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_toothScoreKey, score);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<int> getToothScore() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_toothScoreKey) ?? 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // ========== DEFOULE SCORE ==========
+
+  static Future<bool> saveDefouleScore(int score) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_defouleScoreKey, score);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<int> getDefouleScore() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_defouleScoreKey) ?? 0;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // ========== CARDS STATE ==========
+
+  static Future<bool> saveCardsState(
     String moment,
     List<bool> cardsState,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = '${_cardsStateKey}_${moment.toLowerCase()}';
-
-    final jsonString = json.encode(cardsState);
-    await prefs.setString(key, jsonString);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = '${_cardsStateKey}_${moment.toLowerCase()}';
+      final jsonString = json.encode(cardsState);
+      await prefs.setString(key, jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<List<bool>> getCardsState(
     String moment,
     int defaultLength,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = '${_cardsStateKey}_${moment.toLowerCase()}';
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = '${_cardsStateKey}_${moment.toLowerCase()}';
+      final jsonString = prefs.getString(key);
 
-    final jsonString = prefs.getString(key);
-    if (jsonString != null) {
-      final List<dynamic> decoded = json.decode(jsonString);
+      if (jsonString != null) {
+        final List<dynamic> decoded = json.decode(jsonString);
+        return decoded.map((item) => item as bool).toList();
+      }
 
-      return decoded.map((item) => item as bool).toList();
-    }
-
-    return List.generate(defaultLength, (index) => false);
-  }
-
-  static Future<void> resetAllCardsState() async {
-    final prefs = await SharedPreferences.getInstance();
-    final moments = ['matin', 'midi', 'soir', 'couché'];
-
-    for (String moment in moments) {
-      final key = '${_cardsStateKey}_$moment';
-      await prefs.remove(key);
+      return List.generate(defaultLength, (index) => false);
+    } catch (e) {
+      return List.generate(defaultLength, (index) => false);
     }
   }
 
-  static Future<void> saveLastResetDate(DateTime date) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_lastResetDateKey, date.toIso8601String());
-  }
+  static Future<bool> resetAllCardsState() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final moments = ['matin', 'midi', 'soir', 'couché'];
 
-  static Future<DateTime?> getLastResetDate() async {
-    final prefs = await SharedPreferences.getInstance();
-    final dateString = prefs.getString(_lastResetDateKey);
-
-    if (dateString != null) {
-      return DateTime.parse(dateString);
+      for (String moment in moments) {
+        final key = '${_cardsStateKey}_$moment';
+        await prefs.remove(key);
+      }
+      return true;
+    } catch (e) {
+      return false;
     }
-    return null;
   }
 
-  static Future<void> clearAllData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+  // ========== TACHE STATE ==========
+
+  static Future<bool> saveTacheState(List<bool> tacheState) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = json.encode(tacheState);
+      await prefs.setString(_tacheStateKey, jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<List<bool>> getTacheState({int defaultLength = 3}) async {
-    final List<bool> defaultList = List.generate(3, (index) => false);
-    final prefs = await SharedPreferences.getInstance();
-    final key = _tacheStateKey;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString(_tacheStateKey);
 
-    final jsonString = prefs.getString(key);
+      if (jsonString != null) {
+        final List<dynamic> decoded = json.decode(jsonString);
+        return decoded.map((item) => item as bool).toList();
+      }
 
-    if (jsonString != null) {
-      final List<dynamic> decoded = json.decode(jsonString);
-
-      return decoded.map((item) => item as bool).toList();
+      return List.generate(defaultLength, (index) => false);
+    } catch (e) {
+      return List.generate(defaultLength, (index) => false);
     }
-
-    return defaultList;
   }
 
-  static Future<void> saveTacheState(List<bool> tacheState) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _tacheStateKey;
-
-    final jsonString = json.encode(tacheState);
-
-    await prefs.setString(key, jsonString);
+  static Future<bool> resetTachesState(List<bool> tacheStates) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final List<bool> resetTacheState = List.generate(
+        tacheStates.length,
+        (index) => false,
+      );
+      final jsonString = jsonEncode(resetTacheState);
+      await prefs.setString(_tacheStateKey, jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<void> resetTachesState(List<bool> tacheStates) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _tacheStateKey;
-    final List<bool> resetTacheState = List.generate(
-      tacheStates.length,
-      (index) => false,
-    );
-    final jsonString = jsonEncode(resetTacheState);
-    await prefs.setString(key, jsonString);
+  static Future<bool> resetTacheScore() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_scoreKeys['taches']!, 0);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<void> resetTacheScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _tacheScoreKey;
-    await prefs.setInt(key, 0);
+  // ========== LAST RESET DATE ==========
+
+  static Future<bool> saveLastResetDate(DateTime date) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_lastResetDateKey, date.toIso8601String());
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<void> saveXpGlobal(int score) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _xpGlobal;
+  static Future<DateTime?> getLastResetDate() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateString = prefs.getString(_lastResetDateKey);
 
-    await prefs.setInt(key, score);
+      if (dateString != null) {
+        return DateTime.parse(dateString);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
-  static Future<int> getXpglobal() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _xpGlobal;
-    return prefs.getInt(key) ?? 0;
-  }
+  // ========== UTILITIES ==========
 
-  static Future<void> saveToothScore(int score) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _toothScore;
-    await prefs.setInt(key, score);
-  }
-
-  static Future<int> getToothScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_toothScore) ?? 0;
-  }
-
-  static Future<void> saveDefouleScore(int score) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _defouleScore;
-    await prefs.setInt(key, score);
-  }
-
-  static Future<int> getDefouleScore() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_defouleScore) ?? 0;
+  static Future<bool> clearAllData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

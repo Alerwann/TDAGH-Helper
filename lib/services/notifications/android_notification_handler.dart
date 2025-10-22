@@ -18,6 +18,12 @@ class AndroidNotificationHandler {
       print('🤖 Android - Planification notification #$id');
       print('   Heure demandée : $hour:$minute');
     }
+      if (hour < 0 || hour > 23) {
+      throw ArgumentError('Heure invalide: $hour');
+    }
+    if (minute < 0 || minute > 59) {
+      throw ArgumentError('Minute invalide: $minute');
+    }
 
     try {
       await platform.invokeMethod('scheduleAlarm', {

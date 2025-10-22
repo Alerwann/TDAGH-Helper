@@ -90,37 +90,31 @@ class _MyScoreProvider extends State<MyApp> {
     }
   }
 
-  Future<void> _scheduleAlarmsOnStartup() async {
+Future<void> _scheduleAlarmsOnStartup() async {
     try {
       final profil = Provider.of<HeureProfilProvider>(context, listen: false);
 
-      int retries = 0;
-      while (profil.midiHours == 12 && retries < 10) {
-        await Future.delayed(Duration(milliseconds: 200));
-        retries++;
+      // ✅ Attendre que le provider soit chargé
+      if (profil.isLoading) {
+        await Future.doWhile(() async {
+          await Future.delayed(Duration(milliseconds: 100));
+          return profil.isLoading; // Continue tant que isLoading = true
+        });
       }
 
       if (kDebugMode) {
-        print('🔔 Programmation automatique des alarmes au démarrage...');
-      }
-      if (kDebugMode) {
-        print('   Provider chargé après ${retries * 200}ms');
+        print('🔔 Programmation automatique des alarmes...');
       }
 
       await NotificationService.scheduleAllNotifications(
         reveilHour: profil.reveilHours,
         midiHour: profil.midiHours,
-        soirHour: profil.soirhours,
+        soirHour: profil.soirHours,
         coucheHour: profil.coucheHours,
       );
-
-      if (kDebugMode) {
-        if (kDebugMode) {}
-        print('✅ Alarmes programmées automatiquement au démarrage');
-      }
     } catch (e) {
       if (kDebugMode) {
-        print('❌ Erreur programmation alarmes au démarrage: $e');
+        print('❌ Erreur programmation alarmes: $e');
       }
     }
   }

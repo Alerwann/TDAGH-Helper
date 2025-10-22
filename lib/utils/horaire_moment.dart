@@ -13,11 +13,11 @@ class HoraireMoment {
         return now.hour <= profil.midiHours + 1 &&
             now.hour >= profil.reveilHours - 1;
       case 'Midi':
-        return now.hour <= profil.soirhours + 1 &&
+        return now.hour <= profil.soirHours + 1 &&
             now.hour >= profil.midiHours - 1;
       case 'Soir':
         return now.hour <= profil.coucheHours + 1 &&
-            now.hour >= profil.soirhours - 1;
+            now.hour >= profil.soirHours - 1;
       case 'Couché':
         int heureDebut = profil.coucheHours - 1;
         int dureeAcces = 4;
@@ -42,9 +42,9 @@ class HoraireMoment {
       case 'matin':
         return [profil.reveilHours - 1, profil.midiHours + 1];
       case 'midi':
-        return [profil.midiHours - 1, profil.soirhours + 1];
+        return [profil.midiHours - 1, profil.soirHours + 1];
       case 'soir':
-        return [profil.soirhours - 1, profil.coucheHours + 1];
+        return [profil.soirHours - 1, profil.coucheHours + 1];
       case 'couché':
         if (profil.coucheHours + 4 >= 24) {
           return [profil.coucheHours - 1, profil.coucheHours + 4 - 24];
@@ -65,7 +65,7 @@ class HoraireMoment {
         return profil.midiHours;
 
       case 'repas du soir':
-        return profil.soirhours;
+        return profil.soirHours;
 
       case 'couché':
         return profil.coucheHours;

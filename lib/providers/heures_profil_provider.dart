@@ -2,81 +2,109 @@ import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/services/horaire_storage_service.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/notification_service.dart';
+import 'package:tdahelpe/utils/error_handler.dart';
 
 class HeureProfilProvider extends ChangeNotifier {
-  int _reveilHours = 7;
-  int _reveilMinutes = 0;
-  int _midiHours = 12;
-  int _midiMinutes = 0;
-  int _soirHours = 19;
-  int _soirMinutes = 0;
-  int _coucheHours = 22;
-  int _coucheMinutes = 0;
   int _timerGame = 20;
-  int _reinitHours = 4;
 
-  int get reveilHours => _reveilHours;
-  int get reveilMinutes => _reveilMinutes;
-  int get midiHours => _midiHours;
-  int get midiMinutes => _midiMinutes;
-  int get soirhours => _soirHours;
-  int get soirMinutes => _soirMinutes;
-  int get coucheHours => _coucheHours;
-  int get coucheMinutes => _coucheMinutes;
+
+  bool _isLoading = true;
+
+  Map<String, int> _hours = {
+    'reveil': 7,
+    'midi': 12,
+    'soir': 19,
+    'couche': 22,
+    'reinit': 4,
+  };
+
+  int get reveilHours => _hours['reveil']!;
+  int get midiHours => _hours['midi']!;
+  int get soirHours => _hours['soir']!;
+  int get coucheHours => _hours['couche']!;
+
+  int get reinitHours => _hours['reinit']!;
+
   int get timerGame => _timerGame;
-  int get reinitHours => _reinitHours;
+
+  bool get isLoading => _isLoading;
 
   HeureProfilProvider() {
     _loadData();
   }
 
   Future<void> _loadData() async {
-    _reveilHours = await HoraireStorageService.getHours('réveil');
-    if (kDebugMode) {
-      print('📥 Réveil chargé: $_reveilHours');
-    }
+    _isLoading = true;
+    notifyListeners();
 
-    _midiHours = await HoraireStorageService.getHours('midi');
-    if (kDebugMode) {
-      print('📥 Midi chargé: $_midiHours');
-    }
+    _hours['reveil'] =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getHours('réveil'),
+          errorMessage: "L'heure du réveil n'a pas pu être chargée",
+          defaultValue: 7,
+        ) ??
+        7;
 
-    _soirHours = await HoraireStorageService.getHours('soir');
-    if (kDebugMode) {
-      print('📥 Soir chargé: $_soirHours');
-    }
+    _hours['midi'] =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getHours('midi'),
+          errorMessage: "L'heure de midi n'a pas pu être chargée",
+          defaultValue: 12,
+        ) ??
+        12;
 
-    _coucheHours = await HoraireStorageService.getHours('couché');
-    if (kDebugMode) {
-      print('📥 Couché chargé: $_coucheHours');
-    }
-    _reinitHours = await HoraireStorageService.getHours('reinit');
-    if (kDebugMode) {
-      print('📥 Heure de réinitialisation chargé: $_reinitHours');
-    }
+    _hours["soir"] =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getHours('soir'),
+          errorMessage: "L'heure du soir n'a pas pu être chargée",
+          defaultValue: 19,
+        ) ??
+        19;
 
-    _timerGame = await HoraireStorageService.getTimerGame();
+    _hours["couche"] =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getHours('couché'),
+          errorMessage: "L'heure du couché n'a pas pu être chargée",
+          defaultValue: 21,
+        ) ??
+        21;
 
+    _hours["reinit"] =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getHours('reinit'),
+          errorMessage: "L'heure de réinitialisation n'a pas pu être chargée",
+          defaultValue: 4,
+        ) ??
+        4;
+
+    _timerGame =
+        await ErrorHandler.handleAsync(
+          () => HoraireStorageService.getTimerGame(),
+          errorMessage: "La durée du jeu n'a pas pu être réinitialisé",
+          defaultValue: 20,
+        ) ??
+        20;
+    _isLoading = false;
     notifyListeners();
   }
 
   Future<void> _scheduleNotificationsWithLoadedHours() async {
     try {
-      // ✅ Vérifier TOUTES les permissions nécessaires
-      bool hasPermissions = await AndroidNotificationHandler.hasAllPermissions();
+      bool hasPermissions =
+          await AndroidNotificationHandler.hasAllPermissions();
 
       if (!hasPermissions) {
         if (kDebugMode) {
           print('⚠️ Permissions manquantes pour programmer les alarmes');
         }
-       
+        return;
       }
 
       await NotificationService.scheduleAllNotifications(
-        reveilHour: _reveilHours,
-        midiHour: _midiHours,
-        soirHour: _soirHours,
-        coucheHour: _coucheHours,
+        reveilHour: _hours['reveil']!,
+        midiHour: _hours['midi']!,
+        soirHour: _hours['soir']!,
+        coucheHour: _hours['couche']!,
       );
 
       if (kDebugMode) {
@@ -89,112 +117,78 @@ class HeureProfilProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> resetAllHours() async {
-    _reveilHours = 7;
-    _reveilMinutes = 0;
-    _midiHours = 12;
-    _midiMinutes = 0;
-    _soirHours = 19;
-    _soirMinutes = 0;
-    _coucheHours = 22;
-    _coucheMinutes = 0;
-    _reinitHours = 4;
+  Future<bool> resetAllHours() async {
+    try {
+      _hours = {'reveil': 7, 'midi': 12, 'soir': 19, 'couche': 22, 'reinit': 4};
 
-    await HoraireStorageService.saveHours("réveil", _reveilHours);
-    await HoraireStorageService.saveHours("midi", _midiHours);
-    await HoraireStorageService.saveHours("soir", _soirHours);
-    await HoraireStorageService.saveHours("couché", _coucheHours);
-    await HoraireStorageService.saveHours("reinit", _reinitHours);
+      // Sauvegarder chaque valeur
+      for (var entry in _hours.entries) {
+        await HoraireStorageService.saveHours(entry.key, entry.value);
+      }
 
-    await _scheduleNotificationsWithLoadedHours();
-
-    notifyListeners();
+      await _scheduleNotificationsWithLoadedHours();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur lors de la réinitialisation: $e');
+      }
+      return false;
+    }
   }
 
-  Future<void> setHours(int hours, String moment) async {
+  Future<bool> setTimerGame(int timerG) async {
+    final oldTimer = _timerGame;
+    _timerGame = timerG;
+    try {
+      await HoraireStorageService.saveTimerGame(_timerGame);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur sauvegarde score: $e');
+      }
+      _timerGame = oldTimer;
+      notifyListeners();
+      return false;
+    }
+  }
 
+  Future<bool> setHours(int hours, String moment) async {
     final momentLower = moment.toLowerCase();
 
-    // Récupérer la valeur actuelle
-    int currentValue;
-    switch (momentLower) {
-      case 'réveil':
-        currentValue = _reveilHours;
-        break;
-      case 'midi':
-        currentValue = _midiHours;
-        break;
-      case 'soir':
-        currentValue = _soirHours;
-        break;
-      case 'couché':
-        currentValue = _coucheHours;
-        break;
-      case 'reinit':
-        currentValue = _reinitHours;
-        break;
-      default:
-        if (kDebugMode) {
-          print('⚠️ Moment inconnu : $moment');
-        }
-        return;
+    // 1. Vérifier si le moment existe
+    if (!_hours.containsKey(momentLower)) {
+      if (kDebugMode) {
+        print('⚠️ Moment inconnu : $moment');
+      }
+      return false;
     }
 
-    if (currentValue == hours) {
+    // 2. Vérifier si c'est la même valeur
+    if (_hours[momentLower] == hours) {
       if (kDebugMode) {
         print('⏭️ $moment : même valeur ($hours), pas de modification');
       }
-      return;
+      return true;
     }
 
-    if (kDebugMode) {
-      print('🔧 setHours appelé : $moment = $hours');
+    // 3. Modifier et sauvegarder
+    try {
+      _hours[momentLower] = hours;
+      await HoraireStorageService.saveHours(momentLower, hours);
+      await _scheduleNotificationsWithLoadedHours();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur lors de la modification de $moment: $e');
+      }
+      return false;
     }
-
-
-    switch (momentLower) {
-      case 'réveil':
-        _reveilHours = hours;
-        await HoraireStorageService.saveHours('réveil', _reveilHours);
-        break;
-      case 'midi':
-        _midiHours = hours;
-        await HoraireStorageService.saveHours('midi', _midiHours);
-        break;
-      case 'soir':
-        _soirHours = hours;
-        await HoraireStorageService.saveHours('soir', _soirHours);
-        break;
-      case 'couché':
-        _coucheHours = hours;
-        await HoraireStorageService.saveHours('couché', _coucheHours);
-        break;
-      case 'reinit':
-        _reinitHours = hours;
-        await HoraireStorageService.saveHours('reinit', _reinitHours);
-        print("✅ nouvel horair de réinitialisation $_reinitHours");
-        break;
-    }
-
-    if (kDebugMode) {
-      print(
-        '✅ $moment mis à jour : $hours, reprogrammation des notifications...',
-      );
-    }
-
-    // Reprogrammer TOUTES les notifications avec les nouvelles heures
-    await _scheduleNotificationsWithLoadedHours();
-
-    if (kDebugMode) {
-      print('✅ Notifications reprogrammées');
-    }
-
-    notifyListeners();
   }
 
-  Future<void> setTimerGame(int timerG) async {
-    _timerGame = timerG;
-    await HoraireStorageService.saveTimerGame(_timerGame);
-    notifyListeners();
+  int? getHours(String moment) {
+    return _hours[moment.toLowerCase()];
   }
 }

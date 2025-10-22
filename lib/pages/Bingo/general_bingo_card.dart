@@ -46,8 +46,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
   void _checkAccess() {
     if (!HoraireMoment.isMomentAccessible(widget.titleMoment, context)) {
-      Navigator.of(context).pop();
-
+     
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -57,6 +56,11 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
           duration: Duration(seconds: 3),
         ),
       );
+       Future.delayed(Duration(milliseconds: 500), () {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      });
     }
   }
 

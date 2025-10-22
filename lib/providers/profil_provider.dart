@@ -5,11 +5,13 @@ import 'package:tdahelpe/services/profil_storage_service.dart';
 
 class ProfilProvider extends ChangeNotifier {
   String _pseudo = 'Inconnu';
+
   String _profilImagePath = 'assets/images/defaultprofilimage.png';
 
   bool get isDefaultImage => _profilImagePath.startsWith('assets/');
 
   String get pseudo => _pseudo;
+
   String get profilImagePath => _profilImagePath;
 
   ProfilProvider() {
@@ -35,33 +37,53 @@ class ProfilProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setProfilImagePath(String profilPath) async {
+  Future<bool> setProfilImagePath(String profilPath) async {
+    final oldProfilImage = _profilImagePath;
     _profilImagePath = profilPath;
-    await ProfilStorageService.saveProfilImagePath(_profilImagePath);
-    notifyListeners();
+    try {
+      await ProfilStorageService.saveProfilImagePath(_profilImagePath);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("❌  Erreur de sauvegarde : $e");
+      _profilImagePath = oldProfilImage;
+      return false;
+    }
   }
 
-  Future<void> resetProfilimagePath() async {
+  Future<bool> resetProfilimagePath() async {
     _profilImagePath = 'assets/images/defaultprofilimage.png';
-    await ProfilStorageService.saveProfilImagePath(_profilImagePath);
-    notifyListeners();
+    return await setProfilImagePath(_profilImagePath);
   }
 
-  Future<void> setPseudo(String pseudo) async {
+  Future<bool> setPseudo(String pseudo) async {
+    final oldpseudo = _pseudo;
     _pseudo = pseudo;
-    await ProfilStorageService.savePseudo(_pseudo);
-    notifyListeners();
+    try {
+      await ProfilStorageService.savePseudo(_pseudo);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("❌  Erreur de sauvegarde du pseudo : $e");
+      _pseudo = oldpseudo;
+      notifyListeners();
+      return false;
+    }
   }
 
-  Future<void> resetPseudo() async {
+  Future<bool> resetPseudo() async {
     _pseudo = 'Inconnu';
-    await ProfilStorageService.savePseudo(_pseudo);
-    notifyListeners();
+    return await setPseudo(_pseudo);
   }
 
-  Future<void> resetAll() async {
-    resetPseudo();
-    resetProfilimagePath();
-    notifyListeners();
+  Future<bool> resetAll() async {
+    final pseudoSuccess = await resetPseudo();
+    final imageSuccess = await resetProfilimagePath();
+
+    if (!pseudoSuccess || !imageSuccess) {
+      print("❌ Erreur lors de la réinitialisation");
+    }
+
+    return pseudoSuccess && imageSuccess;
   }
 }

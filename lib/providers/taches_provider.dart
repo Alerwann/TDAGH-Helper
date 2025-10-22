@@ -8,12 +8,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TachesProvider extends ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
+
   List<TachesSchema> _taches = [];
   List<String> _choixTaches = [];
+
   static const String _storageKey = 'user_taches';
 
   List<String> get choixTaches => List.unmodifiable(_choixTaches);
-
   List<TachesSchema> get taches => List.unmodifiable(_taches);
 
   int _nombreT = 3;
@@ -32,70 +33,132 @@ class TachesProvider extends ChangeNotifier {
     _choixTaches = await TachesStorageService.getChoixTaches();
 
     if (tachesJson != null) {
-      // Charger depuis le storage
       final List<dynamic> tachesList = json.decode(tachesJson);
       _taches = tachesList.map((json) => TachesSchema.fromJson(json)).toList();
     } else {
-      // Premier lancement : charger les tâches par défaut
       _taches = TachesList.getDefaultCards();
-      await _saveTaches(); // Sauvegarder immédiatement
+      await _saveTaches();
     }
+
     _isLoading = false;
     notifyListeners();
   }
 
-  // Sauvegarder dans local storage
-  Future<void> _saveTaches() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String tachesJson = json.encode(
-      _taches.map((tache) => tache.toJson()).toList(),
-    );
-    await prefs.setString(_storageKey, tachesJson);
+  // Sauvegarder avec gestion d'erreur
+  Future<bool> _saveTaches() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String tachesJson = json.encode(
+        _taches.map((tache) => tache.toJson()).toList(),
+      );
+      await prefs.setString(_storageKey, tachesJson);
+      return true;
+    } catch (e) {
+      print("❌ Erreur lors de la sauvegarde des tâches : $e");
+      return false;
+    }
   }
 
   // Ajouter une tâche
-  Future<void> ajouterTache(TachesSchema tache) async {
+  Future<bool> ajouterTache(TachesSchema tache) async {
     _taches.insert(0, tache);
-    await _saveTaches();
+    final success = await _saveTaches();
+
+    if (!success) {
+      // Annuler l'ajout si la sauvegarde échoue
+      _taches.removeAt(0);
+      return false;
+    }
+
     notifyListeners();
+    return true;
   }
 
-  Future<void> reinitTAche() async {
+  // Réinitialiser les tâches choisies
+  Future<bool> reinitTache() async {
     _choixTaches = ['0'];
-    saveListeTache(_choixTaches);
-    notifyListeners();
+    return await saveListeTache(_choixTaches);
   }
 
   // Supprimer une tâche par nom
-  Future<void> supprimerTache(String nomTache) async {
-    _taches.removeWhere((tache) => tache.tacheName == nomTache);
-    await _saveTaches();
+  Future<bool> supprimerTache(String nomTache) async {
+    final index = _taches.indexWhere((tache) => tache.tacheName == nomTache);
+
+    if (index == -1) {
+      return false; // Tâche non trouvée
+    }
+
+    final tacheSupprimee = _taches[index];
+    _taches.removeAt(index);
+
+    final success = await _saveTaches();
+
+    if (!success) {
+      // Restaurer la tâche si la sauvegarde échoue
+      _taches.insert(index, tacheSupprimee);
+      return false;
+    }
+
     notifyListeners();
+    return true;
   }
 
   // Modifier une tâche existante
-  Future<void> modifierTache(
+  Future<bool> modifierTache(
     String ancienNom,
     TachesSchema nouvelleTache,
   ) async {
     final index = _taches.indexWhere((tache) => tache.tacheName == ancienNom);
-    if (index != -1) {
-      _taches[index] = nouvelleTache;
-      await _saveTaches();
+
+    if (index == -1) {
+      return false; // Tâche non trouvée
+    }
+
+    final ancienneTache = _taches[index];
+    _taches[index] = nouvelleTache;
+
+    final success = await _saveTaches();
+
+    if (!success) {
+      // Restaurer l'ancienne tâche si la sauvegarde échoue
+      _taches[index] = ancienneTache;
+      return false;
+    }
+
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> modifierNombreTache(int newnombreT) async {
+    final oldNombreT = _nombreT;
+    _nombreT = newnombreT;
+
+    try {
+      await TachesStorageService.saveNombreTaches(_nombreT);
       notifyListeners();
+      return true;
+    } catch (e) {
+      print("❌ Sauvegarde du nombre de tâches a échoué : $e");
+      _nombreT = oldNombreT;
+      notifyListeners();
+      return false;
     }
   }
 
-  Future<void> modifierNombreTache(int newnombreT) async {
-    _nombreT = newnombreT;
-    await TachesStorageService.saveNombreTaches(_nombreT);
-    notifyListeners();
-  }
-
-  Future<void> saveListeTache(List<String> listeTache) async {
+  Future<bool> saveListeTache(List<String> listeTache) async {
+    final oldchoixTache = _choixTaches;
     _choixTaches = listeTache;
-    await TachesStorageService.saveListeChoix(_choixTaches);
-    notifyListeners();
+
+    try {
+      await TachesStorageService.saveListeChoix(_choixTaches);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _choixTaches = oldchoixTache;
+      print("❌ Sauvegarde de la liste a échoué : $e");
+      notifyListeners();
+      return false;
+    }
   }
 
   // Méthodes utilitaires

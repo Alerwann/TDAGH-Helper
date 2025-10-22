@@ -4,6 +4,7 @@ import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/widget/specific/message_record.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
@@ -66,8 +67,10 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   ),
                 ),
 
-                messageRecord(widget.score, defouleP.scoreDefoule),
+                MessageRecord(scoreTape:  widget.score,recordTape:  defouleP.scoreDefoule),
                 SizedBox(height: 50),
+
+                // bouton réinitialiser
                 Container(
                   height: 60,
                   width: 250,
@@ -83,15 +86,25 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   ),
                 ),
 
+                // Bouton remise à 0
                 Container(
                   height: 60,
                   width: 250,
                   margin: EdgeInsets.all(15),
                   child: ElevatedButton(
                     onPressed: () async {
-                      await defouleP.resetScore();
+                      final success = await defouleP.resetScore();
 
-                      print("✅ Score:  ${defouleP.scoreDefoule}");
+                      if (!success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '⚠️ Impossible de réinitialiser le score',
+                            ),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      }
                     },
                     child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
                   ),
@@ -104,33 +117,5 @@ class _FinishDefouleState extends State<FinishDefoule> {
     );
   }
 
-  Widget messageRecord(int scoreTape, int recordTape) {
-    if (recordTape <= scoreTape) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: Column(
-          children: [
-            CustomText.center(
-              "Tu as batut le record",
-              Theme.of(context).textTheme.headlineMedium,
-            ),
-            Text("🤗", style: TextStyle(fontSize: 60)),
-          ],
-        ),
-      );
-    } else {
-      return Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
-        child: Column(
-          children: [
-            CustomText.center(
-              "Le record est de $recordTape tapes.",
-              Theme.of(context).textTheme.headlineMedium,
-            ),
-            Text("😭", style: TextStyle(fontSize: 40)),
-          ],
-        ),
-      );
-    }
-  }
+
 }

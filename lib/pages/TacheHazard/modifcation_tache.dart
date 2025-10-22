@@ -160,7 +160,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                                 content: Text('Tâche modifiée avec succès !'),
                               ),
                             );
-                            tacheP.reinitTAche();
+                            tacheP.reinitTache();
 
                             Navigator.pop(context);
                           },

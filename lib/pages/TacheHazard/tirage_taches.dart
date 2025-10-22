@@ -106,7 +106,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                tacheP.reinitTAche();
+                                tacheP.reinitTache();
                                 scoreP.resetCheckboxesWithLength(1);
                                 scoreP.decrementglobal('taches');
                                 afficheButton = true;
