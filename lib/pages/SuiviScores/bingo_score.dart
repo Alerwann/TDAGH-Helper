@@ -22,6 +22,7 @@ class _BingoScoreState extends State<BingoScore> {
         context,
         "accueil",
         true,
+        Icon(Icons.arrow_back_rounded),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),

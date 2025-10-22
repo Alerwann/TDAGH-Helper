@@ -36,13 +36,13 @@ class _SimpleFlipCardState extends State<SimpleFlipCard>
   @override
   void didUpdateWidget(SimpleFlipCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Si l'état de la carte change, joue l'animation
+
 
     if (widget.isFlipped != oldWidget.isFlipped) {
       if (widget.isFlipped) {
         _controller.forward();
       } else {
-        _controller.reverse(); // Animation vers l'avant
+        _controller.reverse(); 
       }
     }
   }
@@ -108,7 +108,7 @@ class _SimpleFlipCardState extends State<SimpleFlipCard>
     );
   }
 
-  // Ce qui s'affiche derrière
+
   Widget _buildBack() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

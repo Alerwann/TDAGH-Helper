@@ -36,6 +36,7 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
         context,
         "parametre",
         true,
+        Icon(Icons.arrow_back_rounded),
       ),
       body: Consumer<DefouleProvider>(
         builder: (context, defoulP, child) {

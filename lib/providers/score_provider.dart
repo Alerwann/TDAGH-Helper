@@ -4,6 +4,8 @@ import 'package:tdahelpe/services/taches_storage_service.dart';
 import '../services/score_storage_service.dart'; // Import du service qu'on vient de créer
 
 class ScoreProvider extends ChangeNotifier {
+final  int maxXpByLevel = 500;
+
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -43,13 +45,13 @@ class ScoreProvider extends ChangeNotifier {
 
   int get globalScore =>
       ((globalBingoScore / 4).floor() * 5 +
-      _tacheScore * 5 +
+      _tacheScore * 15 +
       _toothScore +
       _defouleScore);
 
-  int get niveauPersonnal => (((globalScore + _xpGlobal) / 140).floor());
+  int get niveauPersonnal => (((globalScore + _xpGlobal) / maxXpByLevel).floor());
 
-  int get xpByLevel => (_xpGlobal + globalScore) % 140;
+  int get xpByLevel => (_xpGlobal + globalScore) % maxXpByLevel;
 
   int nombreTirage = 0;
 

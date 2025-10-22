@@ -34,6 +34,7 @@ class _ParametretirageState extends State<Parametretirage> {
           context,
           "parametre",
           true,
+          Icon(Icons.arrow_back_rounded),
         ),
         body: Center(
           child: Consumer2<TachesProvider, ScoreProvider>(

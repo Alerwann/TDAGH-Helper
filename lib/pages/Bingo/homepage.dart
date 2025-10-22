@@ -23,6 +23,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
         context,
         "accueil",
         true,
+        Icon(Icons.home)
       ),
 
       body: SingleChildScrollView(

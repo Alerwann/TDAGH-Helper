@@ -4,6 +4,7 @@ class AppTheme {
   static const Color primaryColors = Colors.purple;
   static const Color secondaryColors = Color(0xFFFFD54F);
   static const Color thirdColors = Color(0xFFB388FF);
+  static const Color primaryContainer =Color.fromARGB(208, 255, 230, 6);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -30,6 +31,12 @@ class AppTheme {
           fontSize: 30,
           fontWeight: FontWeight.bold,
           color: const Color.fromARGB(221, 232, 79, 18),
+        ),
+
+        titleSmall: TextStyle(
+            fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: const Color.fromARGB(255, 19, 9, 201),
         ),
         headlineLarge: TextStyle(
           fontSize: 24,

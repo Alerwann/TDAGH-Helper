@@ -40,6 +40,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
         context,
         "accueil",
         true,
+        Icon(Icons.home)
       ),
       body: [Quetesfinales(), TacheListeAffichage()][_currentindex],
       bottomNavigationBar: ConvexAppBar(

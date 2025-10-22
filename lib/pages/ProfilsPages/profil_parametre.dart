@@ -64,7 +64,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
           context,
           "parametre",
           true,
-        ),
+Icon(Icons.arrow_back_rounded)),       
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15),
           child: Center(

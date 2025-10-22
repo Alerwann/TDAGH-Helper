@@ -42,6 +42,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
           context,
           "parametre",
           true,
+          Icon(Icons.arrow_back_rounded),
         ),
         body: Scrollbar(
           child: SingleChildScrollView(

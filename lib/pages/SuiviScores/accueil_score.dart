@@ -27,23 +27,27 @@ class _AccueilScoreState extends State<AccueilScore> {
         context,
         "accueil",
         false,
+        Icon(Icons.home)
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),
         child: Center(
           child: Consumer3<ScoreProvider, BonusLevelProvider, ProfilProvider>(
             builder: (context, scoreP, bonusP, profilP, child) {
+              print(
+                "👀 Courant grade ${bonusP.getCurrentGrade(scoreP.niveauPersonnal)!.gradeName}",
+              );
               return Column(
                 spacing: 15,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText.center(
-                    "${bonusP.getCurrentGrade(scoreP.niveauPersonnal)?.gradeName ?? 'Aucun'} ${profilP.pseudo.toUpperCase()} de niveau ${scoreP.niveauPersonnal}",
+                    "${bonusP.getGradeByIndex(scoreP.niveauPersonnal)?.gradeName ?? 'Aucun'} ${profilP.pseudo.toUpperCase()}",
                     Theme.of(context).textTheme.titleMedium,
                   ),
 
                   CustomText.center(
-                    "Nombre d'XP actuel = ${scoreP.xpByLevel} / 140",
+                    "Xp pour le niveau ${scoreP.niveauPersonnal} = ${scoreP.xpByLevel} / ${scoreP.maxXpByLevel}",
                     Theme.of(context).textTheme.bodyLarge,
                   ),
 
@@ -55,16 +59,13 @@ class _AccueilScoreState extends State<AccueilScore> {
                     child: StepProgressIndicator(
                       padding: 0,
                       size: 16,
-                      totalSteps: 140,
+                      totalSteps: 500,
                       currentStep: scoreP.xpByLevel,
                       selectedColor: Theme.of(context).colorScheme.secondary,
                       unselectedColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  CustomText.center(
-                    "Aujourd'hui l'XP acquis : ${scoreP.globalScore}",
-                    Theme.of(context).textTheme.bodyLarge,
-                  ),
+              SizedBox(height: 30,),
 
                   SizedBox(
                     height: 60,

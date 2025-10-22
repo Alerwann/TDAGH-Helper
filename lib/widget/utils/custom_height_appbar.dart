@@ -46,6 +46,7 @@ class CustomHeightApBcar {
     BuildContext context,
     String typeApp,
     bool returnHome,
+    Icon choicIcon,
   ) {
     AppBar returnApp = AppBar(
       toolbarHeight: CustomHeightApBcar.heightAppbar(title, context),
@@ -55,7 +56,7 @@ class CustomHeightApBcar {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.home),
+              icon: choicIcon,
             )
           : null,
     );

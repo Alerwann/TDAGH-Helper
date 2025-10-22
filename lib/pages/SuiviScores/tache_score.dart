@@ -43,6 +43,7 @@ class _TacheScoreState extends State<TacheScore> {
         context,
         'accueil',
         true,
+        Icon(Icons.arrow_back_rounded),
       ),
       body: Consumer3<ScoreProvider, ProfilProvider, TachesProvider>(
         builder: (context, scoreP, profilP, tacheP, child) {

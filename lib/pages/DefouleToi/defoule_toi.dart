@@ -23,6 +23,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
         context,
         "accueil",
         true,
+        Icon(Icons.home)
       ),
       body: Consumer2<DefouleProvider, ScoreProvider>(
         builder: (context, defouleP, scoreP, child) {

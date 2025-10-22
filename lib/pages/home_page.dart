@@ -10,7 +10,6 @@ import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/device_utils.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
-import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class HomeGlobalPage extends StatefulWidget {
   const HomeGlobalPage({super.key});
@@ -63,6 +62,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
             context,
             "accueil",
             false,
+            Icon(Icons.home)
           ),
 
           body: Consumer<SoundProvider>(
@@ -128,15 +128,16 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                                   width: 130,
                                 ),
                                 SizedBox(height: 10),
-
                                 ShaderMask(
                                   shaderCallback: (bounds) {
-                                    return LinearGradient(
+                                    final gradient = LinearGradient(
                                       colors: [
-                                        activityCard[index].firstColor,
-                                        activityCard[index].secondColor,
+                                        Color.fromARGB(255, 167, 30, 241),
+                                        const Color.fromARGB(255, 53, 0, 84),
+                                        Color.fromARGB(255, 177, 23, 228),
                                       ],
-                                    ).createShader(
+                                    );
+                                    return gradient.createShader(
                                       Rect.fromLTWH(
                                         0,
                                         0,
@@ -145,9 +146,16 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                                       ),
                                     );
                                   },
-                                  child: CustomText.center(
+                                  child: Text(
                                     activityCard[index].activityName,
-                                    Theme.of(context).textTheme.bodyLarge,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                    maxLines: null,
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ],

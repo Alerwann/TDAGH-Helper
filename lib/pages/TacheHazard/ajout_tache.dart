@@ -32,6 +32,7 @@ class _AjoutTacheState extends State<AjoutTache> {
           context,
           'parametre',
           true,
+          Icon(Icons.arrow_back_rounded),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(12),

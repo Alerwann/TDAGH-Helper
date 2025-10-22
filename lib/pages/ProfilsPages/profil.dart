@@ -25,6 +25,7 @@ class _ProfilPageState extends State<ProfilPage> {
         context,
         "parametre",
         false,
+        Icon(Icons.home)
       ),
 
       body: SingleChildScrollView(

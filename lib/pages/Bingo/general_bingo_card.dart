@@ -134,6 +134,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
         context,
         "accueil",
         true,
+        Icon(Icons.arrow_back_rounded)
       ),
       body: Consumer<ScoreProvider>(
         builder: (context, scoreP, child) {

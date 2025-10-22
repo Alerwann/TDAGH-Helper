@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
-import 'package:tdahelpe/utils/dropdown_moment.dart';
-import 'package:tdahelpe/widget/utils/custom_text.dart';
+
 
 class HoraireMoment {
   static bool isMomentAccessible(String moment, BuildContext context) {
@@ -78,23 +77,4 @@ class HoraireMoment {
     }
   }
 
-  static Widget horairesModif(
-    String moment,
-    String momentsend,
-    BuildContext context,
-  ) {
-    return Column(
-      spacing: 5,
-      children: [
-        CustomText.center(
-          'Heure du $moment',
-          Theme.of(context).textTheme.headlineMedium,
-        ),
-
-        Center(
-          child: DropdownMoment(moment: moment, momentsend: momentsend),
-        ),
-      ],
-    );
-  }
 }

@@ -24,6 +24,7 @@ class _BonusScoreState extends State<BonusScore> {
         context,
         'accueil',
         true,
+        Icon(Icons.arrow_back_rounded),
       ),
       body: Consumer2<ScoreProvider, ProfilProvider>(
         builder: (context, scoreP, profilP, child) {

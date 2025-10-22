@@ -49,7 +49,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   (route) => false,
                 );
               },
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.arrow_back_rounded),
             ),
             automaticallyImplyLeading: false,
             title: TextDegrade(title: "Résultats", choicetype: 'accueil'),

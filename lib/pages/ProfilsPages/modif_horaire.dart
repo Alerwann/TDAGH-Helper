@@ -52,6 +52,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
         context,
         "parametre",
         true,
+        Icon(Icons.arrow_back_rounded),
       ),
       body: Consumer<HeureProfilProvider>(
         builder: (context, heureP, child) {
