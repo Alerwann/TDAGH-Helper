@@ -135,7 +135,6 @@ class HeureProfilProvider extends ChangeNotifier {
         }
         // Rollback complet
         _hours = oldHours;
-        notifyListeners();
         return false;
       }
     }
@@ -154,7 +153,6 @@ class HeureProfilProvider extends ChangeNotifier {
 
     if (!succes) {
       _timerGame = oldTimer;
-      notifyListeners();
       return false;
     }
     notifyListeners();

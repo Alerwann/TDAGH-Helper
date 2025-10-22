@@ -48,9 +48,7 @@ class DefouleProvider extends ChangeNotifier {
     final succes = await DefouleService.resetScoreDefoulee();
     if (!succes) {
       _scoreDefoule = oldScore;
-      notifyListeners();
-
-      return false;
+    return false;
     }
 
     notifyListeners();
@@ -65,7 +63,6 @@ class DefouleProvider extends ChangeNotifier {
 
     if (!succes) {
       _scoreDefoule = oldScore;
-      notifyListeners();
       return false;
     }
 
@@ -81,7 +78,6 @@ class DefouleProvider extends ChangeNotifier {
 
     if (!succes) {
       _timerDuration = oldDuration;
-      notifyListeners();
       return false;
     }
 
@@ -97,7 +93,6 @@ class DefouleProvider extends ChangeNotifier {
 
     if (!succes) {
       _timerDuration = oldDuration;
-      notifyListeners();
       return false;
     }
 

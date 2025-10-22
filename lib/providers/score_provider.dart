@@ -237,8 +237,7 @@ Future<int> getScoreByMoment(String moment) async {
       );
       if (!success) {
         _scores = oldScores;
-  
-        return false;
+          return false;
       }
     }
 
@@ -267,7 +266,6 @@ Future<int> getScoreByMoment(String moment) async {
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
-
       return false;
     }
 
@@ -277,7 +275,6 @@ Future<int> getScoreByMoment(String moment) async {
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
-
       return false;
     }
 
@@ -314,8 +311,7 @@ Future<int> getScoreByMoment(String moment) async {
 
     if (!success) {
       _scores['taches'] = oldTacheScore;
-  
-      return false;
+        return false;
     }
 
     notifyListeners();
@@ -335,7 +331,6 @@ Future<int> getScoreByMoment(String moment) async {
 
     if (!success) {
       _toothScore = oldToothScore;
-
       return false;
     }
 
@@ -355,8 +350,7 @@ Future<int> getScoreByMoment(String moment) async {
 
     if (!success) {
       _defouleScore = oldDefouleScore;
-   
-      return false;
+         return false;
     }
 
     notifyListeners();

@@ -65,7 +65,6 @@ class TachesProvider extends ChangeNotifier {
     final success = await _saveTaches();
 
     if (!success) {
-      // Annuler l'ajout si la sauvegarde échoue
       _taches.removeAt(0);
       return false;
     }
@@ -138,7 +137,6 @@ class TachesProvider extends ChangeNotifier {
     if (!success) {
       print("❌ Sauvegarde du nombre de tâches a échoué");
       _nombreT = oldNombreT;
-      notifyListeners();
       return false;
     }
     notifyListeners();
@@ -154,7 +152,6 @@ class TachesProvider extends ChangeNotifier {
     if (!success) {
       _choixTaches = oldchoixTache;
       print("❌ Sauvegarde de la liste a échoué ");
-      notifyListeners();
       return false;
     }
     notifyListeners();
