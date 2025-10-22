@@ -12,33 +12,37 @@ class BonusLevelService {
 
       List<List<dynamic>> rows = const CsvToListConverter().convert(
         csvString,
-        eol: '\n', // End of line = retour à la ligne
-        fieldDelimiter: ';', // Ton séparateur (point-virgule)
+        eol: '\n',
+        fieldDelimiter: ';',
       );
+
       List<BonusLevel> levels = rows
-          .skip(1) // Ignorer la première ligne (headers)
-          .map((row) => BonusLevel.fromCsv(row)) // Transformer chaque ligne
-          .toList(); // Convertir en liste
+          .skip(1)
+          .map((row) => BonusLevel.fromCsv(row))
+          .toList();
 
       if (kDebugMode) {
         print('✅ ${levels.length} grades chargés');
       }
+
       return levels;
     } catch (e) {
       if (kDebugMode) {
-        print('❌ Erreur lors du chargement des grades : $e');
+        print('❌ Erreur chargement grades : $e');
       }
-      return [];
+      rethrow; // ✅ Laisse ErrorHandler gérer
     }
   }
-    static Future<BonusLevel?> getLevelReward(int currentLevel) async {
-   
-    final levels = await loadLevels();
 
+  static Future<BonusLevel?> getLevelReward(int currentLevel) async {
     try {
+      final levels = await loadLevels();
+
       return levels.firstWhere((level) => level.declancheLevel == currentLevel);
     } catch (e) {
-    
+      if (kDebugMode) {
+        print('⚠️ Niveau $currentLevel non trouvé: $e');
+      }
       return null;
     }
   }

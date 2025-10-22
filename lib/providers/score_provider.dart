@@ -172,13 +172,8 @@ class ScoreProvider extends ChangeNotifier {
     );
   }
 
-  Future<int> getScoreByMoment(String moment) async {
-    return await ErrorHandler.handleAsync(
-          () => ScoreStorageService.getScore(moment),
-          errorMessage: 'Impossible de charger le score pour $moment',
-          defaultValue: 0,
-        ) ??
-        0;
+Future<int> getScoreByMoment(String moment) async {
+    return await ScoreStorageService.getScore(moment);
   }
 
   // ✅ increment ULTRA simplifié !
@@ -191,16 +186,12 @@ class ScoreProvider extends ChangeNotifier {
     final oldScore = _scores[moment]!;
     _scores[moment] = _scores[moment]! + 1;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveScore(moment, _scores[moment]!),
-          errorMessage: 'Impossible de sauvegarder le score pour $moment',
-          defaultValue: false,
-        ) ??
-        false;
+    final success = await ScoreStorageService.saveScore(
+      moment,
+      _scores[moment]!,
+    );
 
     if (!success) {
-      // Rollback
       _scores[moment] = oldScore;
       return false;
     }
@@ -219,13 +210,10 @@ class ScoreProvider extends ChangeNotifier {
     final oldScore = _scores[moment]!;
     _scores[moment] = _scores[moment]! > 0 ? _scores[moment]! - 1 : 0;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveScore(moment, _scores[moment]!),
-          errorMessage: 'Impossible de sauvegarder le score pour $moment',
-          defaultValue: false,
-        ) !=
-        null;
+    final success = await ScoreStorageService.saveScore(
+      moment,
+      _scores[moment]!,
+    );
 
     if (!success) {
       // Rollback
@@ -236,7 +224,6 @@ class ScoreProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
-
 
   Future<bool> resetAllScores() async {
     final oldScores = Map<String, int>.from(_scores);
@@ -250,15 +237,13 @@ class ScoreProvider extends ChangeNotifier {
       );
       if (!success) {
         _scores = oldScores;
-        notifyListeners();
+  
         return false;
       }
     }
 
     notifyListeners();
     return true;
-
-
   }
 
   // ✅ Le reste reste identique
@@ -282,39 +267,22 @@ class ScoreProvider extends ChangeNotifier {
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
-      notifyListeners();
+
       return false;
     }
 
-    final saveSuccess =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveTacheState(_isChecked),
-          errorMessage: 'Impossible de sauvegarder l\'état des tâches',
-          defaultValue: false,
-        ) !=
-        null;
+    final saveSuccess = await ScoreStorageService.saveTacheState(_isChecked);
 
     if (!saveSuccess) {
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
-      notifyListeners();
+
       return false;
     }
 
     notifyListeners();
     return true;
-  }
-
-  Future<bool> createIsChecke(int lengthList) async {
-    List<bool> initList = List.generate(lengthList, (index) => false);
-
-    return await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveTacheState(initList),
-          errorMessage: 'Impossible de créer la liste de tâches',
-          defaultValue: false,
-        ) !=
-        null;
   }
 
   Future<bool> resetCheckboxesWithLength(int newLength) async {
@@ -324,18 +292,13 @@ class ScoreProvider extends ChangeNotifier {
     _isChecked = List.generate(newLength, (index) => false);
     _currentStep = 0;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveTacheState(_isChecked),
-          errorMessage: 'Impossible de réinitialiser les checkboxes',
-          defaultValue: false,
-        ) !=
-        null;
+    final success = await ScoreStorageService.saveTacheState(_isChecked);
 
     if (!success) {
       // Rollback
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
+    
       return false;
     }
 
@@ -347,16 +310,11 @@ class ScoreProvider extends ChangeNotifier {
     final oldTacheScore = _scores['taches']!;
     _scores['taches'] = 0;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.resetTacheScore(),
-          errorMessage: 'Impossible de réinitialiser le score des tâches',
-          defaultValue: false,
-        ) !=
-        null;
+    final success = await ScoreStorageService.resetTacheScore();
 
     if (!success) {
       _scores['taches'] = oldTacheScore;
+  
       return false;
     }
 
@@ -366,22 +324,18 @@ class ScoreProvider extends ChangeNotifier {
 
   Future<bool> incrementToothScore() async {
     if (_toothScore >= 15) {
+   
       return true;
     }
 
     final oldToothScore = _toothScore;
     _toothScore += 5;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveToothScore(_toothScore),
-          errorMessage: 'Impossible de sauvegarder le score de brossage',
-          defaultValue: false,
-        ) !=
-        null;
+    final success = await ScoreStorageService.saveToothScore(_toothScore);
 
     if (!success) {
       _toothScore = oldToothScore;
+
       return false;
     }
 
@@ -397,16 +351,11 @@ class ScoreProvider extends ChangeNotifier {
     final oldDefouleScore = _defouleScore;
     _defouleScore += 5;
 
-    final success =
-        await ErrorHandler.handleAsync(
-          () => ScoreStorageService.saveDefouleScore(_defouleScore),
-          errorMessage: 'Impossible de sauvegarder le score de défoulage',
-          defaultValue: false,
-        ) !=
-        null;
+    final success = await ScoreStorageService.saveDefouleScore(_defouleScore);
 
     if (!success) {
       _defouleScore = oldDefouleScore;
+   
       return false;
     }
 

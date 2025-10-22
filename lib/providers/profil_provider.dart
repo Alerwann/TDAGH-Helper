@@ -65,7 +65,7 @@ class ProfilProvider extends ChangeNotifier {
     final success = await ProfilStorageService.savePseudo(_pseudo);
     if (!success) {
       _pseudo = oldpseudo;
-      notifyListeners();
+ 
       return false;
     }
     notifyListeners();
