@@ -1,83 +1,74 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HoraireStorageService {
-  static const String _reveilHours = 'reveil_hours';
-  static const String _midiHours = "midi_hours";
-  static const String _soirHours = "soir_hours";
-  static const String _coucheHours = "couche_hours";
   static const String _timerGame = "timer_game";
-  static const String _reinitHour = "reinit_hour";
 
-  static Future<void> saveHours(String moment, int hours) async {
-    final prefs = await SharedPreferences.getInstance();
-    String key;
+  static const Map<String, String> _horaireKeys = {
+    'reveil': 'reveil_hours',
+    'midi': 'midi_hours',
+    'soir': 'soir_hours',
+    'couche': 'couche_hours', // Variante sans accent
+    'reinit': 'reinit_hour',
+  };
 
-    switch (moment.toLowerCase()) {
-      case 'réveil':
-        key = _reveilHours;
-        break;
-      case 'midi':
-        key = _midiHours;
-        break;
-      case 'soir':
-        key = _soirHours;
-        break;
-      case 'couché':
-        key = _coucheHours;
-        break;
-      case 'reinit':
-        key = _reinitHour;
-        break;
+  /// Sauvegarder une heure pour un moment donné
+  static Future<bool> saveHours(String moment, int hours) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _horaireKeys[moment.toLowerCase()];
 
-      default:
-        return;
+      if (key == null) {
+        return false; // Moment invalide
+      }
+
+      await prefs.setInt(key, hours);
+      return true;
+    } catch (e) {
+      return false;
     }
-
-    await prefs.setInt(key, hours);
   }
 
+  /// Récupérer une heure pour un moment donné
   static Future<int> getHours(String moment) async {
-    final prefs = await SharedPreferences.getInstance();
-    String key;
-    int defaultValue;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = _horaireKeys[moment.toLowerCase()];
 
-    switch (moment.toLowerCase()) {
-      case 'réveil':
-        key = _reveilHours;
-        defaultValue = 7;
-        break;
-      case 'midi':
-        key = _midiHours;
-        defaultValue = 12;
-        break;
-      case 'soir':
-        key = _soirHours;
-        defaultValue = 19;
-        break;
-      case 'couché':
-        key = _coucheHours;
-        defaultValue = 21;
-        break;
-      case 'reinit':
-        key = _reinitHour;
-        defaultValue = 4;
-        break;
-      default:
+      // Valeurs par défaut selon le moment
+      const defaults = {
+        'reveil_hours': 7,
+        'midi_hours': 12,
+        'soir_hours': 19,
+        'couche_hours': 21,
+        'reinit_hour': 4,
+      };
+
+      if (key == null) {
         return 0;
-    }
+      }
 
-    return prefs.getInt(key) ?? defaultValue;
+      return prefs.getInt(key) ?? (defaults[key] ?? 0);
+    } catch (e) {
+      return 0;
+    }
   }
 
-  static Future<void> saveTimerGame(int timerG) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _timerGame;
-    await prefs.setInt(key, timerG);
+  static Future<bool> saveTimerGame(int timerG) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_timerGame, timerG);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<int> getTimerGame() async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _timerGame;
-    return prefs.getInt(key) ?? 20;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_timerGame) ?? 20;
+    } catch (e) {
+      return 20;
+    }
   }
 }

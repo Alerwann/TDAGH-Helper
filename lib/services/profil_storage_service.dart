@@ -4,31 +4,42 @@ class ProfilStorageService {
   static const String _pseudo = 'pseudo';
   static const String _profilImagePath = 'profil_image_path';
 
-  static Future<void> savePseudo(String pseudo) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _pseudo;
-    await prefs.setString(key, pseudo);
+  static Future<bool> savePseudo(String pseudo) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_pseudo, pseudo);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  static Future<void> saveProfilImagePath(String profilimagepath) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _profilImagePath;
-    await prefs.setString(key, profilimagepath);
+  static Future<bool> saveProfilImagePath(String profilimagepath) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_profilImagePath, profilimagepath);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<String> getPseudo() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final pseudo = prefs.getString(_pseudo) ?? 'Inconnu';
-    return pseudo;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_pseudo) ?? 'Inconnu';
+    } catch (e) {
+      return 'Inconnu';
+    }
   }
 
   static Future<String> getImagePath() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final imagePath =
-        prefs.getString(_profilImagePath) ??
-        'assets/images/defaultprofilimage.png';
-    return imagePath;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_profilImagePath) ??
+          'assets/images/defaultprofilimage.png';
+    } catch (e) {
+      return 'assets/images/defaultprofilimage.png';
+    }
   }
 }

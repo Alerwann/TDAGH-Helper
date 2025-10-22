@@ -40,15 +40,17 @@ class ProfilProvider extends ChangeNotifier {
   Future<bool> setProfilImagePath(String profilPath) async {
     final oldProfilImage = _profilImagePath;
     _profilImagePath = profilPath;
-    try {
-      await ProfilStorageService.saveProfilImagePath(_profilImagePath);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("❌  Erreur de sauvegarde : $e");
+
+    final success = await ProfilStorageService.saveProfilImagePath(
+      _profilImagePath,
+    );
+
+    if (!success) {
       _profilImagePath = oldProfilImage;
       return false;
     }
+    notifyListeners();
+    return true;
   }
 
   Future<bool> resetProfilimagePath() async {
@@ -59,16 +61,15 @@ class ProfilProvider extends ChangeNotifier {
   Future<bool> setPseudo(String pseudo) async {
     final oldpseudo = _pseudo;
     _pseudo = pseudo;
-    try {
-      await ProfilStorageService.savePseudo(_pseudo);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("❌  Erreur de sauvegarde du pseudo : $e");
+
+    final success = await ProfilStorageService.savePseudo(_pseudo);
+    if (!success) {
       _pseudo = oldpseudo;
       notifyListeners();
       return false;
     }
+    notifyListeners();
+    return true;
   }
 
   Future<bool> resetPseudo() async {

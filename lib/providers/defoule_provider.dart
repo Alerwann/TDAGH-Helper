@@ -42,88 +42,66 @@ class DefouleProvider extends ChangeNotifier {
   }
 
   Future<bool> resetScore() async {
-    if (kDebugMode) {
-      print("🔄 Réinitialisation du score de défoulage");
-    }
-
-    final oldScore = _scoreDefoule; 
+    final oldScore = _scoreDefoule;
     _scoreDefoule = 0;
 
-    try {
-      await DefouleService.resetScoreDefoulee();
-      notifyListeners();
-
-      if (kDebugMode) {
-        print("✅ Score réinitialisé avec succès");
-      }
-
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur réinitialisation score: $e');
-      }
-
+    final succes = await DefouleService.resetScoreDefoulee();
+    if (!succes) {
       _scoreDefoule = oldScore;
       notifyListeners();
 
       return false;
     }
+
+    notifyListeners();
+    return true;
   }
 
   Future<bool> saveScore(int scoreD) async {
     final oldScore = _scoreDefoule;
     _scoreDefoule = scoreD;
 
-    try {
-      await DefouleService.saveScoreDefoule(_scoreDefoule);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur sauvegarde score: $e');
-      }
+    final succes = await DefouleService.saveScoreDefoule(_scoreDefoule);
+
+    if (!succes) {
       _scoreDefoule = oldScore;
       notifyListeners();
       return false;
     }
+
+    notifyListeners();
+    return true;
   }
 
   Future<bool> saveTimerDuration(int timerD) async {
     final oldDuration = _timerDuration;
     _timerDuration = timerD;
 
-    try {
-      await DefouleService.saveTimerDuration(_timerDuration);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur sauvegarde timer: $e');
-      }
+    final succes = await DefouleService.saveTimerDuration(_timerDuration);
+
+    if (!succes) {
       _timerDuration = oldDuration;
       notifyListeners();
       return false;
     }
+
+    notifyListeners();
+    return true;
   }
 
-Future<bool> resetTimerDuration() async {
-    final oldDuration = _timerDuration; 
-    _timerDuration = 20; 
+  Future<bool> resetTimerDuration() async {
+    final oldDuration = _timerDuration;
+    _timerDuration = 20;
 
-    try {
-      await DefouleService.resetTimerDuration();
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur réinitialisation timer: $e');
-      }
+    final succes = await DefouleService.resetTimerDuration();
 
-
+    if (!succes) {
       _timerDuration = oldDuration;
       notifyListeners();
-
       return false;
     }
+
+    notifyListeners();
+    return true;
   }
 }

@@ -7,7 +7,6 @@ import 'package:tdahelpe/utils/error_handler.dart';
 class HeureProfilProvider extends ChangeNotifier {
   int _timerGame = 20;
 
-
   bool _isLoading = true;
 
   Map<String, int> _hours = {
@@ -118,74 +117,76 @@ class HeureProfilProvider extends ChangeNotifier {
   }
 
   Future<bool> resetAllHours() async {
-    try {
-      _hours = {'reveil': 7, 'midi': 12, 'soir': 19, 'couche': 22, 'reinit': 4};
+    final oldHours = Map<String, int>.from(_hours);
 
-      // Sauvegarder chaque valeur
-      for (var entry in _hours.entries) {
-        await HoraireStorageService.saveHours(entry.key, entry.value);
-      }
+    // Reset des valeurs
+    _hours = {'reveil': 7, 'midi': 12, 'soir': 19, 'couche': 22, 'reinit': 4};
 
-      await _scheduleNotificationsWithLoadedHours();
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur lors de la réinitialisation: $e');
+    // Sauvegarder chaque valeur
+    for (var entry in _hours.entries) {
+      final success = await HoraireStorageService.saveHours(
+        entry.key,
+        entry.value,
+      );
+
+      if (!success) {
+        if (kDebugMode) {
+          print('❌ Échec sauvegarde de ${entry.key}');
+        }
+        // Rollback complet
+        _hours = oldHours;
+        notifyListeners();
+        return false;
       }
-      return false;
     }
+
+    // Toutes les sauvegardes ont réussi
+    await _scheduleNotificationsWithLoadedHours();
+    notifyListeners();
+    return true;
   }
 
   Future<bool> setTimerGame(int timerG) async {
     final oldTimer = _timerGame;
     _timerGame = timerG;
-    try {
-      await HoraireStorageService.saveTimerGame(_timerGame);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur sauvegarde score: $e');
-      }
+
+    final succes = await HoraireStorageService.saveTimerGame(_timerGame);
+
+    if (!succes) {
       _timerGame = oldTimer;
       notifyListeners();
       return false;
     }
+    notifyListeners();
+    return true;
   }
 
-  Future<bool> setHours(int hours, String moment) async {
+ Future<bool> setHours(int hours, String moment) async {
     final momentLower = moment.toLowerCase();
 
-    // 1. Vérifier si le moment existe
     if (!_hours.containsKey(momentLower)) {
-      if (kDebugMode) {
-        print('⚠️ Moment inconnu : $moment');
-      }
       return false;
     }
 
-    // 2. Vérifier si c'est la même valeur
     if (_hours[momentLower] == hours) {
-      if (kDebugMode) {
-        print('⏭️ $moment : même valeur ($hours), pas de modification');
-      }
       return true;
     }
 
-    // 3. Modifier et sauvegarder
-    try {
-      _hours[momentLower] = hours;
-      await HoraireStorageService.saveHours(momentLower, hours);
-      await _scheduleNotificationsWithLoadedHours();
-      notifyListeners();
-      return true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur lors de la modification de $moment: $e');
-      }
+    final oldValue = _hours[momentLower]!;
+    _hours[momentLower] = hours;
+
+    // ✅ Juste vérifier le bool
+    final success = await HoraireStorageService.saveHours(momentLower, hours);
+
+    if (!success) {
+ 
+      _hours[momentLower] = oldValue;
       return false;
     }
+
+    await _scheduleNotificationsWithLoadedHours();
+    notifyListeners();
+    return true;
   }
 
   int? getHours(String moment) {

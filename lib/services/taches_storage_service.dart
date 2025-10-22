@@ -1,32 +1,44 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TachesStorageService {
- 
   static const String _nombreTaches = "nombreTaches";
   static const String _listChoix = "listeChoix";
 
-  static Future<void> saveNombreTaches(int nombreT) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _nombreTaches;
-    await prefs.setInt(key, nombreT);
+  static Future<bool> saveNombreTaches(int nombreT) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(_nombreTaches, nombreT);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-
-  static Future<void> saveListeChoix(List<String> listTotalChoix) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = _listChoix;
-    await prefs.setStringList(key, listTotalChoix);
+  static Future<bool> saveListeChoix(List<String> listTotalChoix) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_listChoix, listTotalChoix);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   static Future<int> getNombreT() async {
-    final prefs = await SharedPreferences.getInstance();
-    final nombreT = prefs.getInt(_nombreTaches) ?? 3;
-    return nombreT;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getInt(_nombreTaches) ?? 3;
+    } catch (e) {
+      return 3;
+    }
   }
 
   static Future<List<String>> getChoixTaches() async {
-    final prefs = await SharedPreferences.getInstance();
-    final listeChoix = prefs.getStringList(_listChoix) ?? ['0'];
-    return listeChoix;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getStringList(_listChoix) ?? ['0'];
+    } catch (e) {
+      return ['0'];
+    }
   }
 }

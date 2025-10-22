@@ -133,32 +133,32 @@ class TachesProvider extends ChangeNotifier {
     final oldNombreT = _nombreT;
     _nombreT = newnombreT;
 
-    try {
-      await TachesStorageService.saveNombreTaches(_nombreT);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("❌ Sauvegarde du nombre de tâches a échoué : $e");
+    final success = await TachesStorageService.saveNombreTaches(_nombreT);
+
+    if (!success) {
+      print("❌ Sauvegarde du nombre de tâches a échoué");
       _nombreT = oldNombreT;
       notifyListeners();
       return false;
     }
+    notifyListeners();
+    return true;
   }
 
   Future<bool> saveListeTache(List<String> listeTache) async {
     final oldchoixTache = _choixTaches;
     _choixTaches = listeTache;
 
-    try {
-      await TachesStorageService.saveListeChoix(_choixTaches);
-      notifyListeners();
-      return true;
-    } catch (e) {
+    final success = await TachesStorageService.saveListeChoix(_choixTaches);
+
+    if (!success) {
       _choixTaches = oldchoixTache;
-      print("❌ Sauvegarde de la liste a échoué : $e");
+      print("❌ Sauvegarde de la liste a échoué ");
       notifyListeners();
       return false;
     }
+    notifyListeners();
+    return true;
   }
 
   // Méthodes utilitaires

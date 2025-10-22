@@ -237,27 +237,28 @@ class ScoreProvider extends ChangeNotifier {
     return true;
   }
 
-  // ✅ resetAllScores simplifié avec une boucle !
+
   Future<bool> resetAllScores() async {
     final oldScores = Map<String, int>.from(_scores);
 
-    // Reset tous les scores
     _scores = {'matin': 0, 'midi': 0, 'soir': 0, 'couché': 0, 'taches': 0};
 
-    try {
-      // Sauvegarder tous les scores en une boucle
-      for (var entry in _scores.entries) {
-        await ScoreStorageService.saveScore(entry.key, entry.value);
+    for (var entry in _scores.entries) {
+      final success = await ScoreStorageService.saveScore(
+        entry.key,
+        entry.value,
+      );
+      if (!success) {
+        _scores = oldScores;
+        notifyListeners();
+        return false;
       }
-
-      notifyListeners();
-      return true;
-    } catch (e) {
-      // Rollback
-      _scores = oldScores;
-      notifyListeners();
-      return false;
     }
+
+    notifyListeners();
+    return true;
+
+
   }
 
   // ✅ Le reste reste identique
@@ -278,7 +279,6 @@ class ScoreProvider extends ChangeNotifier {
     }
 
     if (!success) {
-      // Rollback
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
@@ -295,7 +295,6 @@ class ScoreProvider extends ChangeNotifier {
         null;
 
     if (!saveSuccess) {
-      // Rollback
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
       _scores['taches'] = oldTacheScore;
