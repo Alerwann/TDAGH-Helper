@@ -3,7 +3,7 @@ class NotificationConstants {
   static const int morningNotificationId = 1;
   static const int midiNotificationId = 2;
   static const int soirNotificationId = 3;
-  static const int coucheNotificationId = 4;
+  static const int coucherNotificationId = 4;
 
   // Identifiants iOS
   static const String iosCategoryId = 'tdahelpe_category';
@@ -24,22 +24,19 @@ class NotificationConstants {
       'title': '🍽️ La période du midi va finir !!',
       'body': 'N\'oublie pas de valider tes tâches du midi',
     },
-    coucheNotificationId: {
+    coucherNotificationId: {
       'title': '⭐ Prêt pour dormir?',
       'body': 'N\'oublie pas de valider tes tâches avant de dormir',
     },
   };
 
-
   static String getTitle(int id) {
     return notificationMessages[id]?['title'] ?? 'Notification';
   }
 
-
   static String getBody(int id) {
     return notificationMessages[id]?['body'] ?? '';
   }
-
 
   static ({String title, String body}) getMessage(int id) {
     final data = notificationMessages[id];
@@ -55,8 +52,8 @@ class NotificationConstants {
         return 'midi';
       case soirNotificationId:
         return 'soir';
-      case coucheNotificationId:
-        return 'couche';
+      case coucherNotificationId:
+        return 'coucher';
       default:
         return 'inconnu';
     }

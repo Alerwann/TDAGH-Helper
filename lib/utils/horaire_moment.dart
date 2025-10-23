@@ -2,24 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 
-
 class HoraireMoment {
   static bool isMomentAccessible(String moment, BuildContext context) {
     final now = DateTime.now();
     final profil = Provider.of<HeureProfilProvider>(context, listen: false);
 
-    switch (moment) {
-      case 'Matin':
+    switch (moment.toLowerCase()) {
+      case 'matin':
         return now.hour <= profil.midiHours + 1 &&
             now.hour >= profil.reveilHours - 1;
-      case 'Midi':
+      case 'mid':
         return now.hour <= profil.soirHours + 1 &&
             now.hour >= profil.midiHours - 1;
-      case 'Soir':
-        return now.hour <= profil.coucheHours + 1 &&
+      case 'soir':
+        return now.hour <= profil.coucherHours + 1 &&
             now.hour >= profil.soirHours - 1;
-      case 'Couché':
-        int heureDebut = profil.coucheHours - 1;
+      case 'coucher':
+        int heureDebut = profil.coucherHours - 1;
         int dureeAcces = 4;
 
         if (heureDebut + dureeAcces >= 24) {
@@ -44,12 +43,12 @@ class HoraireMoment {
       case 'midi':
         return [profil.midiHours - 1, profil.soirHours + 1];
       case 'soir':
-        return [profil.soirHours - 1, profil.coucheHours + 1];
-      case 'couché':
-        if (profil.coucheHours + 4 >= 24) {
-          return [profil.coucheHours - 1, profil.coucheHours + 4 - 24];
+        return [profil.soirHours - 1, profil.coucherHours + 1];
+      case 'coucher':
+        if (profil.coucherHours + 4 >= 24) {
+          return [profil.coucherHours - 1, profil.coucherHours + 4 - 24];
         } else {
-          return [profil.coucheHours - 1, profil.coucheHours + 4];
+          return [profil.coucherHours - 1, profil.coucherHours + 4];
         }
       default:
         return [25, 25];
@@ -57,8 +56,8 @@ class HoraireMoment {
   }
 
   static int convertMomentName(String moment, HeureProfilProvider profil) {
-    switch (moment) {
-      case 'réveil':
+    switch (moment.toLowerCase()) {
+      case 'reveil':
         return profil.reveilHours;
 
       case 'repas de midi':
@@ -67,8 +66,8 @@ class HoraireMoment {
       case 'repas du soir':
         return profil.soirHours;
 
-      case 'couché':
-        return profil.coucheHours;
+      case 'coucher':
+        return profil.coucherHours;
 
       case 'réinitialisation':
         return profil.reinitHours;
@@ -76,5 +75,4 @@ class HoraireMoment {
         return 12;
     }
   }
-
 }

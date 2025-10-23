@@ -13,14 +13,14 @@ class HeureProfilProvider extends ChangeNotifier {
     'reveil': 7,
     'midi': 12,
     'soir': 19,
-    'couche': 22,
+    'coucher': 22,
     'reinit': 4,
   };
 
   int get reveilHours => _hours['reveil']!;
   int get midiHours => _hours['midi']!;
   int get soirHours => _hours['soir']!;
-  int get coucheHours => _hours['couche']!;
+  int get coucherHours => _hours['coucher']!;
 
   int get reinitHours => _hours['reinit']!;
 
@@ -38,7 +38,7 @@ class HeureProfilProvider extends ChangeNotifier {
 
     _hours['reveil'] =
         await ErrorHandler.handleAsync(
-          () => HoraireStorageService.getHours('réveil'),
+          () => HoraireStorageService.getHours('reveil'),
           errorMessage: "L'heure du réveil n'a pas pu être chargée",
           defaultValue: 7,
         ) ??
@@ -60,10 +60,10 @@ class HeureProfilProvider extends ChangeNotifier {
         ) ??
         19;
 
-    _hours["couche"] =
+    _hours["coucher"] =
         await ErrorHandler.handleAsync(
-          () => HoraireStorageService.getHours('couché'),
-          errorMessage: "L'heure du couché n'a pas pu être chargée",
+          () => HoraireStorageService.getHours('coucher'),
+          errorMessage: "L'heure du coucher n'a pas pu être chargée",
           defaultValue: 21,
         ) ??
         21;
@@ -103,7 +103,7 @@ class HeureProfilProvider extends ChangeNotifier {
         reveilHour: _hours['reveil']!,
         midiHour: _hours['midi']!,
         soirHour: _hours['soir']!,
-        coucheHour: _hours['couche']!,
+        coucherHour: _hours['coucher']!,
       );
 
       if (kDebugMode) {
@@ -120,7 +120,7 @@ class HeureProfilProvider extends ChangeNotifier {
     final oldHours = Map<String, int>.from(_hours);
 
     // Reset des valeurs
-    _hours = {'reveil': 7, 'midi': 12, 'soir': 19, 'couche': 22, 'reinit': 4};
+    _hours = {'reveil': 7, 'midi': 12, 'soir': 19, 'coucher': 22, 'reinit': 4};
 
     // Sauvegarder chaque valeur
     for (var entry in _hours.entries) {
@@ -159,7 +159,7 @@ class HeureProfilProvider extends ChangeNotifier {
     return true;
   }
 
- Future<bool> setHours(int hours, String moment) async {
+  Future<bool> setHours(int hours, String moment) async {
     final momentLower = moment.toLowerCase();
 
     if (!_hours.containsKey(momentLower)) {
@@ -177,7 +177,6 @@ class HeureProfilProvider extends ChangeNotifier {
     final success = await HoraireStorageService.saveHours(momentLower, hours);
 
     if (!success) {
- 
       _hours[momentLower] = oldValue;
       return false;
     }

@@ -17,7 +17,7 @@ class ScoreProvider extends ChangeNotifier {
     'matin': 0,
     'midi': 0,
     'soir': 0,
-    'couché': 0,
+    'coucher': 0,
     'taches': 0,
   };
 
@@ -33,7 +33,7 @@ class ScoreProvider extends ChangeNotifier {
   int get morningScore => _scores['matin']!;
   int get midiScore => _scores['midi']!;
   int get afternoonScore => _scores['soir']!;
-  int get eveningScore => _scores['couché']!;
+  int get eveningScore => _scores['coucher']!;
   int get tacheScore => _scores['taches']!;
 
   List<bool> get isChecked => _isChecked;
@@ -46,7 +46,7 @@ class ScoreProvider extends ChangeNotifier {
       _scores['matin']! +
       _scores['midi']! +
       _scores['soir']! +
-      _scores['couché']!;
+      _scores['coucher']!;
 
   int get globalScore =>
       ((globalBingoScore / 4).floor() * 5 +
@@ -137,7 +137,7 @@ class ScoreProvider extends ChangeNotifier {
               'matin': 0,
               'midi': 0,
               'soir': 0,
-              'couché': 0,
+              'coucher': 0,
               'taches': 0,
             };
 
@@ -176,7 +176,7 @@ Future<int> getScoreByMoment(String moment) async {
     return await ScoreStorageService.getScore(moment);
   }
 
-  // ✅ increment ULTRA simplifié !
+
   Future<bool> incrementglobal(String moment) async {
     // Vérifier si le moment existe
     if (!_scores.containsKey(moment)) {
@@ -200,7 +200,7 @@ Future<int> getScoreByMoment(String moment) async {
     return true;
   }
 
-  // ✅ decrement ULTRA simplifié !
+
   Future<bool> decrementglobal(String moment) async {
     // Vérifier si le moment existe
     if (!_scores.containsKey(moment)) {
@@ -228,7 +228,7 @@ Future<int> getScoreByMoment(String moment) async {
   Future<bool> resetAllScores() async {
     final oldScores = Map<String, int>.from(_scores);
 
-    _scores = {'matin': 0, 'midi': 0, 'soir': 0, 'couché': 0, 'taches': 0};
+    _scores = {'matin': 0, 'midi': 0, 'soir': 0, 'coucher': 0, 'taches': 0};
 
     for (var entry in _scores.entries) {
       final success = await ScoreStorageService.saveScore(

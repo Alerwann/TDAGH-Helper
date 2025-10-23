@@ -7,7 +7,7 @@ class ScoreStorageService {
     'matin': 'morning_score',
     'midi': 'midi_score',
     'soir': 'afternoon_score',
-    'couché': 'evening_score',
+    'coucher': 'evening_score',
     'taches': 'taches_score',
     'bingoGlobal': 'global_bingo_score',
   };
@@ -158,7 +158,7 @@ class ScoreStorageService {
   static Future<bool> resetAllCardsState() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final moments = ['matin', 'midi', 'soir', 'couché'];
+      final moments = ['matin', 'midi', 'soir', 'coucher'];
 
       for (String moment in moments) {
         final key = '${_cardsStateKey}_$moment';

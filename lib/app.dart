@@ -10,6 +10,10 @@ import 'package:tdahelpe/pages/home/home_shell.dart';
 /// - La navigation globale
 /// - Le titre de l'app
 class TDAHelpeApp extends StatelessWidget {
+  
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   const TDAHelpeApp({super.key});
 
   @override

@@ -7,7 +7,7 @@ class HoraireStorageService {
     'reveil': 'reveil_hours',
     'midi': 'midi_hours',
     'soir': 'soir_hours',
-    'couche': 'couche_hours', // Variante sans accent
+    'coucher': 'coucher_hours', // Variante sans accent
     'reinit': 'reinit_hour',
   };
 
@@ -39,7 +39,7 @@ class HoraireStorageService {
         'reveil_hours': 7,
         'midi_hours': 12,
         'soir_hours': 19,
-        'couche_hours': 21,
+        'coucher_hours': 21,
         'reinit_hour': 4,
       };
 

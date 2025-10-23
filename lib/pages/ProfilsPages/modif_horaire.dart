@@ -15,7 +15,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
   TextEditingController matinController = TextEditingController();
   TextEditingController midiController = TextEditingController();
   TextEditingController soirController = TextEditingController();
-  TextEditingController coucheController = TextEditingController();
+  TextEditingController coucherController = TextEditingController();
   TextEditingController reinitController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -29,7 +29,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
       matinController.text = heureP.reveilHours.toString();
       midiController.text = heureP.midiHours.toString();
       soirController.text = heureP.soirHours.toString();
-      coucheController.text = heureP.coucheHours.toString();
+      coucherController.text = heureP.coucherHours.toString();
       reinitController.text = heureP.reinitHours.toString();
     });
   }
@@ -39,7 +39,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
     matinController.dispose();
     midiController.dispose();
     soirController.dispose();
-    coucheController.dispose();
+    coucherController.dispose();
     reinitController.dispose();
     super.dispose();
   }
@@ -80,8 +80,8 @@ class _ModifHoraireState extends State<ModifHoraire> {
                         momentController: soirController,
                       ),
                       HoraireChamps(
-                        moment: "couché ",
-                        momentController: coucheController,
+                        moment: "coucher ",
+                        momentController: coucherController,
                       ),
                       HoraireChamps(
                         moment: "reinit ",
@@ -95,7 +95,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
                             if (_formKey.currentState!.validate()) {
                               heureP.setHours(
                                 int.parse(matinController.text),
-                                'réveil',
+                                'reveil',
                               );
                               heureP.setHours(
                                 int.parse(midiController.text),
@@ -106,8 +106,8 @@ class _ModifHoraireState extends State<ModifHoraire> {
                                 'soir',
                               );
                               heureP.setHours(
-                                int.parse(coucheController.text),
-                                'couché',
+                                int.parse(coucherController.text),
+                                'coucher',
                               );
                               heureP.setHours(
                                 int.parse(reinitController.text),
@@ -155,8 +155,8 @@ class _ModifHoraireState extends State<ModifHoraire> {
                                             .toString();
                                         soirController.text = heureP.soirHours
                                             .toString();
-                                        coucheController.text = heureP
-                                            .coucheHours
+                                        coucherController.text = heureP
+                                            .coucherHours
                                             .toString();
                                         reinitController.text = heureP
                                             .reinitHours

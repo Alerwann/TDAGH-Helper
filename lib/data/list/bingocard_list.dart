@@ -97,7 +97,7 @@ class BingoDataSoir {
   }
 }
 
-class BingoDataCouche {
+class BingoDatacoucher {
   static final List<BingoCard> _defaultCards = [
     BingoCard(
       frontText: 'Occupe toi sans écran',

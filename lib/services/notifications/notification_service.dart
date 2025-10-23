@@ -8,9 +8,7 @@ import 'package:tdahelpe/services/notifications/notification_constants.dart';
 import 'package:tdahelpe/services/notifications/notification_storage.dart';
 import 'package:tdahelpe/services/notifications/timezone_config.dart';
 
-
 class NotificationService {
-
   static final StreamController<String> _notificationStream =
       StreamController<String>.broadcast();
 
@@ -26,8 +24,6 @@ class NotificationService {
 
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-
-
 
     final DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
@@ -51,7 +47,6 @@ class NotificationService {
         final String? payload = response.payload;
 
         if (payload != null) {
-
           await NotificationStorage.storeNotificationTap(payload);
 
           _notificationStream.add(payload);
@@ -62,14 +57,14 @@ class NotificationService {
     );
 
     if (Platform.isAndroid) {
-     await AndroidNotificationHandler.requestPermissions(_notifications);
+      await AndroidNotificationHandler.requestPermissions(_notifications);
 
-     await AndroidNotificationHandler.checkPermissions();
+      await AndroidNotificationHandler.checkPermissions();
     }
 
     if (Platform.isIOS) {
       IosNotificationHandler.requestPermissions(plugin: _notifications);
-        final String? launchPayload =
+      final String? launchPayload =
           await IosNotificationHandler.checkLaunchNotification(
             plugin: _notifications,
           );
@@ -79,7 +74,6 @@ class NotificationService {
         _notificationStream.add(launchPayload);
         print('📱 iOS: Notification de lancement traitée');
       }
-
     }
 
     print('✅ Notifications complètement initialisées');
@@ -89,7 +83,7 @@ class NotificationService {
     required int reveilHour,
     required int midiHour,
     required int soirHour,
-    required int coucheHour,
+    required int coucherHour,
   }) async {
     print('🔔 scheduleAllNotifications appelé avec:');
 
@@ -99,7 +93,7 @@ class NotificationService {
 
     print('🔔   Soir: $soirHour h');
 
-    print('🔔  Couché: $coucheHour h');
+    print('🔔  Coucher: $coucherHour h');
 
     await _scheduleNotification(
       id: NotificationConstants.morningNotificationId,
@@ -128,12 +122,12 @@ class NotificationService {
       minute: 0,
     );
 
-    // Planifier notification du couché
+    // Planifier notification du coucher
     await _scheduleNotification(
-      id: NotificationConstants.coucheNotificationId,
+      id: NotificationConstants.coucherNotificationId,
       title: NotificationConstants.getTitle(4),
       body: NotificationConstants.getBody(4),
-      hour: coucheHour,
+      hour: coucherHour,
       minute: 0,
     );
   }
@@ -195,8 +189,7 @@ class NotificationService {
       final result = await platform.invokeMethod('getNotificationData');
       return result != null;
     } catch (e) {
-
-        print('❌ Erreur Android: $e');
+      print('❌ Erreur Android: $e');
 
       return false;
     }

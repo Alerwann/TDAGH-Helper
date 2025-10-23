@@ -46,7 +46,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
               onPressed: () {
                  AppNavigator.goToRoot();
               },
-              icon: Icon(Icons.arrow_back_rounded),
+              icon: Icon(Icons.home),
             ),
             automaticallyImplyLeading: false,
             title: TextDegrade(title: "Résultats", choicetype: 'accueil'),

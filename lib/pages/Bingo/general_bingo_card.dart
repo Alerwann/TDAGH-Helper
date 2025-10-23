@@ -46,7 +46,6 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
 
   void _checkAccess() {
     if (!HoraireMoment.isMomentAccessible(widget.titleMoment, context)) {
-     
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -56,7 +55,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
           duration: Duration(seconds: 3),
         ),
       );
-       Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(Duration(milliseconds: 500), () {
         if (mounted) {
           Navigator.of(context).pop();
         }
@@ -76,8 +75,8 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
         case 'Soir':
           bingoCards = BingoDataSoir.getDefaultCards();
           break;
-        case 'Couché':
-          bingoCards = BingoDataCouche.getDefaultCards();
+        case 'Coucher':
+          bingoCards = BingoDatacoucher.getDefaultCards();
           break;
         default:
           bingoCards = BingoDataMorning.getDefaultCards();
@@ -138,7 +137,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
         context,
         "accueil",
         true,
-        Icon(Icons.arrow_back_rounded)
+        Icon(Icons.arrow_back_rounded),
       ),
       body: Consumer<ScoreProvider>(
         builder: (context, scoreP, child) {
@@ -153,8 +152,9 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
             case 'Soir':
               momentScore = scoreP.afternoonScore;
               break;
-            case 'Couché':
+            case 'Coucher':
               momentScore = scoreP.eveningScore;
+              // momentScore = 0;
               break;
             default:
               momentScore = 0;

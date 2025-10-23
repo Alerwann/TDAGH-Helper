@@ -56,7 +56,7 @@ class _BingoScoreState extends State<BingoScore> {
                 sousQuete("Matin", scoreP.morningScore),
                 sousQuete("Midi", scoreP.midiScore),
                 sousQuete("Soir", scoreP.afternoonScore),
-                sousQuete("Couché", scoreP.eveningScore),
+                sousQuete("Coucher", scoreP.eveningScore),
                 SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () {

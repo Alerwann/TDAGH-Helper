@@ -130,7 +130,7 @@ class MainActivity : FlutterActivity() {
                 1 -> "Matin"
                 2 -> "Midi"
                 3 -> "Soir"
-                4 -> "Couché"
+                4 -> "Coucher"
                 else -> "Matin"
             }
             

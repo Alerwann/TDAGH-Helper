@@ -66,7 +66,7 @@ class MomentButton extends StatelessWidget {
                   case 'soir':
                     scoreByMoment = scoreP.afternoonScore;
                     break;
-                  case 'couché':
+                  case 'coucher':
                     scoreByMoment = scoreP.eveningScore;
                     break;
                 }

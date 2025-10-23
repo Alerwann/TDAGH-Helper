@@ -23,7 +23,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
         context,
         "accueil",
         true,
-        Icon(Icons.home)
+        Icon(Icons.home),
       ),
 
       body: SingleChildScrollView(
@@ -53,9 +53,9 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                     iconColor: Color.fromARGB(255, 255, 226, 63),
                   ),
 
-                  //couché
+                  //coucher
                   MomentButton(
-                    moment: 'Couché',
+                    moment: 'Coucher',
                     icon: HugeIconsSolid.star,
                     iconColor: Color.fromARGB(255, 255, 255, 0),
                   ),

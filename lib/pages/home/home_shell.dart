@@ -3,20 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
-import 'package:provider/provider.dart';
-import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/core/startup/alarm_scheduler.dart';
+import 'package:tdahelpe/core/startup/notification_handler.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
-import 'package:tdahelpe/providers/heures_profil_provider.dart';
-import 'package:tdahelpe/services/notifications/notification_service.dart';
 
-/// Shell principal de l'application avec bottom navigation
-/// 
-/// Gère :
-/// - La navigation entre les 3 pages principales
-/// - La programmation des alarmes au démarrage
-/// - L'initialisation de la navigation pour les notifications
+/// Shell principal avec la navigation bottom bar
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
 
@@ -24,26 +17,21 @@ class HomeShell extends StatefulWidget {
   State<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell>
-    with WidgetsBindingObserver, MethodChannelMixin {
+class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   int _currentIndex = 0;
+  static const _methodChannel = MethodChannel('alarm_channel');
 
-  // Les 3 pages principales
-  final List<Widget> _pages = [
-    HomeGlobalPage(),
-    AccueilScore(),
-    ProfilPage(),
-  ];
+  final List<Widget> _pages = [HomeGlobalPage(), AccueilScore(), ProfilPage()];
 
   @override
   void initState() {
     super.initState();
-    
+
     // Observer le cycle de vie
     WidgetsBinding.instance.addObserver(this);
-    
-    // Configuration du MethodChannel pour Android
-    setupMethodChannel();
+
+    // Configuration du canal Android
+    _methodChannel.setMethodCallHandler(_handleMethodCall);
 
     // Initialisation post-frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -51,52 +39,26 @@ class _HomeShellState extends State<HomeShell>
     });
   }
 
-  /// Initialise tout ce qui nécessite un context
+  /// Initialise les services au démarrage
   Future<void> _initialize() async {
-    // Initialiser la navigation pour les notifications
-    await AppNavigator.initialize();
-    
-    // Programmer les alarmes
-    await _scheduleAlarmsOnStartup();
+    await NotificationHandler.initialize();
+    await AlarmScheduler.scheduleOnStartup(context);
   }
 
-  /// Programme toutes les alarmes au démarrage
-  Future<void> _scheduleAlarmsOnStartup() async {
-    try {
-      final profil = Provider.of<HeureProfilProvider>(
-        context,
-        listen: false,
-      );
-
-      // Attendre que le provider soit chargé
-      if (profil.isLoading) {
-        await Future.doWhile(() async {
-          await Future.delayed(Duration(milliseconds: 100));
-          return profil.isLoading;
-        });
-      }
-
+  /// Gère les appels depuis le code natif (Android)
+  Future<void> _handleMethodCall(MethodCall call) async {
+    if (call.method == 'onNotificationTapped') {
       if (kDebugMode) {
-        print('🔔 Programmation automatique des alarmes...');
+        print('🔔 Notification tapée (depuis Kotlin)');
       }
-
-      await NotificationService.scheduleAllNotifications(
-        reveilHour: profil.reveilHours,
-        midiHour: profil.midiHours,
-        soirHour: profil.soirHours,
-        coucheHour: profil.coucheHours,
-      );
-    } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur programmation alarmes: $e');
-      }
+      await NotificationHandler.initialize();
     }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    AppNavigator.dispose();
+    NotificationHandler.dispose();
     super.dispose();
   }
 
@@ -108,8 +70,7 @@ class _HomeShellState extends State<HomeShell>
       if (kDebugMode) {
         print('📱 App revenue au premier plan');
       }
-      // Revérifier les notifications en attente
-      AppNavigator.initialize();
+      NotificationHandler.initialize();
     }
   }
 
@@ -153,23 +114,5 @@ class _HomeShellState extends State<HomeShell>
         },
       ),
     );
-  }
-}
-
-/// Mixin pour gérer le MethodChannel Android
-mixin MethodChannelMixin {
-  static const platform = MethodChannel('alarm_channel');
-
-  void setupMethodChannel() {
-    platform.setMethodCallHandler(_handleMethodCall);
-  }
-
-  Future<void> _handleMethodCall(MethodCall call) async {
-    if (call.method == 'onNotificationTapped') {
-      if (kDebugMode) {
-        print('🔔 Notification tapée détectée depuis Kotlin !');
-      }
-      await AppNavigator.initialize();
-    }
   }
 }
