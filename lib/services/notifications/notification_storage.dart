@@ -48,8 +48,6 @@ class NotificationStorage {
     }
   }
 
-  static Future<String?> getStoredMoment() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyMoment);
-  }
+
+
 }

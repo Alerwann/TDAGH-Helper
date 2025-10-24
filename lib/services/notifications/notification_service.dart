@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/notification_constants.dart';
@@ -59,15 +60,25 @@ class NotificationService {
     if (Platform.isAndroid) {
       await AndroidNotificationHandler.requestPermissions(_notifications);
 
-      await AndroidNotificationHandler.checkPermissions();
+      final hasPermissions =await AndroidNotificationHandler.checkPermissions();
+         if (!hasPermissions) {
+        // ⚠️ Stocker qu'il faut afficher un message
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('needs_permission_warning', true);
+      }
     }
 
     if (Platform.isIOS) {
-      IosNotificationHandler.requestPermissions(plugin: _notifications);
+    final granted =await  IosNotificationHandler.requestPermissions(plugin: _notifications);
       final String? launchPayload =
           await IosNotificationHandler.checkLaunchNotification(
             plugin: _notifications,
           );
+
+      if (! granted) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('needs_permission_warning', true);
+      }
 
       if (launchPayload != null) {
         await NotificationStorage.storeNotificationTap(launchPayload);

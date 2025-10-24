@@ -94,6 +94,9 @@ class _ParametretirageState extends State<Parametretirage> {
                                   tachesTime.taches.length) {
                                 return "Nombre de tache maximal => ${tachesTime.taches.length}";
                               }
+                              if (int.parse(value) > 10) {
+                                return "Nombre maximal de tâches quotidiennes est de 10";
+                              }
                               return null;
                             },
                           ),

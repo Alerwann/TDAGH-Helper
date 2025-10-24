@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/core/startup/alarm_scheduler.dart';
 import 'package:tdahelpe/core/startup/notification_handler.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
+import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
+import 'package:tdahelpe/widget/specific/showPermissionExplanationDialog.dart';
 
 /// Shell principal avec la navigation bottom bar
 class HomeShell extends StatefulWidget {
@@ -39,6 +45,63 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      // L'app revient au premier plan
+      if (kDebugMode) {
+        print('📱 App revenue au premier plan - Vérification des permissions');
+      }
+
+      // ✅ VÉRIFIE LES PERMISSIONS
+      _checkPermissionsOnResume();
+
+      // Ton code existant pour les notifications
+      NotificationHandler.initialize();
+    }
+  }
+
+  Future<void> _checkPermissionsOnResume() async {
+    if (Platform.isAndroid) {
+      final hasPermissions =
+          await AndroidNotificationHandler.checkPermissions();
+
+      if (!hasPermissions) {
+        // Stocker qu'il faut afficher un warning
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('needs_permission_warning', true);
+
+        if (kDebugMode) {
+          print('⚠️ Permissions manquantes détectées');
+        }
+
+        // Afficher un dialog
+        if (mounted) {}
+      }
+    } else if (Platform.isIOS) {
+      // Pour iOS, on peut aussi vérifier
+      final plugin = FlutterLocalNotificationsPlugin();
+      final granted = await plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+
+      if (granted == false) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('needs_permission_warning', true);
+
+        if (mounted) {
+          ShowPermissionExplanationDialog.showdial(context, mounted);
+          
+        }
+      }
+    }
+  }
+
+
   /// Initialise les services au démarrage
   Future<void> _initialize() async {
     await NotificationHandler.initialize();
@@ -60,18 +123,6 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     NotificationHandler.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    if (state == AppLifecycleState.resumed) {
-      if (kDebugMode) {
-        print('📱 App revenue au premier plan');
-      }
-      NotificationHandler.initialize();
-    }
   }
 
   @override

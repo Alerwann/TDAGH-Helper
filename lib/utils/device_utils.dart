@@ -16,7 +16,7 @@ class DeviceUtils {
         brand.contains('oneplus');
   }
 
-  static void testAndroid(BuildContext context) async {
+ static void testAndroid(BuildContext context) async {
     if (Platform.isAndroid) {
       bool hasPermission = await AndroidNotificationHandler.checkPermissions();
 
@@ -51,4 +51,5 @@ class DeviceUtils {
       }
     }
   }
+  
 }

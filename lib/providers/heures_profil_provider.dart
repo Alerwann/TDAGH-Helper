@@ -88,7 +88,7 @@ class HeureProfilProvider extends ChangeNotifier {
   }
 
   Future<void> _scheduleNotificationsWithLoadedHours() async {
-    try {
+    try{
       bool hasPermissions =
           await AndroidNotificationHandler.hasAllPermissions();
 
