@@ -73,7 +73,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                   margin: EdgeInsets.all(15),
                   child: ElevatedButton(
                     onPressed: () {
-                      AppNavigator.replaceTo(GamePage());
+                      AppNavigator.replaceTo(context,GamePage());
                     },
                     child: Text("Réessayer", style: TextStyle(fontSize: 20)),
                   ),

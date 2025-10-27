@@ -26,9 +26,6 @@ class BonusLevelProvider extends ChangeNotifier {
         ) ??
         [];
 
-    if (kDebugMode) {
-      print('✅ ${_levels.length} grades chargés dans le provider');
-    }
 
     _isLoading = false;
     notifyListeners();
@@ -72,9 +69,7 @@ class BonusLevelProvider extends ChangeNotifier {
 
 BonusLevel? getGradeByIndex(int index) {
     if (_levels.isEmpty) {
-      if (kDebugMode) {
-        print('⚠️ getGradeByIndex: Aucun grade chargé');
-      }
+ 
       return null;
     }
 
@@ -82,9 +77,7 @@ BonusLevel? getGradeByIndex(int index) {
     final grade = _levels.firstWhere(
       (level) => level.declancheLevel == index,
       orElse: () {
-        if (kDebugMode) {
-          print('⚠️ getGradeByIndex: Index $index non trouvé');
-        }
+    
         return _levels.first; // Valeur par défaut
       },
     );
@@ -94,9 +87,7 @@ BonusLevel? getGradeByIndex(int index) {
 
   BonusLevel? getNextGrade(int currentLevel) {
     if (_levels.isEmpty) {
-      if (kDebugMode) {
-        print('⚠️ getNextGrade: Aucun grade chargé');
-      }
+
       return null;
     }
 
@@ -104,17 +95,12 @@ BonusLevel? getGradeByIndex(int index) {
     int nextIndex = currentIndex + 1;
 
     if (nextIndex >= _levels.length) {
-      if (kDebugMode) {
-        print('🏆 getNextGrade: Plus de grades disponibles');
-      }
+
       return null; // Plus de grades
     }
 
     final nextGrade = getGradeByIndex(nextIndex);
 
-    if (kDebugMode && nextGrade != null) {
-      print('🎯 getNextGrade(niveau $currentLevel) → ${nextGrade.gradeName}');
-    }
 
     return nextGrade;
   }
@@ -122,9 +108,7 @@ BonusLevel? getGradeByIndex(int index) {
   
 int? getNextGradeLevel(int currentLevel) {
     if (_levels.isEmpty) {
-      if (kDebugMode) {
-        print('⚠️ getNextGradeLevel: Aucun grade chargé');
-      }
+
       return null;
     }
 
@@ -132,17 +116,12 @@ int? getNextGradeLevel(int currentLevel) {
     int nextIndex = currentIndex + 1;
 
     if (nextIndex >= _levels.length) {
-      if (kDebugMode) {
-        print('🏆 getNextGradeLevel: Niveau max atteint');
-      }
+    
       return null;
     }
 
     final nextLevel = nextIndex * 5;
 
-    if (kDebugMode) {
-      print('📊 getNextGradeLevel(niveau $currentLevel) → $nextLevel');
-    }
 
     return nextLevel;
   }

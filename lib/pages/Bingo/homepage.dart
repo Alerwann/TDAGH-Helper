@@ -1,3 +1,7 @@
+// Accueil du bingo
+// Donne accès à la validation des activités suivant le moment de la journée
+// A chaque fois il est affiché le nom de la période le score et son horaire d'ouverture ou fermeture
+
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
@@ -14,6 +18,8 @@ class HomeBingoPage extends StatefulWidget {
 
 class _HomeBingoPageState extends State<HomeBingoPage> {
   var choiceBingo = 0;
+  bool showBanner = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,7 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                 spacing: 30,
 
                 children: [
+                
                   MomentButton(
                     moment: 'Matin',
                     icon: HugeIconsSolid.sun02,
@@ -46,14 +53,13 @@ class _HomeBingoPageState extends State<HomeBingoPage> {
                     icon: HugeIconsSolid.apple01,
                     iconColor: Color.fromARGB(255, 255, 0, 0),
                   ),
-                  //soir
+
                   MomentButton(
                     moment: 'Soir',
                     icon: HugeIconsSolid.moon02,
                     iconColor: Color.fromARGB(255, 255, 226, 63),
                   ),
 
-                  //coucher
                   MomentButton(
                     moment: 'Coucher',
                     icon: HugeIconsSolid.star,

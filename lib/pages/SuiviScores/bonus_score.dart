@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/pages/TimerTooth/home_timer_tooth.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
@@ -84,12 +85,7 @@ class _BonusScoreState extends State<BonusScore> {
 
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeTimertooth(),
-                        ),
-                      );
+                      AppNavigator.replaceTo(context, HomeTimertooth());
                     },
                     child: Text("Aller vers le lavage de dent"),
                   ),
@@ -141,12 +137,7 @@ class _BonusScoreState extends State<BonusScore> {
                         ),
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeDefouleToi(),
-                        ),
-                      );
+                      AppNavigator.replaceTo(context, HomeDefouleToi());
                     },
                     child: Text("Va battre des records"),
                   ),

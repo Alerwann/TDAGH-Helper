@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class AndroidNotificationHandler {
   static const platform = MethodChannel('alarm_channel');
@@ -18,7 +17,7 @@ class AndroidNotificationHandler {
       print('🤖 Android - Planification notification #$id');
       print('   Heure demandée : $hour:$minute');
     }
-      if (hour < 0 || hour > 23) {
+    if (hour < 0 || hour > 23) {
       throw ArgumentError('Heure invalide: $hour');
     }
     if (minute < 0 || minute > 59) {
@@ -49,9 +48,6 @@ class AndroidNotificationHandler {
   static Future<void> cancelNotification({required int id}) async {
     try {
       await platform.invokeMethod('cancelAlarm', {'id': id});
-      if (kDebugMode) {
-        print('🤖 Android - ❌ Notification #$id annulée');
-      }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Erreur annulation notification Android: $e');
@@ -64,9 +60,6 @@ class AndroidNotificationHandler {
   static Future<void> cancelAllNotifications() async {
     try {
       await platform.invokeMethod('cancelAllAlarms');
-      if (kDebugMode) {
-        print('🤖 Android - ❌ Toutes les notifications annulées');
-      }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Erreur annulation toutes notifications Android: $e');
@@ -77,14 +70,10 @@ class AndroidNotificationHandler {
 
   /// Vérifie si toutes les permissions nécessaires sont accordées
   static Future<bool> checkPermissions() async {
-
     try {
       final bool? canSchedule = await platform.invokeMethod('checkPermissions');
 
       if (canSchedule == false) {
-        if (kDebugMode) {
-          print('❌ Permission SCHEDULE_EXACT_ALARM manquante');
-        }
         return false;
       }
 
@@ -93,49 +82,35 @@ class AndroidNotificationHandler {
       }
       return canSchedule ?? false;
     } catch (e) {
-      if (kDebugMode) {
-        print('⚠️ Erreur vérification permissions: $e');
-      }
       return false;
     }
   }
 
   /// Demande les permissions nécessaires pour les notifications
-  static Future<void> requestPermissions(FlutterLocalNotificationsPlugin plugin) async {
-
+  static Future<bool> requestPermissions() async {
+    if (!Platform.isAndroid) {
+      return true;
+    }
 
     try {
-      if (kDebugMode) {
-        print('🤖 Android: Demande des permissions...');
-      }
+      final bool? granted = await platform.invokeMethod('requestPermissions');
 
-       await plugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.requestNotificationsPermission();
+      print("🤖 granted?? : $granted");
 
-      if (kDebugMode) {
-        print('✅ Permission notifications demandée');
-      }
+      return granted ?? false;
     } catch (e) {
-      if (kDebugMode) {
-        print('⚠️ Erreur demande permission: $e');
-      }
+      return false;
     }
   }
 
   /// Ouvre les paramètres système pour configurer les permissions
-  static Future<void> openSettings() async {
+  static Future<void> openSettingsAndroid() async {
     if (!Platform.isAndroid) {
       return;
     }
 
     try {
       await platform.invokeMethod('openSettings');
-      if (kDebugMode) {
-        print('🤖 Android - Ouverture des paramètres');
-      }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Erreur ouverture paramètres: $e');
@@ -153,20 +128,13 @@ class AndroidNotificationHandler {
       final result = await platform.invokeMethod('getNotificationData');
       final bool opened = result != null;
 
-      if (kDebugMode) {
-        print('🤖 Android - Ouvert depuis notification: $opened');
-      }
-
       return opened;
     } catch (e) {
-      if (kDebugMode) {
-        print('❌ Erreur vérification ouverture Android: $e');
-      }
       return false;
     }
   }
 
-    static Future<bool> hasAllPermissions() async {
+  static Future<bool> hasAllPermissions() async {
     if (Platform.isAndroid) {
       try {
         final bool? canSchedule = await platform.invokeMethod(
@@ -174,9 +142,6 @@ class AndroidNotificationHandler {
         );
 
         if (canSchedule == false) {
-          if (kDebugMode) {
-            print('❌ Permission SCHEDULE_EXACT_ALARM manquante');
-          }
           return false;
         }
 

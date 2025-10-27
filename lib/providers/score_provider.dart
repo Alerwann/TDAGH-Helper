@@ -66,6 +66,7 @@ class ScoreProvider extends ChangeNotifier {
 
   // ✅ _loadData ULTRA simplifié avec une boucle !
   Future<void> _loadData() async {
+    print("🔋 loadData de scoreP");
     _xpGlobal =
         await ErrorHandler.handleAsync(
           () => ScoreStorageService.getXpGlobal(),
@@ -74,7 +75,6 @@ class ScoreProvider extends ChangeNotifier {
         ) ??
         0;
 
-    // ✅ Charger tous les scores en une boucle !
     for (var moment in _scores.keys) {
       _scores[moment] =
           await ErrorHandler.handleAsync(
@@ -113,13 +113,14 @@ class ScoreProvider extends ChangeNotifier {
 
     _lastResetDate = await ScoreStorageService.getLastResetDate();
 
-    await _checkAndReset();
+    await checkAndReset();
     _isLoading = false;
     notifyListeners();
   }
 
   // ✅ _checkAndReset simplifié
-  Future<void> _checkAndReset() async {
+  Future<void> checkAndReset() async {
+    print("🔋 check si on reload");
     await ErrorHandler.handleAsync(
       () async {
         final now = DateTime.now();
@@ -128,6 +129,7 @@ class ScoreProvider extends ChangeNotifier {
 
         if (_lastResetDate == null || _lastResetDate!.isBefore(today6AM)) {
           if (now.isAfter(today6AM)) {
+            print("🔋 on doit reset");
             // Sauvegarder l'XP avant reset
             _xpGlobal = _xpGlobal + globalScore;
             await ScoreStorageService.saveXpGlobal(_xpGlobal);
@@ -172,14 +174,15 @@ class ScoreProvider extends ChangeNotifier {
     );
   }
 
-Future<int> getScoreByMoment(String moment) async {
+  Future<int> getScoreByMoment(String moment) async {
     return await ScoreStorageService.getScore(moment);
   }
 
-
   Future<bool> incrementglobal(String moment) async {
     // Vérifier si le moment existe
+    print("🫣 ${_scores[moment]}");
     if (!_scores.containsKey(moment)) {
+      print("🫣❓ erreur");
       return false;
     }
 
@@ -193,13 +196,13 @@ Future<int> getScoreByMoment(String moment) async {
 
     if (!success) {
       _scores[moment] = oldScore;
+      print("🫣 pas de succes}");
       return false;
     }
-
+    print("🫣 ${_scores[moment]}");
     notifyListeners();
     return true;
   }
-
 
   Future<bool> decrementglobal(String moment) async {
     // Vérifier si le moment existe
@@ -237,7 +240,7 @@ Future<int> getScoreByMoment(String moment) async {
       );
       if (!success) {
         _scores = oldScores;
-          return false;
+        return false;
       }
     }
 
@@ -245,7 +248,6 @@ Future<int> getScoreByMoment(String moment) async {
     return true;
   }
 
-  // ✅ Le reste reste identique
   Future<bool> updateTacheCheck(int index, bool value) async {
     final oldIsChecked = List<bool>.from(_isChecked);
     final oldCurrentStep = _currentStep;
@@ -256,7 +258,7 @@ Future<int> getScoreByMoment(String moment) async {
 
     bool success;
 
-if (_currentStep == _isChecked.length && _currentStep > 0) {
+    if (_currentStep == _isChecked.length && _currentStep > 0) {
       success = await incrementglobal('taches');
       if (!success) {
         _isChecked = oldIsChecked;
@@ -272,7 +274,6 @@ if (_currentStep == _isChecked.length && _currentStep > 0) {
       }
     }
 
-   
     final saveSuccess = await ScoreStorageService.saveTacheState(_isChecked);
 
     if (!saveSuccess) {
@@ -299,7 +300,7 @@ if (_currentStep == _isChecked.length && _currentStep > 0) {
       // Rollback
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
-    
+
       return false;
     }
 
@@ -315,7 +316,7 @@ if (_currentStep == _isChecked.length && _currentStep > 0) {
 
     if (!success) {
       _scores['taches'] = oldTacheScore;
-        return false;
+      return false;
     }
 
     notifyListeners();
@@ -324,7 +325,6 @@ if (_currentStep == _isChecked.length && _currentStep > 0) {
 
   Future<bool> incrementToothScore() async {
     if (_toothScore >= 15) {
-   
       return true;
     }
 
@@ -354,7 +354,7 @@ if (_currentStep == _isChecked.length && _currentStep > 0) {
 
     if (!success) {
       _defouleScore = oldDefouleScore;
-         return false;
+      return false;
     }
 
     notifyListeners();

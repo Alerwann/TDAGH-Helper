@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/DefouleToi/game_page.dart';
 import 'package:tdahelpe/pages/DefouleToi/modif_timer_game.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -23,7 +24,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
         context,
         "accueil",
         true,
-        Icon(Icons.home)
+        Icon(Icons.home),
       ),
       body: Consumer2<DefouleProvider, ScoreProvider>(
         builder: (context, defouleP, scoreP, child) {
@@ -58,27 +59,19 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GamePage()),
-                      );
+                      AppNavigator.push(context, GamePage());
                     },
                     child: Text("Start"),
                   ),
                 ),
-                
+
                 // bouton modifier timer
                 SizedBox(
                   width: 260,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (contex) => ModifTimerGame(),
-                        ),
-                      );
+                      await AppNavigator.push(context, ModifTimerGame());
                     },
                     child: Text("Modifier timer"),
                   ),

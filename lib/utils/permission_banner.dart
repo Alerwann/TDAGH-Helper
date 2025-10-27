@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
+import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
+import 'package:tdahelpe/utils/permission_state.dart';
 
 class PermissionBanner extends StatefulWidget {
   const PermissionBanner({super.key});
@@ -11,18 +15,34 @@ class PermissionBanner extends StatefulWidget {
 
 class _PermissionBannerState extends State<PermissionBanner> {
   bool _showBanner = false;
+  StreamSubscription<bool>? _permissionSubscription;
 
   @override
   void initState() {
+    print("😜 init de permission banner");
     super.initState();
+
     _checkPermissions();
+
+    _permissionSubscription = PermissionState.permissionStream.listen((
+      needsWarning,
+    ) {
+      setState(() {
+        _showBanner = needsWarning;
+      });
+    });
   }
 
   Future<void> _checkPermissions() async {
     final prefs = await SharedPreferences.getInstance();
+
+    final firstConnect = prefs.getBool('first_launch') ?? true;
+
     final needsWarning = prefs.getBool('needs_permission_warning') ?? false;
 
-    if (needsWarning) {
+
+
+    if (needsWarning && !firstConnect) {
       setState(() {
         _showBanner = true;
       });
@@ -36,6 +56,12 @@ class _PermissionBannerState extends State<PermissionBanner> {
     setState(() {
       _showBanner = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _permissionSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -65,14 +91,18 @@ class _PermissionBannerState extends State<PermissionBanner> {
                 ),
                 Text(
                   'Active les notifications pour recevoir tes rappels',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ],
             ),
           ),
           TextButton(
             onPressed: () {
-              AndroidNotificationHandler.openSettings();
+              if (Platform.isAndroid) {
+                AndroidNotificationHandler.openSettingsAndroid();
+              } else if (Platform.isIOS) {
+                IosNotificationHandler.openSettingsIos();
+              }
               _dismissBanner();
             },
             child: Text('Activer'),

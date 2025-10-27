@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tdahelpe/core/startup/notification_handler.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/notification_constants.dart';
@@ -13,7 +14,9 @@ class NotificationService {
   static final StreamController<String> _notificationStream =
       StreamController<String>.broadcast();
 
-  static Stream<String> get notificationStream => _notificationStream.stream;
+  static Stream<String> get notificationStream {
+    return _notificationStream.stream;
+  }
 
   static final FlutterLocalNotificationsPlugin _notifications =
       FlutterLocalNotificationsPlugin();
@@ -21,6 +24,7 @@ class NotificationService {
   static const platform = MethodChannel('alarm_channel');
 
   static Future<void> initialize() async {
+    print('🔵 ===== DÉBUT INITIALISATION NOTIFICATIONS =====');
     await TimezoneConfig.initialize();
 
     const AndroidInitializationSettings androidSettings =
@@ -41,53 +45,53 @@ class NotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(android: androidSettings, iOS: iosSettings);
 
-    // Initialiser
+    // ⚠️ Vérifier le lancement AVANT initialize()
+    String? launchPayload;
+    if (Platform.isIOS) {
+      print('🔵 iOS: Vérification du lancement AVANT initialize');
+      launchPayload = await IosNotificationHandler.checkLaunchNotification(
+        plugin: _notifications,
+      );
+      print('🔵 iOS: launchPayload récupéré = $launchPayload');
+    }
+   await AndroidNotificationHandler.requestPermissions();
+   await checkAllPermission();
+
+    // Initialiser avec callback
+    print('🔵 Appel de _notifications.initialize()');
     await _notifications.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        print(
+          '🔥 ===== CALLBACK onDidReceiveNotificationResponse DÉCLENCHÉ =====',
+        );
+        print('   actionId: ${response.actionId}');
+        print('   input: ${response.input}');
+        print(
+          '   notificationResponseType: ${response.notificationResponseType}',
+        );
+        print('   payload: ${response.payload}');
+        print('🔥 =========================================================');
+
         final String? payload = response.payload;
-
         if (payload != null) {
+          print(payload);
           await NotificationStorage.storeNotificationTap(payload);
-
           _notificationStream.add(payload);
-
-          print('📱 CALLBACK iOS: Moment stocké et émis');
         }
       },
     );
+    print('🔵 _notifications.initialize() terminé');
 
-    if (Platform.isAndroid) {
-      await AndroidNotificationHandler.requestPermissions(_notifications);
-
-      final hasPermissions =await AndroidNotificationHandler.checkPermissions();
-         if (!hasPermissions) {
-        // ⚠️ Stocker qu'il faut afficher un message
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('needs_permission_warning', true);
-      }
+    // // Traiter le payload de lancement
+    if (Platform.isIOS && launchPayload != null) {
+      print('🟢 iOS: Traitement du payload de lancement: $launchPayload');
+      await NotificationHandler.initialize();
+      await NotificationStorage.storeNotificationTap(launchPayload);
+      _notificationStream.add(launchPayload);
     }
 
-    if (Platform.isIOS) {
-    final granted =await  IosNotificationHandler.requestPermissions(plugin: _notifications);
-      final String? launchPayload =
-          await IosNotificationHandler.checkLaunchNotification(
-            plugin: _notifications,
-          );
-
-      if (! granted) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('needs_permission_warning', true);
-      }
-
-      if (launchPayload != null) {
-        await NotificationStorage.storeNotificationTap(launchPayload);
-        _notificationStream.add(launchPayload);
-        print('📱 iOS: Notification de lancement traitée');
-      }
-    }
-
-    print('✅ Notifications complètement initialisées');
+    print('🔵 ===== FIN INITIALISATION NOTIFICATIONS =====');
   }
 
   static Future<void> scheduleAllNotifications({
@@ -96,16 +100,7 @@ class NotificationService {
     required int soirHour,
     required int coucherHour,
   }) async {
-    print('🔔 scheduleAllNotifications appelé avec:');
-
-    print('🔔  Réveil: $reveilHour h');
-
-    print('🔔   Midi: $midiHour h');
-
-    print('🔔   Soir: $soirHour h');
-
-    print('🔔  Coucher: $coucherHour h');
-
+    print("🤖❓ schedul allnotificaiton ?");
     await _scheduleNotification(
       id: NotificationConstants.morningNotificationId,
       title: NotificationConstants.getTitle(1),
@@ -120,8 +115,9 @@ class NotificationService {
       title: NotificationConstants.getTitle(2),
       body: NotificationConstants.getBody(2),
       hour: midiHour,
+      // minute: 0
       // hour: DateTime.now().hour,
-      minute: 00,
+      minute: 0,
     );
 
     // Planifier notification du soir
@@ -188,21 +184,32 @@ class NotificationService {
 
   static Future<bool> isOpenedFromNotification() async {
     if (Platform.isAndroid) {
-      return isOpenedFromNotificationAndroid();
-    } else if (Platform.isIOS) {
-      return NotificationStorage.wasOpenedFromNotification();
+      print("🤖 isopen from a notif??");
+      return await AndroidNotificationHandler.wasOpenedFromNotification();
     }
     return false;
   }
 
-  static Future<bool> isOpenedFromNotificationAndroid() async {
-    try {
-      final result = await platform.invokeMethod('getNotificationData');
-      return result != null;
-    } catch (e) {
-      print('❌ Erreur Android: $e');
+  static Future<bool> checkAllPermission() async {
+    bool permissionAuto = false;
+    final prefs = await SharedPreferences.getInstance();
+    if (Platform.isAndroid) {
+      print("🤖 initalisation platform android notificaiton service");
 
-      return false;
+      permissionAuto = await AndroidNotificationHandler.checkPermissions();
+
+      print('🤖 hasPermissions = $permissionAuto');
+    } else if (Platform.isIOS) {
+      print('🔵 iOS: Demande des permissions');
+      permissionAuto =
+          await IosNotificationHandler.requestNotificationPermissions();
+      print('🔵 iOS: Permissions accordées ? $permissionAuto');
     }
+    // mise à jour des données sur les permissions
+    await prefs.setBool('needs_permission_warning', !permissionAuto);
+
+    final saved = prefs.getBool('needs_permission_warning');
+    print('🤖 needs_permission_warning sauvegardé = $saved');
+    return permissionAuto;
   }
 }

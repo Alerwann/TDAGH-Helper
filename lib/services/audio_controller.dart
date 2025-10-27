@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:logging/logging.dart';
 
@@ -11,29 +12,37 @@ class AudioController {
     try {
       _audioPlayer = AudioPlayer();
 
-      await _audioPlayer!.setAudioContext(
-        AudioContext(
-          iOS: AudioContextIOS(
-            category: AVAudioSessionCategory.playback,
-            options: {
-              AVAudioSessionOptions.mixWithOthers,
-              AVAudioSessionOptions.duckOthers,
-            },
+      if (Platform.isIOS) {
+        await _audioPlayer!.setAudioContext(
+          AudioContext(
+            iOS: AudioContextIOS(
+              category: AVAudioSessionCategory.playback,
+              options: {
+                AVAudioSessionOptions.mixWithOthers,
+                AVAudioSessionOptions.duckOthers,
+              },
+            ),
           ),
-          android: AudioContextAndroid(
-            isSpeakerphoneOn: false,
-            stayAwake: true,
-            contentType: AndroidContentType.music,
-            usageType: AndroidUsageType.media,
-            audioFocus: AndroidAudioFocus.gain,
+        );
+      } else if (Platform.isAndroid) {
+        await _audioPlayer!.setAudioContext(
+          AudioContext(
+            android: AudioContextAndroid(
+              isSpeakerphoneOn: false,
+              stayAwake: true,
+              contentType: AndroidContentType.music,
+              usageType: AndroidUsageType.media,
+              audioFocus: AndroidAudioFocus.gain,
+            ),
           ),
-        ),
-      );
+        );
+      }
 
       _isInitialized = true;
       _log.info('AudioController initialized successfully');
     } catch (e) {
       _log.severe('Error initializing AudioController: $e');
+      _isInitialized = false;
     }
   }
 
@@ -50,7 +59,7 @@ class AudioController {
     }
   }
 
-Future<void> playSound(String assetKey, String typeMemory) async {
+  Future<void> playSound(String assetKey, String typeMemory) async {
     if (!_isInitialized || _audioPlayer == null) {
       await initialize();
       if (!_isInitialized) {
@@ -60,7 +69,6 @@ Future<void> playSound(String assetKey, String typeMemory) async {
     }
 
     try {
-
       await _audioPlayer!.stop();
 
       if (typeMemory == "interne") {
@@ -70,7 +78,6 @@ Future<void> playSound(String assetKey, String typeMemory) async {
       }
     } catch (e) {
       _log.severe('Erreur lecture audio: $e');
-  
     }
   }
 
@@ -109,6 +116,5 @@ Future<void> playSound(String assetKey, String typeMemory) async {
     } else {
       _log.warning('Cannot stop: AudioController not initialized');
     }
-    
   }
 }

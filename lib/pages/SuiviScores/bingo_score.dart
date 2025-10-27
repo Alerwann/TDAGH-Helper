@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/Bingo/homepage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
@@ -60,10 +61,7 @@ class _BingoScoreState extends State<BingoScore> {
                 SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomeBingoPage()),
-                    );
+                    AppNavigator.replaceTo(context, HomeBingoPage());
                   },
                   child: Text("Aller valider le bingo"),
                 ),

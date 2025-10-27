@@ -40,7 +40,7 @@ class DeviceUtils {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
-                 AndroidNotificationHandler.openSettings();
+                 AndroidNotificationHandler.openSettingsAndroid();
                 },
                 child: Text('Ouvrir'),
               ),

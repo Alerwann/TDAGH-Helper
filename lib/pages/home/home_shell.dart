@@ -1,19 +1,19 @@
-import 'dart:io';
-
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/core/startup/alarm_scheduler.dart';
 import 'package:tdahelpe/core/startup/notification_handler.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
-import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
-import 'package:tdahelpe/widget/specific/showPermissionExplanationDialog.dart';
+import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/services/notifications/notification_service.dart';
+import 'package:tdahelpe/utils/permission_state.dart';
+import 'package:tdahelpe/widget/specific/show_permission_explanation_dialog.dart';
 
 /// Shell principal avec la navigation bottom bar
 class HomeShell extends StatefulWidget {
@@ -27,12 +27,10 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   int _currentIndex = 0;
   static const _methodChannel = MethodChannel('alarm_channel');
 
-  final List<Widget> _pages = [HomeGlobalPage(), AccueilScore(), ProfilPage()];
-
   @override
   void initState() {
     super.initState();
-
+    print("🤯 notificaiton init home shell");
     // Observer le cycle de vie
     WidgetsBinding.instance.addObserver(this);
 
@@ -42,70 +40,54 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
     // Initialisation post-frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initialize();
+      _checkFirstLaunch();
     });
   }
 
+  Future<void> _initialize() async {
+    print("🤯 notificaiton init home shell fonction _initialize");
+
+    await NotificationHandler.initialize();
+
+    await AlarmScheduler.scheduleOnStartup(context);
+  }
+
+  Future<void> _checkFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final isFirstLaunch = prefs.getBool('first_launch') ?? true;
+
+    // print("👀 isfirstlunch : $isFirstLaunch");
+
+    if (isFirstLaunch) {
+      await prefs.setBool('first_launch', false);
+
+      // Afficher le dialog explicatif
+      if (mounted) {
+        ShowPermissionExplanationDialog.firstTextApparition(context);
+      }
+    }
+  }
+
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.resumed) {
-      // L'app revient au premier plan
-      if (kDebugMode) {
-        print('📱 App revenue au premier plan - Vérification des permissions');
+      print('📱 App est au premier plan - Vérification des permissions');
+
+      final scoreP = Provider.of<ScoreProvider>(context, listen: false);
+
+      bool resumePermission = await NotificationService.checkAllPermission();
+      PermissionState.notifyPermissionChanged(!resumePermission);
+      if (mounted && !resumePermission) {
+        // print("👀 show permision dial");
+        ShowPermissionExplanationDialog.showdial(context, mounted);
       }
-
-      // ✅ VÉRIFIE LES PERMISSIONS
-      _checkPermissionsOnResume();
-
-      // Ton code existant pour les notifications
-      NotificationHandler.initialize();
-    }
-  }
-
-  Future<void> _checkPermissionsOnResume() async {
-    if (Platform.isAndroid) {
-      final hasPermissions =
-          await AndroidNotificationHandler.checkPermissions();
-
-      if (!hasPermissions) {
-        // Stocker qu'il faut afficher un warning
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('needs_permission_warning', true);
-
-        if (kDebugMode) {
-          print('⚠️ Permissions manquantes détectées');
-        }
-
-        // Afficher un dialog
-        if (mounted) {}
-      }
-    } else if (Platform.isIOS) {
-      // Pour iOS, on peut aussi vérifier
-      final plugin = FlutterLocalNotificationsPlugin();
-      final granted = await plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-
-      if (granted == false) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('needs_permission_warning', true);
-
-        if (mounted) {
-          ShowPermissionExplanationDialog.showdial(context, mounted);
-          
-        }
+      if (mounted) {
+        scoreP.checkAndReset();
       }
     }
-  }
-
-
-  /// Initialise les services au démarrage
-  Future<void> _initialize() async {
-    await NotificationHandler.initialize();
-    await AlarmScheduler.scheduleOnStartup(context);
   }
 
   /// Gère les appels depuis le code natif (Android)
@@ -127,8 +109,9 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [HomeGlobalPage(), AccueilScore(), ProfilPage()];
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: pages[_currentIndex],
       bottomNavigationBar: ConvexAppBar(
         style: TabStyle.react,
         backgroundColor: Colors.purple,

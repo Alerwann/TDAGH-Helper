@@ -34,17 +34,16 @@ class TimezoneConfig {
       'ADT': 'America/Halifax',
     };
 
-    // Si le fuseau est dans la map, retourner la location
+
     if (timezoneMap.containsKey(systemTimeZone)) {
       return timezoneMap[systemTimeZone]!;
     }
 
-    // Si c'est déjà un nom complet (contient '/'), le retourner tel quel
     if (systemTimeZone.contains('/')) {
       return systemTimeZone;
     }
 
-    // Sinon, retourner tel quel en espérant que ça fonctionne
+
     return systemTimeZone;
   }
 
@@ -54,12 +53,12 @@ class TimezoneConfig {
     try {
       tz.setLocalLocation(tz.getLocation(locationName));
       if (kDebugMode) {
-        print('✅ Fuseau horaire configuré : $locationName');
+
       }
       return true;
     } catch (e) {
       if (kDebugMode) {
-        print('⚠️ Échec configuration fuseau $locationName : $e');
+
       }
       return false;
     }

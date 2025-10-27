@@ -7,19 +7,16 @@ class NotificationStorage {
 
   /// Stocke qu'une notification a été tapée
   static Future<void> storeNotificationTap(String moment) async {
-    if (kDebugMode) {
-      print('💾 Stockage du moment: $moment');
-    }
-
+    print("👀 notificaiton storage tap");
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyMoment, moment);
     await prefs.setBool(_keyOpen, true);
 
     // Vérification
     final saved = prefs.getString(_keyMoment);
-    if (kDebugMode) {
+
       print('💾 Vérification: moment sauvegardé = $saved');
-    }
+ 
   }
 
   /// Vérifie si l'app a été ouverte depuis une notification
@@ -27,10 +24,6 @@ class NotificationStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
       final shouldOpen = prefs.getBool(_keyOpen) ?? false;
-
-      if (kDebugMode) {
-        print('👀 wasOpenedFromNotification: $shouldOpen');
-      }
 
       if (shouldOpen) {
         // Nettoyer après lecture
@@ -47,7 +40,4 @@ class NotificationStorage {
       return false;
     }
   }
-
-
-
 }

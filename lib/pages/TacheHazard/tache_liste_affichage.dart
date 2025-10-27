@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/TacheHazard/ajout_tache.dart';
 import 'package:tdahelpe/pages/TacheHazard/modifcation_tache.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
@@ -16,11 +17,6 @@ class TacheListeAffichage extends StatefulWidget {
 }
 
 class _TacheListeAffichageState extends State<TacheListeAffichage> {
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer<TachesProvider>(
@@ -60,12 +56,9 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                         margin: EdgeInsets.all(2),
                         child: ListTile(
                           onTap: () async {
-                            await Navigator.push(
+                            await AppNavigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ModifcationTache(tacheComplete: tache),
-                              ),
+                              ModifcationTache(tacheComplete: tache),
                             );
                           },
                           title: Text(
@@ -87,7 +80,9 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text('Supprimer " ${tache.tacheName} "?'),
+                                    title: Text(
+                                      'Supprimer " ${tache.tacheName} "?',
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: Navigator.of(context).pop,
@@ -120,23 +115,17 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
               width: 375,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AjoutTache()),
-                  );
+                  AppNavigator.push(context, AjoutTache());
                 },
-                child: Text("Ajouter une tâche", textAlign: TextAlign.center,)
+                child: Text("Ajouter une tâche", textAlign: TextAlign.center),
               ),
             ),
             SizedBox(height: 20),
             SizedBox(
-               width: 375,
+              width: 375,
               child: ElevatedButton(
                 onPressed: () async {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Parametretirage()),
-                  );
+                  await AppNavigator.push(context, Parametretirage());
                 },
                 child: Text("Modifier le nombre de tirage"),
               ),

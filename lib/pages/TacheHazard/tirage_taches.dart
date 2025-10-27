@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/TacheHazard/animation_tirage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
@@ -6,6 +7,7 @@ import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/alerdialog.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/loader_widget.dart';
 
 class Quetesfinales extends StatefulWidget {
   const Quetesfinales({super.key});
@@ -23,12 +25,13 @@ class _QuetesfinalesState extends State<Quetesfinales> {
     return Center(
       child: Consumer2<TachesProvider, ScoreProvider>(
         builder: (context, tacheP, scoreP, child) {
-          if (scoreP.isLoading || tacheP.isLoading) {
-            return CircularProgressIndicator();
-          }
           final itemCount = tacheP.choixTaches.length;
           var afficheButton =
               tacheP.choixTaches.isEmpty || tacheP.choixTaches[0] == "0";
+
+          if (scoreP.isLoading || tacheP.isLoading) {
+            return LoaderWidget();
+          }
 
           return Container(
             margin: EdgeInsets.all(40),
@@ -82,7 +85,9 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                       Expanded(
                                         child: CustomText.left(
                                           tacheP.choixTaches[index],
-                                          Theme.of(context).textTheme.bodyMedium
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
                                         ),
                                       ),
                                     ],
@@ -100,7 +105,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                     'Règle de tirage',
                                     "⚠️ Si tu as déjà un tirage quotidien en cours, en modifiant la liste celui-ci sera annulé.\n Si tu as déjà tes points tu n'auras pas plus d'XP",
                                   ),
-                                  icon: Icon(Icons.info_outline_rounded),
+                                  icon: Icon(Icons.warning_amber_rounded),
                                 ),
                               ],
                             ),
@@ -122,18 +127,13 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                           spacing: 10,
                           children: [
                             CustomText.center(
-                              "En attente d'un tirager",
+                              "En attente d'un tirage",
                               TextTheme.of(context).bodyLarge,
                             ),
                             SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () async {
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TirageFinal(),
-                                  ),
-                                );
+                                await AppNavigator.push(context, TirageFinal());
 
                                 final tacheProvider =
                                     Provider.of<TachesProvider>(

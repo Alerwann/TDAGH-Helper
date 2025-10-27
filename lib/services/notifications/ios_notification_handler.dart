@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tdahelpe/services/notifications/notification_constants.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class IosNotificationHandler {
+  static const platform = MethodChannel('alarm_channel');
+
   /// Planifie une notification iOS
   static Future<void> scheduleNotification({
     required FlutterLocalNotificationsPlugin plugin,
@@ -13,11 +16,6 @@ class IosNotificationHandler {
     required int hour,
     required int minute,
   }) async {
-    if (kDebugMode) {
-      print('📱 iOS - Planification notification #$id');
-      print('   Heure demandée : $hour:$minute');
-    }
-
     final tz.TZDateTime scheduledDate = _nextInstanceOfTime(hour, minute);
     final String moment = NotificationConstants.getMomentFromId(id);
 
@@ -44,60 +42,42 @@ class IosNotificationHandler {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: moment,
     );
-
-    if (kDebugMode) {
-      print('📱 iOS - ✅ Notification planifiée avec payload: $moment');
-    }
+    print('📱 iOS - ✅ Notification planifiée avec payload: $moment');
   }
 
   static Future<String?> checkLaunchNotification({
     required FlutterLocalNotificationsPlugin plugin,
   }) async {
-    if (kDebugMode) {
-      print('📱 iOS: Vérification notification de lancement...');
-    }
+    print('📱 iOS: Vérification notification de lancement...');
 
     final NotificationAppLaunchDetails? launchDetails = await plugin
         .getNotificationAppLaunchDetails();
 
-    if (kDebugMode) {
-      print('📱 iOS: launchDetails = $launchDetails');
-      print('📱 iOS: launchDetails != null ? ${launchDetails != null}');
-    }
+    // print('📱 iOS: launchDetails = $launchDetails');
+    print('📱 iOS: launchDetails != null ? ${launchDetails != null}');
 
     if (launchDetails != null) {
-      if (kDebugMode) {
-        print(
-          '📱 iOS: didNotificationLaunchApp = ${launchDetails.didNotificationLaunchApp}',
-        );
-        print(
-          '📱 iOS: notificationResponse = ${launchDetails.notificationResponse}',
-        );
-      }
+      print("🪐 launcheDétail différent de null");
 
+  
       if (launchDetails.notificationResponse != null) {
-        if (kDebugMode) {
-          print(
-            '📱 iOS: response.id = ${launchDetails.notificationResponse!.id}',
-          );
-          print(
-            '📱 iOS: response.payload = ${launchDetails.notificationResponse!.payload}',
-          );
-        }
+        print(
+          '📱 iOS: response.id = ${launchDetails.notificationResponse!.id}',
+        );
+    
+        print("🪐 launcheDétail notificationTesponse différent de null");
       }
 
       // Si l'app a été lancée depuis une notification
       if (launchDetails.didNotificationLaunchApp) {
-        if (kDebugMode) {
-          print('📱 iOS: App lancée depuis une notification !');
-        }
+        print('📱 iOS: App lancée depuis une notification !');
 
         final NotificationResponse? response =
             launchDetails.notificationResponse;
 
         if (response != null && response.payload != null) {
           if (kDebugMode) {
-            print('📱 iOS: Payload de lancement = ${response.payload}');
+            print('🤯📱 iOS: Payload de lancement = ${response.payload}');
           }
           return response.payload; // ✨ Retourner le payload
         }
@@ -110,15 +90,13 @@ class IosNotificationHandler {
 
     return null; // Pas de notification de lancement
   }
+
   /// Annule une notification iOS
   static Future<void> cancelNotification({
     required FlutterLocalNotificationsPlugin plugin,
     required int id,
   }) async {
     await plugin.cancel(id);
-    if (kDebugMode) {
-      print('📱 iOS - ❌ Notification #$id annulée');
-    }
   }
 
   /// Annule toutes les notifications iOS
@@ -126,9 +104,6 @@ class IosNotificationHandler {
     required FlutterLocalNotificationsPlugin plugin,
   }) async {
     await plugin.cancelAll();
-    if (kDebugMode) {
-      print('📱 iOS - ❌ Toutes les notifications annulées');
-    }
   }
 
   /// Crée les catégories de notifications iOS
@@ -152,29 +127,18 @@ class IosNotificationHandler {
     ];
   }
 
-  /// Demande les permissions iOS
-  static Future<bool> requestPermissions({
-    required FlutterLocalNotificationsPlugin plugin,
-  }) async {
-    if (kDebugMode) {
-      print('📱 iOS: Demande des permissions...');
+
+
+
+  static Future<void> openSettingsIos() async {
+    try {
+      // UIApplicationOpenSettingsURLString
+      await platform.invokeMethod('openAppSettings');
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur ouverture réglages iOS: $e');
+      }
     }
-
-    final bool? result = await plugin
-        .resolvePlatformSpecificImplementation
-            <IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-          critical: false,
-        );
-
-    if (kDebugMode) {
-      print('📱 iOS: Permissions accordées ? $result');
-    }
-
-    return result ?? false;
   }
 
   /// Calcule la prochaine occurrence d'une heure donnée
@@ -195,11 +159,32 @@ class IosNotificationHandler {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    if (kDebugMode) {
-      print('⏰ Maintenant : $now');
-      print('⏰ Notification prévue : $scheduledDate');
-    }
-
     return scheduledDate;
   }
+
+  static Future<bool> requestNotificationPermissions() async {
+    print("🤯 ios notification handleur request permission version courte");
+    try {
+      final bool? granted = await platform.invokeMethod(
+        'requestNotificationPermission',
+      );
+
+      if (kDebugMode) {
+        print(
+          granted == true
+              ? '✅ iOS - Permission accordée'
+              : '❌ iOS - Permission refusée',
+        );
+      }
+
+      return granted ?? false;
+    } catch (e) {
+      if (kDebugMode) {
+        print('⚠️ Erreur demande permission iOS: $e');
+      }
+      return false;
+    }
+  }
+
+
 }

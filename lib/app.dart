@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/Theme/app_theme.dart';
-import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/home/home_shell.dart';
 
 /// Widget racine de l'application TDAHelpe
@@ -10,7 +9,6 @@ import 'package:tdahelpe/pages/home/home_shell.dart';
 /// - La navigation globale
 /// - Le titre de l'app
 class TDAHelpeApp extends StatelessWidget {
-  
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
@@ -18,9 +16,10 @@ class TDAHelpeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+ 
     return MaterialApp(
       // Configuration de la navigation
-      navigatorKey: AppNavigator.navigatorKey,
+      navigatorKey: navigatorKey,
 
       // Configuration de base
       debugShowCheckedModeBanner: false,

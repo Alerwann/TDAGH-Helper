@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -81,12 +82,7 @@ class _TacheScoreState extends State<TacheScore> {
 
                     OutlinedButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AccueilTaches(),
-                          ),
-                        );
+                        AppNavigator.replaceTo(context, AccueilTaches());
                       },
                       child: Text("Aller valider ses tâches"),
                     ),

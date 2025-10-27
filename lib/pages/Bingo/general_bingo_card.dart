@@ -1,3 +1,7 @@
+//Permet de valider les 4 activité du moment sélectionné
+// Une animation s'affiche quand les 4 sont validées
+// le score est calculé à chaque changement de la carte
+
 import 'dart:ui' as ui;
 import 'package:tdahelpe/data/list/bingocard_list.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -23,7 +27,6 @@ class BingoGamePreview extends StatefulWidget {
 class _BingoGamePreviewState extends State<BingoGamePreview>
     with TickerProviderStateMixin {
   late List<dynamic> bingoCards;
-  // late int affichescore;
   late AnimationController _celebrationController;
   bool _showAnimation = false;
   bool _isLoading = true;
@@ -109,7 +112,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Erreur de chargement')));
+      ).showSnackBar(SnackBar(content: Text('Désolé les cartes du bingo n\'ont pas pu être initialisées')));
       Navigator.pop(context);
     }
   }

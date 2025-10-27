@@ -68,13 +68,64 @@ class MainActivity : FlutterActivity() {
                     result.success("Toutes les alarmes annulées")
                 }
 
-                "checkPermissions" -> {
-                    val canSchedule = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        canScheduleExactAlarms()
-                    } else {
-                        true
+              "checkPermissions" -> {
+                    Log.d("MainActivity", "🔍 Vérification des permissions...")
+                    
+                    var hasAllPermissions = true
+                    
+                    // 1️⃣ Vérifier POST_NOTIFICATIONS (Android 13+)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val hasNotifPerm = checkSelfPermission(
+                            android.Manifest.permission.POST_NOTIFICATIONS
+                        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                        
+                        Log.d("MainActivity", "📱 POST_NOTIFICATIONS = $hasNotifPerm")
+                        
+                        if (!hasNotifPerm) {
+                            hasAllPermissions = false
+                        }
                     }
-                    result.success(canSchedule)
+    
+                     // 2️⃣ Vérifier SCHEDULE_EXACT_ALARM (Android 12+)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val canSchedule = canScheduleExactAlarms()
+                        Log.d("MainActivity", "⏰ SCHEDULE_EXACT_ALARM = $canSchedule")
+                        
+                        if (!canSchedule) {
+                            hasAllPermissions = false
+                        }
+                    }
+                        
+                        Log.d("MainActivity", "✅ Résultat final = $hasAllPermissions")
+                        result.success(hasAllPermissions)
+                    }
+                "requestPermissions" -> {
+                        Log.d("MainActivity", "📱 Demande de toutes les permissions")
+                        
+                        // 1️⃣ Demander POST_NOTIFICATIONS (Android 13+)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            val hasNotifPerm = checkSelfPermission(
+                                android.Manifest.permission.POST_NOTIFICATIONS
+                            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            
+                            if (!hasNotifPerm) {
+                                requestNotificationPermission()
+                                result.success(false) // Pas encore accordée
+                                return@setMethodCallHandler
+                            }
+                        }
+                        
+                        // 2️⃣ Vérifier SCHEDULE_EXACT_ALARM (Android 12+)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            if (!canScheduleExactAlarms()) {
+                                requestExactAlarmPermission()
+                                result.success(false) // Pas encore accordée
+                                return@setMethodCallHandler
+                            }
+                        }
+    
+                    // ✅ Toutes les permissions sont OK
+                    result.success(true)
                 }
 
                 "openSettings" -> {
@@ -99,6 +150,8 @@ class MainActivity : FlutterActivity() {
                     requestIgnoreBatteryOptimizations()
                     result.success(null)
                 }
+
+            
 
                 else -> result.notImplemented()
             }
@@ -145,6 +198,8 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+
+
     @RequiresApi(Build.VERSION_CODES.S)
     private fun canScheduleExactAlarms(): Boolean {
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -190,8 +245,8 @@ class MainActivity : FlutterActivity() {
         }
 
         val now = System.currentTimeMillis()
-        Log.d("MainActivity", "⏰ Maintenant: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now)}")
-        Log.d("MainActivity", "⏰ Alarme prévue: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
+            Log.d("MainActivity", "⏰ Maintenant: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now)}")
+            Log.d("MainActivity", "⏰ Alarme prévue: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
 
         if (calendar.timeInMillis <= now) {
             Log.d("MainActivity", "⚠️ Heure passée, ajout d'un jour")
@@ -205,7 +260,7 @@ class MainActivity : FlutterActivity() {
             pendingIntent
         )
 
-        Log.d("MainActivity", "✅ Alarme programmée avec succès !")
+       Log.d("MainActivity", "✅ Alarme programmée avec succès !")
     }
 
     private fun cancelAlarm(id: Int) {
@@ -241,5 +296,34 @@ class MainActivity : FlutterActivity() {
             intent.data = Uri.parse("package:$packageName")
             startActivity(intent)
         }
+    }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        Log.d("MainActivity", "📱 Demande de permission POST_NOTIFICATIONS")
+        
+        requestPermissions(
+            arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+            REQUEST_NOTIFICATION_PERMISSION
+        )
+    }
+
+   //  Callback quand l'utilisateur répond
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        
+        if (requestCode == REQUEST_NOTIFICATION_PERMISSION) {
+            val granted = grantResults.isNotEmpty() && 
+                        grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED
+            
+            Log.d("MainActivity", "📱 Permission POST_NOTIFICATIONS: ${if (granted) "✅ Accordée" else "❌ Refusée"}")
+        }
+}
+
+    companion object {
+        private const val REQUEST_NOTIFICATION_PERMISSION = 1001
     }
 }

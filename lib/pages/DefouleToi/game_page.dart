@@ -62,7 +62,7 @@ class _GamePageState extends State<GamePage> {
                       ),
                   interval: Duration(milliseconds: 100),
                   onFinished: () {
-                    AppNavigator.replaceTo(FinishDefoule(score: _score));
+                    AppNavigator.replaceTo(context,FinishDefoule(score: _score));
                   },
                 ),
                 !_compteurActive

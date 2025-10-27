@@ -11,7 +11,7 @@ class HoraireMoment {
       case 'matin':
         return now.hour <= profil.midiHours + 1 &&
             now.hour >= profil.reveilHours - 1;
-      case 'mid':
+      case 'midi':
         return now.hour <= profil.soirHours + 1 &&
             now.hour >= profil.midiHours - 1;
       case 'soir':

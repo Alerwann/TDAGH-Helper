@@ -13,9 +13,9 @@ class AlarmScheduler {
 
       // Attendre que le provider soit chargé
       if (profil.isLoading) {
-        if (kDebugMode) {
+     
           print('⏳ Attente du chargement du profil...');
-        }
+      
 
         await Future.doWhile(() async {
           await Future.delayed(Duration(milliseconds: 100));
@@ -23,13 +23,13 @@ class AlarmScheduler {
         });
       }
 
-      if (kDebugMode) {
+
         print('🔔 Programmation des alarmes automatiques');
         print('   Réveil: ${profil.reveilHours}h');
         print('   Midi: ${profil.midiHours}h');
         print('   Soir: ${profil.soirHours}h');
         print('   Coucher: ${profil.coucherHours}h');
-      }
+    
 
       await NotificationService.scheduleAllNotifications(
         reveilHour: profil.reveilHours,
@@ -39,11 +39,11 @@ class AlarmScheduler {
       );
 
       if (kDebugMode) {
-        print('✅ Alarmes programmées avec succès');
+        // print('✅ Alarmes programmées avec succès');
       }
     } catch (e) {
       if (kDebugMode) {
-        print('❌ Erreur programmation alarmes: $e');
+        // print('❌ Erreur programmation alarmes: $e');
       }
     }
   }

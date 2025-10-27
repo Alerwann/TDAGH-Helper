@@ -15,19 +15,34 @@ class ImageSet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ProfilProvider>(
       builder: (context, profil, child) {
-        if (profil.isDefaultImage) {
-          return Image.asset(
-            profil.profilImagePath,
-            width: sizewidth,
-            height: sizewidth,
-            fit: BoxFit.cover,
-          );
-        }
-        return Image.file(
-          File(profil.profilImagePath),
-          width: 150,
-          height: 150,
-          fit: BoxFit.cover,
+        return FutureBuilder<bool>(
+          future: File(profil.profilImagePath).exists(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data == true) {
+              return Image.file(
+                File(profil.profilImagePath),
+                width: sizewidth,
+                height: sizewidth,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  // Si l'image ne charge pas, afficher l'image par défaut
+                  return Image.asset(
+                    'assets/images/defaultprofilimage.png',
+                    width: sizewidth,
+                    height: sizewidth,
+                    fit: BoxFit.cover,
+                  );
+                },
+              );
+            }
+            // Par défaut
+            return Image.asset(
+              'assets/images/defaultprofilimage.png',
+              width: sizewidth,
+              height: sizewidth,
+              fit: BoxFit.cover,
+            );
+          },
         );
       },
     );

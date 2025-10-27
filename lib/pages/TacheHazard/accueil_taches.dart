@@ -12,19 +12,7 @@ class AccueilTaches extends StatefulWidget {
 }
 
 class _AccueilTachesState extends State<AccueilTaches> {
-  final gradient = LinearGradient(
-    colors: [
-      const Color.fromARGB(255, 237, 85, 2),
-      const Color.fromARGB(255, 244, 176, 4),
-      const Color.fromARGB(255, 255, 85, 59),
-    ],
-  );
-
-  final textStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
+ 
   int _currentindex = 0;
   void setCurrentIndex(int index) {
     setState(() {

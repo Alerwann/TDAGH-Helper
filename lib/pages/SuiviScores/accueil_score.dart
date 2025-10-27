@@ -8,6 +8,7 @@ import 'package:tdahelpe/pages/SuiviScores/tache_score.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
+import 'package:tdahelpe/widget/utils/buton_theme.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
@@ -27,16 +28,13 @@ class _AccueilScoreState extends State<AccueilScore> {
         context,
         "accueil",
         false,
-        Icon(Icons.home)
+        Icon(Icons.home),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),
         child: Center(
           child: Consumer3<ScoreProvider, BonusLevelProvider, ProfilProvider>(
             builder: (context, scoreP, bonusP, profilP, child) {
-              print(
-                "👀 Courant grade ${bonusP.getCurrentGrade(scoreP.niveauPersonnal)!.gradeName}",
-              );
               return Column(
                 spacing: 15,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -47,7 +45,7 @@ class _AccueilScoreState extends State<AccueilScore> {
                   ),
 
                   CustomText.center(
-                    "Xp pour le niveau ${scoreP.niveauPersonnal} = ${scoreP.xpByLevel} / ${scoreP.maxXpByLevel}",
+                    "Xp pour le niveau  ${scoreP.xpByLevel} / ${scoreP.maxXpByLevel}",
                     Theme.of(context).textTheme.bodyLarge,
                   ),
 
@@ -65,70 +63,21 @@ class _AccueilScoreState extends State<AccueilScore> {
                       unselectedColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-              SizedBox(height: 30,),
+                  SizedBox(height: 30),
+                  ButonTheme.standardButton(BingoScore(), "Bingo", context),
 
-                  SizedBox(
-                    height: 60,
-                    width: 250,
+                  ButonTheme.standardButton(TacheScore(), "Tâches", context),
 
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BingoScore()),
-                        );
-                      },
-                      child: Text("Bingo"),
-                    ),
+                  ButonTheme.standardButton(
+                    BonusScore(),
+                    "Points Bonus",
+                    context,
                   ),
-                  SizedBox(
-                    height: 60,
-                    width: 250,
 
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TacheScore()),
-                        );
-                      },
-                      child: Text("Tâches"),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 60,
-                    width: 250,
-
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => BonusScore()),
-                        );
-                      },
-                      child: Text("Points bonus"),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 60,
-                    width: 250,
-
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FonctionnementScore(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Fonctionnement",
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 4, 36, 63),
-                        ),
-                      ),
-                    ),
+                  ButonTheme.standardButton(
+                    FonctionnementScore(),
+                    "Fonctionnement",
+                    context,
                   ),
                 ],
               );
@@ -138,4 +87,5 @@ class _AccueilScoreState extends State<AccueilScore> {
       ),
     );
   }
+
 }

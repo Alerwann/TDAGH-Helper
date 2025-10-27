@@ -13,7 +13,7 @@ class DefouleProvider extends ChangeNotifier {
 
   DefouleProvider() {
     if (kDebugMode) {
-      print("🏗️ Provider créé");
+
     }
     _loadData();
   }

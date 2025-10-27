@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -24,11 +25,9 @@ class MomentButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: HoraireMoment.isMomentAccessible(moment, context)
-          ? () => Navigator.push(
+          ? () => AppNavigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => BingoGamePreview(titleMoment: moment),
-              ),
+              BingoGamePreview(titleMoment: moment),
             )
           : null,
       child: Container(

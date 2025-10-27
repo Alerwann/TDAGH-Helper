@@ -11,6 +11,7 @@ import 'package:custom_timer/custom_timer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/loader_widget.dart';
 import 'package:tdahelpe/widget/utils/text_degrade.dart';
 
 class HomeTimertooth extends StatefulWidget {
@@ -49,17 +50,53 @@ class _HomeTimertoothState extends State<HomeTimertooth>
 
   Future<void> pickMusic() async {
     FilePickerResult? result;
-
+    print("🎶 Déput de pickMusique");
     if (Platform.isIOS) {
       result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['mp3', 'm4a', 'wav', 'aac'],
       );
-    } else {
+    } else if (Platform.isAndroid) {
       result = await FilePicker.platform.pickFiles(type: FileType.audio);
     }
 
-    if (result != null && result.files.single.path != null) {
+    if (result == null || result.files.isEmpty) return;
+    final PlatformFile file = result.files.single;
+
+    final allowedExtensions = {'mp3', 'm4a', 'wav', 'aac'};
+    final fileExtension = file.extension?.toLowerCase() ?? '';
+
+     if (!allowedExtensions.contains(fileExtension)) {
+      // ❌ Format non supporté
+      if (Platform.isAndroid) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Format audio non supporté. Veuillez choisir un fichier MP3, M4A, WAV ou AAC.',
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return; // On arrête ici
+    }
+      String? sourcePath = file.path;
+    if (sourcePath == null) {
+
+      if (Platform.isAndroid) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Impossible d’accéder au fichier. Veuillez choisir un fichier local.',
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return;
+    }
+
+    if (result.files.single.path != null) {
       String sourcePath = result.files.single.path!;
 
       try {
@@ -172,24 +209,14 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           ),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 40),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Consumer2<SoundProvider, ScoreProvider>(
             builder: (context, audioProvider, scoreP, child) {
               if (!audioProvider.isReady) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 20),
-                      Text('Audio en cours d\'initialisation...'),
-                    ],
-                  ),
-                );
+                return LoaderWidget();
               }
               return Center(
                 child: Column(
-        
                   spacing: 10,
 
                   children: [
@@ -331,10 +358,10 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                             context,
                             listen: false,
                           );
-                          print("🎵 audioProvider récupéré via Provider.of");
+                          // print("🎵 audioProvider récupéré via Provider.of");
 
                           if (audioProvider.isPlaying) {
-                            print("🚀 Lecture demandée");
+                            // print("🚀 Lecture demandée");
                             audioProvider.playSound(
                               newValue.musicPath,
                               "appli",

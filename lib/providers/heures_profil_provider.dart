@@ -106,12 +106,10 @@ class HeureProfilProvider extends ChangeNotifier {
         coucherHour: _hours['coucher']!,
       );
 
-      if (kDebugMode) {
-        print('✅ Toutes les notifications programmées');
-      }
+    
     } catch (e) {
       if (kDebugMode) {
-        print('❌ Erreur lors de la programmation des notifications : $e');
+        // print('❌ Erreur lors de la programmation des notifications : $e');
       }
     }
   }
@@ -130,9 +128,7 @@ class HeureProfilProvider extends ChangeNotifier {
       );
 
       if (!success) {
-        if (kDebugMode) {
-          print('❌ Échec sauvegarde de ${entry.key}');
-        }
+
         // Rollback complet
         _hours = oldHours;
         return false;
