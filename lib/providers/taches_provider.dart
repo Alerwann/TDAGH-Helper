@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:tdahelpe/data/list/taches_list.dart';
 import 'package:tdahelpe/data/schema/taches_shema.dart';
 import 'package:tdahelpe/services/taches_storage_service.dart';
@@ -26,22 +27,32 @@ class TachesProvider extends ChangeNotifier {
 
   // Charger depuis local storage
   Future<void> _loadTaches() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? tachesJson = prefs.getString(_storageKey);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? tachesJson = prefs.getString(_storageKey);
 
-    _nombreT = await TachesStorageService.getNombreT();
-    _choixTaches = await TachesStorageService.getChoixTaches();
+      _nombreT = await TachesStorageService.getNombreT();
+      _choixTaches = await TachesStorageService.getChoixTaches();
 
-    if (tachesJson != null) {
-      final List<dynamic> tachesList = json.decode(tachesJson);
-      _taches = tachesList.map((json) => TachesSchema.fromJson(json)).toList();
-    } else {
+      if (tachesJson != null) {
+        final List<dynamic> tachesList = json.decode(tachesJson);
+        _taches = tachesList
+            .map((json) => TachesSchema.fromJson(json))
+            .toList();
+      } else {
+        _taches = TachesList.getDefaultCards();
+        await _saveTaches();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur chargement tâches, utilisation valeurs par défaut: $e');
+      }
       _taches = TachesList.getDefaultCards();
       await _saveTaches();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   // Sauvegarder avec gestion d'erreur
@@ -129,6 +140,7 @@ class TachesProvider extends ChangeNotifier {
   }
 
   Future<bool> modifierNombreTache(int newnombreT) async {
+   
     final oldNombreT = _nombreT;
     _nombreT = newnombreT;
 
@@ -144,6 +156,7 @@ class TachesProvider extends ChangeNotifier {
   }
 
   Future<bool> saveListeTache(List<String> listeTache) async {
+  
     final oldchoixTache = _choixTaches;
     _choixTaches = listeTache;
 

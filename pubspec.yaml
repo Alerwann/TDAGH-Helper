@@ -35,6 +35,7 @@ dependencies:
 
   # system & utilities :
 
+  device_info_plus: ^10.1.0
   flutter_local_notifications: ^19.5.0
   path_provider: ^2.1.5
   provider: ^6.0.5

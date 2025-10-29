@@ -14,8 +14,8 @@ class AndroidNotificationHandler {
     required int minute,
   }) async {
     if (kDebugMode) {
-      print('🤖 Android - Planification notification #$id');
-      print('   Heure demandée : $hour:$minute');
+      // print('🤖 Android - Planification notification #$id');
+      // print('   Heure demandée : $hour:$minute');
     }
     if (hour < 0 || hour > 23) {
       throw ArgumentError('Heure invalide: $hour');
@@ -33,9 +33,9 @@ class AndroidNotificationHandler {
         'minute': minute,
       });
 
-      if (kDebugMode) {
-        print('🤖 Android - ✅ Notification planifiée');
-      }
+      // if (kDebugMode) {
+      //   print('🤖 Android - ✅ Notification planifiée');
+      // }
     } catch (e) {
       if (kDebugMode) {
         print('❌ Erreur planification Android: $e');
@@ -70,8 +70,10 @@ class AndroidNotificationHandler {
 
   /// Vérifie si toutes les permissions nécessaires sont accordées
   static Future<bool> checkPermissions() async {
+    // print("🤖❓ entree dans chekpermission");
     try {
       final bool? canSchedule = await platform.invokeMethod('checkPermissions');
+      // print("🤖❓ canschedule : $canSchedule");
 
       if (canSchedule == false) {
         return false;
@@ -88,6 +90,8 @@ class AndroidNotificationHandler {
 
   /// Demande les permissions nécessaires pour les notifications
   static Future<bool> requestPermissions() async {
+    // print("🤖❓ entree dans requestPermission");
+
     if (!Platform.isAndroid) {
       return true;
     }
@@ -95,7 +99,7 @@ class AndroidNotificationHandler {
     try {
       final bool? granted = await platform.invokeMethod('requestPermissions');
 
-      print("🤖 granted?? : $granted");
+      // print("🤖 granted?? : $granted");
 
       return granted ?? false;
     } catch (e) {
@@ -127,6 +131,7 @@ class AndroidNotificationHandler {
     try {
       final result = await platform.invokeMethod('getNotificationData');
       final bool opened = result != null;
+      print("🪶 opened bool : $opened");
 
       return opened;
     } catch (e) {

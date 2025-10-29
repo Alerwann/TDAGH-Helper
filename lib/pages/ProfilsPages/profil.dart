@@ -1,6 +1,6 @@
 // Page d'accueil des paramètres
 // Permet l'accès à la modification du profil, des horaires et l'autorisation des notifications
-// Donne accè à "A propos"
+// Donne accès à "A propos"
 
 import 'dart:io';
 import 'package:tdahelpe/pages/ProfilsPages/modif_horaire.dart';
@@ -9,6 +9,7 @@ import 'package:tdahelpe/pages/home/about_page.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
+import 'package:tdahelpe/utils/device_utils.dart';
 import 'package:tdahelpe/widget/utils/buton_theme.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
@@ -25,6 +26,20 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
+  bool _showAndroidMessage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    print("👾 load data du paramètre");
+    _showAndroidMessage = await DeviceUtils.isBatteryOptimizationNeeded();
+    print("👾 showAndroidmessage : $_showAndroidMessage");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +87,11 @@ class _ProfilPageState extends State<ProfilPage> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         if (Platform.isAndroid) {
-                          AndroidNotificationHandler.openSettingsAndroid();
+                          if (_showAndroidMessage) {
+                            DeviceUtils.dialogAndroidOther(context);
+                          } else {
+                            AndroidNotificationHandler.openSettingsAndroid();
+                          }
                         } else if (Platform.isIOS) {
                           IosNotificationHandler.openSettingsIos();
                         }

@@ -31,8 +31,6 @@ class _TirageFinalState extends State<TirageFinal>
   int indfinal = 0;
   List<String> listFinale = [];
   int nbCycles = 0;
-
-  bool _activeAnimation = false;
   late AnimationStatusListener _slideListener;
   late AnimationStatusListener _animationListener;
 
@@ -67,7 +65,10 @@ class _TirageFinalState extends State<TirageFinal>
         if (currentCycle < nbCycles) {
           controllerAnimation.forward();
         } else {
-          Navigator.pop(context);
+          Future.delayed(
+            Duration(milliseconds: 500),
+            () => Navigator.pop(context),
+          );
         }
       }
     };
@@ -100,6 +101,23 @@ class _TirageFinalState extends State<TirageFinal>
     };
 
     _animation.addStatusListener(_animationListener);
+    _initialisation();
+  }
+
+  void _initialisation() {
+    final tacheP = Provider.of<TachesProvider>(context, listen: false);
+    final scoreP = Provider.of<ScoreProvider>(context, listen: false);
+    listIndex = tabIndice(tacheP.nombreT, tacheP.taches.length );
+    nbCycles = tacheP.nombreT;
+
+    for (int i = 0; i < tacheP.nombreT; i++) {
+      int convertInt = (listIndex[i]);
+
+      listFinale.add(tacheP.taches[convertInt].tacheName);
+    }
+    scoreP.resetCheckboxesWithLength(nbCycles);
+    tacheP.saveListeTache(listFinale);
+    controllerAnimation.forward();
   }
 
   @override
@@ -146,29 +164,32 @@ class _TirageFinalState extends State<TirageFinal>
                     );
                   },
                 ),
-                if (_activeAnimation == false)
-                  ElevatedButton(
-                    onPressed: () {
-                      listIndex = tabIndice(
-                        tacheP.nombreT,
-                        tacheP.taches.length - 1,
-                      );
-                      nbCycles = tacheP.nombreT;
+                // if (_activeAnimation == false)
+                //   ElevatedButton(
+                //     onPressed: () {
+                //       print("🫟 tache debut de la créa");
+                //       listIndex = tabIndice(
+                //         tacheP.nombreT,
+                //         tacheP.taches.length - 1,
+                //       );
+                //       nbCycles = tacheP.nombreT;
+                //       print("🫟 list index crée");
+                //       for (int i = 0; i < tacheP.nombreT; i++) {
+                //         int convertInt = (listIndex[i]);
 
-                      for (int i = 0; i < tacheP.nombreT; i++) {
-                        int convertInt = (listIndex[i]);
+                //         listFinale.add(tacheP.taches[convertInt].tacheName);
+                //       }
+                //       print("🫟 juste avant save");
+                //       scoreP.resetCheckboxesWithLength(nbCycles);
+                //       tacheP.saveListeTache(listFinale);
 
-                        listFinale.add(tacheP.taches[convertInt].tacheName);
-                      }
-                      tacheP.saveListeTache(listFinale);
-
-                      setState(() {
-                        controllerAnimation.forward();
-                        _activeAnimation = true;
-                      });
-                    },
-                    child: Text("Tirer les tâches"),
-                  ),
+                //       setState(() {
+                //         controllerAnimation.forward();
+                //         _activeAnimation = true;
+                //       });
+                //     },
+                //     child: Text("Tirer les tâches"),
+                //   ),
               ],
             );
           },

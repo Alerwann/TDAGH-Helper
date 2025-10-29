@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:tdahelpe/services/audio_controller.dart';
 
 class SoundProvider extends ChangeNotifier {
@@ -30,12 +31,16 @@ class SoundProvider extends ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur initialisation audio: $e');
+      }
       _isInitializing = false;
       notifyListeners();
     }
   }
 
-Future<void> playSound(String assetKey, String typeMemory) async {
+  // ✅ FIX : Ne plus rethrow, logger l'erreur
+  Future<void> playSound(String assetKey, String typeMemory) async {
     if (!_isReady) return;
 
     try {
@@ -43,28 +48,47 @@ Future<void> playSound(String assetKey, String typeMemory) async {
       _isPlaying = true;
       notifyListeners();
     } catch (e) {
-      _isPlaying = false; 
+      if (kDebugMode) {
+        print('❌ Erreur lecture audio: $e');
+      }
+      _isPlaying = false;
       notifyListeners();
-      rethrow; 
+      // ✅ Ne pas rethrow - l'erreur est gérée ici
     }
   }
 
+  // ✅ FIX : Ajouter try-catch
   Future<void> pauseSound() async {
     if (_isPlaying) {
-      await _audioController!.pauseMusic();
-      _isPlaying = false; 
-      notifyListeners();
+      try {
+        await _audioController!.pauseMusic();
+        _isPlaying = false;
+        notifyListeners();
+      } catch (e) {
+        if (kDebugMode) {
+          print('❌ Erreur pause audio: $e');
+        }
+        _isPlaying = false;
+        notifyListeners();
+      }
     }
   }
 
   Future<void> stopSound() async {
     if (_isPlaying) {
-      await _audioController!.stopMusic();
-      _isPlaying = false; 
-      notifyListeners();
+      try {
+        await _audioController!.stopMusic();
+        _isPlaying = false;
+        notifyListeners();
+      } catch (e) {
+        if (kDebugMode) {
+          print('❌ Erreur stop audio: $e');
+        }
+        _isPlaying = false;
+        notifyListeners();
+      }
     }
   }
-
 
   // Nettoyage des ressources
   @override

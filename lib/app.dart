@@ -16,7 +16,6 @@ class TDAHelpeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
     return MaterialApp(
       // Configuration de la navigation
       navigatorKey: navigatorKey,

@@ -44,6 +44,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
   Future<void> _loadInitialData() async {
     final profil = Provider.of<ProfilProvider>(context, listen: false);
     _pseudoController.text = profil.pseudo;
+
   }
 
   @override
@@ -64,7 +65,8 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
           context,
           "parametre",
           true,
-Icon(Icons.arrow_back_rounded)),       
+          Icon(Icons.arrow_back_rounded),
+        ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(15),
           child: Center(

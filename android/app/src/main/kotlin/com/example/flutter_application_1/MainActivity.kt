@@ -69,7 +69,7 @@ class MainActivity : FlutterActivity() {
                 }
 
               "checkPermissions" -> {
-                    Log.d("MainActivity", "🔍 Vérification des permissions...")
+                   // Log.d("MainActivity", "🔍 Vérification des permissions...")
                     
                     var hasAllPermissions = true
                     
@@ -89,7 +89,7 @@ class MainActivity : FlutterActivity() {
                      // 2️⃣ Vérifier SCHEDULE_EXACT_ALARM (Android 12+)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         val canSchedule = canScheduleExactAlarms()
-                        Log.d("MainActivity", "⏰ SCHEDULE_EXACT_ALARM = $canSchedule")
+                     //   Log.d("MainActivity", "⏰ SCHEDULE_EXACT_ALARM = $canSchedule")
                         
                         if (!canSchedule) {
                             hasAllPermissions = false
@@ -100,7 +100,7 @@ class MainActivity : FlutterActivity() {
                         result.success(hasAllPermissions)
                     }
                 "requestPermissions" -> {
-                        Log.d("MainActivity", "📱 Demande de toutes les permissions")
+                      //  Log.d("MainActivity", "📱 Demande de toutes les permissions")
                         
                         // 1️⃣ Demander POST_NOTIFICATIONS (Android 13+)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -134,10 +134,10 @@ class MainActivity : FlutterActivity() {
                 }
 
                 "getNotificationData" -> {
-                    Log.d("MainActivity", "🔍 getNotificationData appelé")
+                   // Log.d("MainActivity", "🔍 getNotificationData appelé")
                     val data = notificationData
                     notificationData = null
-                    Log.d("MainActivity", "📦 Données retournées: $data")
+                   // Log.d("MainActivity", "📦 Données retournées: $data")
                     result.success(data)
                 }
 
@@ -160,13 +160,13 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "📱 onCreate appelé")
+      //  Log.d("MainActivity", "📱 onCreate appelé")
         intent?.let { handleNotificationIntent(it) }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        Log.d("MainActivity", "📱 onNewIntent appelé")
+      //  Log.d("MainActivity", "📱 onNewIntent appelé")
         handleNotificationIntent(intent)
         
         // ✅ Informer Flutter qu'une notification est arrivée
@@ -192,7 +192,7 @@ class MainActivity : FlutterActivity() {
                 "moment" to moment
             )
             
-            Log.d("MainActivity", "💾 Données stockées: $notificationData")
+       //     Log.d("MainActivity", "💾 Données stockées: $notificationData")
         } else {
             Log.d("MainActivity", "ℹ️ Pas de notification détectée")
         }
@@ -220,7 +220,7 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun scheduleExactAlarm(id: Int, title: String, body: String, hour: Int, minute: Int) {
-        Log.d("MainActivity", "🕐 Programmation alarme ID: $id pour ${hour}h${minute}")
+     //   Log.d("MainActivity", "🕐 Programmation alarme ID: $id pour ${hour}h${minute}")
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -245,13 +245,13 @@ class MainActivity : FlutterActivity() {
         }
 
         val now = System.currentTimeMillis()
-            Log.d("MainActivity", "⏰ Maintenant: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now)}")
-            Log.d("MainActivity", "⏰ Alarme prévue: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
+        //    Log.d("MainActivity", "⏰ Maintenant: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(now)}")
+        //    Log.d("MainActivity", "⏰ Alarme prévue: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
 
         if (calendar.timeInMillis <= now) {
-            Log.d("MainActivity", "⚠️ Heure passée, ajout d'un jour")
+        //    Log.d("MainActivity", "⚠️ Heure passée, ajout d'un jour")
             calendar.add(Calendar.DAY_OF_YEAR, 1)
-            Log.d("MainActivity", "⏰ Nouvelle heure: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
+        //    Log.d("MainActivity", "⏰ Nouvelle heure: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(calendar.timeInMillis)}")
         }
 
         alarmManager.setExactAndAllowWhileIdle(
@@ -260,7 +260,7 @@ class MainActivity : FlutterActivity() {
             pendingIntent
         )
 
-       Log.d("MainActivity", "✅ Alarme programmée avec succès !")
+     //  Log.d("MainActivity", "✅ Alarme programmée avec succès !")
     }
 
     private fun cancelAlarm(id: Int) {
@@ -299,7 +299,7 @@ class MainActivity : FlutterActivity() {
     }
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun requestNotificationPermission() {
-        Log.d("MainActivity", "📱 Demande de permission POST_NOTIFICATIONS")
+     //   Log.d("MainActivity", "📱 Demande de permission POST_NOTIFICATIONS")
         
         requestPermissions(
             arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
@@ -319,7 +319,7 @@ class MainActivity : FlutterActivity() {
             val granted = grantResults.isNotEmpty() && 
                         grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED
             
-            Log.d("MainActivity", "📱 Permission POST_NOTIFICATIONS: ${if (granted) "✅ Accordée" else "❌ Refusée"}")
+       //    Log.d("MainActivity", "📱 Permission POST_NOTIFICATIONS: ${if (granted) "✅ Accordée" else "❌ Refusée"}")
         }
 }
 

@@ -101,9 +101,13 @@ class AudioController {
     }
   }
 
-  Future<void> pauseMusic() async {
+Future<void> pauseMusic() async {
     if (_audioPlayer != null && _isInitialized) {
-      await _audioPlayer!.pause();
+      try {
+        await _audioPlayer!.pause();
+      } catch (e) {
+        _log.severe('Error pausing audio: $e');
+      }
     } else {
       _log.warning('Cannot pause: AudioController not initialized');
     }
@@ -111,8 +115,12 @@ class AudioController {
 
   Future<void> stopMusic() async {
     if (_audioPlayer != null && _isInitialized) {
-      await _audioPlayer!.stop();
-      await _audioPlayer!.release();
+      try {
+        await _audioPlayer!.stop();
+        await _audioPlayer!.release();
+      } catch (e) {
+        _log.severe('Error stopping audio: $e');
+      }
     } else {
       _log.warning('Cannot stop: AudioController not initialized');
     }

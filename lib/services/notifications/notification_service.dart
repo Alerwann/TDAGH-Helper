@@ -54,8 +54,8 @@ class NotificationService {
       );
       print('🔵 iOS: launchPayload récupéré = $launchPayload');
     }
-   await AndroidNotificationHandler.requestPermissions();
-   await checkAllPermission();
+    await AndroidNotificationHandler.requestPermissions();
+    await checkAllPermission();
 
     // Initialiser avec callback
     print('🔵 Appel de _notifications.initialize()');
@@ -115,7 +115,7 @@ class NotificationService {
       title: NotificationConstants.getTitle(2),
       body: NotificationConstants.getBody(2),
       hour: midiHour,
-      // minute: 0
+      // minute: 59,
       // hour: DateTime.now().hour,
       minute: 0,
     );

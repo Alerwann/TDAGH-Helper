@@ -28,7 +28,6 @@ void main() async {
   // Initialisation notifications
   try {
     await NotificationService.initialize();
-    
   } catch (e) {
     if (kDebugMode) print('⚠️ Erreur init notifications: $e');
   }
@@ -52,6 +51,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BonusLevelProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: onboardingCompleted ? TDAHelpeApp() : OnboardingPage(),
         routes: {'/home': (context) => TDAHelpeApp()},
       ),

@@ -1,15 +1,15 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter/services.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/data/list/activity_list.dart';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:tdahelpe/utils/device_utils.dart';
+// import 'package:tdahelpe/utils/device_utils.dart';
 import 'package:tdahelpe/utils/permission_banner.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/loader_widget.dart';
@@ -21,38 +21,7 @@ class HomeGlobalPage extends StatefulWidget {
   State<HomeGlobalPage> createState() => _HomeGlobalPageState();
 }
 
-class _HomeGlobalPageState extends State<HomeGlobalPage>  {
-
-
-  final MethodChannel _batteryChannel = MethodChannel('alarm_channel');
-  @override
-  void initState() {
-    super.initState();
-
-  if (Platform.isAndroid) {
-      _checkBatteryOptimizationIfNeeded();
-    }
-  }
-
-  Future<void> _checkBatteryOptimizationIfNeeded() async {
-  
-
-    if (DeviceUtils.isBatteryOptimizationNeeded()) {
-      final prefs = await SharedPreferences.getInstance();
-      final alreadyShown = prefs.getBool('battery_guide_shown') ?? false;
-
-      if (!alreadyShown) {
-        final isIgnoring = await _batteryChannel.invokeMethod(
-          'checkBatteryOptimization',
-        );
-        if (!isIgnoring) {
-          prefs.setBool('battery_guide_shown', true);
-        }
-      }
-    }
-  }
-
-
+class _HomeGlobalPageState extends State<HomeGlobalPage> {
 
   late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
 

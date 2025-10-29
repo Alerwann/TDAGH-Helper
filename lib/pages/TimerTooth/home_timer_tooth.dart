@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' show Platform, File;
+import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/data/list/music_list.dart';
 import 'package:tdahelpe/data/schema/music_schema.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -49,92 +50,104 @@ class _HomeTimertoothState extends State<HomeTimertooth>
   final List<MusicSchema> musicList = MusicList.getDefaultCards();
 
   Future<void> pickMusic() async {
-    FilePickerResult? result;
-    print("🎶 Déput de pickMusique");
-    if (Platform.isIOS) {
-      result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['mp3', 'm4a', 'wav', 'aac'],
-      );
-    } else if (Platform.isAndroid) {
-      result = await FilePicker.platform.pickFiles(type: FileType.audio);
-    }
-
-    if (result == null || result.files.isEmpty) return;
-    final PlatformFile file = result.files.single;
-
-    final allowedExtensions = {'mp3', 'm4a', 'wav', 'aac'};
-    final fileExtension = file.extension?.toLowerCase() ?? '';
-
-     if (!allowedExtensions.contains(fileExtension)) {
-      // ❌ Format non supporté
-      if (Platform.isAndroid) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Format audio non supporté. Veuillez choisir un fichier MP3, M4A, WAV ou AAC.',
-            ),
-            duration: Duration(seconds: 3),
-          ),
+    try {
+      FilePickerResult? result;
+      print("🎶 Déput de pickMusique");
+      if (Platform.isIOS) {
+        result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['mp3', 'm4a', 'wav', 'aac'],
         );
+      } else if (Platform.isAndroid) {
+        result = await FilePicker.platform.pickFiles(type: FileType.audio);
       }
-      return; // On arrête ici
-    }
+
+      if (result == null || result.files.isEmpty) return;
+      final PlatformFile file = result.files.single;
+
+      final allowedExtensions = {'mp3', 'm4a', 'wav', 'aac'};
+      final fileExtension = file.extension?.toLowerCase() ?? '';
+
+      if (!allowedExtensions.contains(fileExtension)) {
+        // ❌ Format non supporté
+        if (Platform.isAndroid) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Format audio non supporté. Veuillez choisir un fichier MP3, M4A, WAV ou AAC.',
+              ),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+        return; // On arrête ici
+      }
       String? sourcePath = file.path;
-    if (sourcePath == null) {
-
-      if (Platform.isAndroid) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Impossible d’accéder au fichier. Veuillez choisir un fichier local.',
+      if (sourcePath == null) {
+        if (Platform.isAndroid) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Impossible d’accéder au fichier. Veuillez choisir un fichier local.',
+              ),
+              duration: Duration(seconds: 3),
             ),
-            duration: Duration(seconds: 3),
-          ),
-        );
+          );
+        }
+        return;
       }
-      return;
-    }
 
-    if (result.files.single.path != null) {
-      String sourcePath = result.files.single.path!;
+      if (result.files.single.path != null) {
+        String sourcePath = result.files.single.path!;
 
-      try {
-        final directory = await getApplicationDocumentsDirectory();
-        final fileName = result.files.single.name;
-        final permanentPath = '${directory.path}/$fileName';
+        try {
+          final directory = await getApplicationDocumentsDirectory();
+          final fileName = result.files.single.name;
+          final permanentPath = '${directory.path}/$fileName';
 
-        final File sourceFile = File(sourcePath);
+          final File sourceFile = File(sourcePath);
 
-        if (await sourceFile.exists()) {
-          await sourceFile.copy(permanentPath);
-
-          setState(() {
-            musicPathChoice = permanentPath;
-            musicName = fileName;
-          });
-        } else {
-          // Fallback pour iOS : essaie de jouer directement
-          if (Platform.isIOS) {
+          if (await sourceFile.exists()) {
+            await sourceFile.copy(permanentPath);
             setState(() {
-              musicPathChoice = sourcePath;
+              musicPathChoice = permanentPath;
               musicName = fileName;
             });
           }
-        }
-      } catch (e) {
-        // Sur iOS, si la copie échoue, on tente de jouer directement
-        if (Platform.isIOS) {
-          setState(() {
-            musicPathChoice = sourcePath;
-          });
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️ Erreur copie fichier: $e');
+          }
+
+          if (Platform.isIOS) {
+            setState(() {
+              musicPathChoice = sourcePath;
+            });
+          } else {
+            // ✅ Informer l'utilisateur sur Android
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('⚠️ Impossible d\'importer la musique'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+            }
+          }
         }
       }
-    }
-
-    if (_isTimerActive && musicPathChoice.isNotEmpty) {
-      final audioProvider = Provider.of<SoundProvider>(context, listen: false);
-      audioProvider.playSound(musicPathChoice, "interne");
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur générale pickMusic: $e');
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Une erreur est survenue'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 

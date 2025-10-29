@@ -34,13 +34,14 @@ class _PermissionBannerState extends State<PermissionBanner> {
   }
 
   Future<void> _checkPermissions() async {
+    print("🤖 vérification des permissions");
     final prefs = await SharedPreferences.getInstance();
 
     final firstConnect = prefs.getBool('first_launch') ?? true;
 
     final needsWarning = prefs.getBool('needs_permission_warning') ?? false;
 
-
+    print("🤖❌ needwarning : $needsWarning");
 
     if (needsWarning && !firstConnect) {
       setState(() {
@@ -90,7 +91,7 @@ class _PermissionBannerState extends State<PermissionBanner> {
                   ),
                 ),
                 Text(
-                  'Active les notifications pour recevoir tes rappels',
+                  'Active les notifications pour recevoir les rappels',
                   style: TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ],

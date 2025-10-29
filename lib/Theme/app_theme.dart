@@ -22,7 +22,7 @@ class AppTheme {
 
       textTheme: TextTheme(
         titleLarge: TextStyle(
-          fontSize: 30,
+          fontSize: 32,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -101,14 +101,14 @@ class AppTheme {
 
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColors,
-        brightness: Brightness.dark, // ← Important
-        primary: thirdColors, // Violet plus clair en dark mode
+        brightness: Brightness.dark, 
+        primary: thirdColors, 
         secondary: secondaryColors,
         tertiary: primaryColors,
-        surface: Color(0xFF1E1E1E), // Fond sombre
+        surface: Color(0xFF1E1E1E), 
       ),
 
-      scaffoldBackgroundColor: Color(0xFF121212), // Fond très sombre
+      scaffoldBackgroundColor: Color(0xFF121212), 
       useMaterial3: true,
 
       // Texte
@@ -116,7 +116,7 @@ class AppTheme {
         headlineLarge: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          color: Colors.white, // ← Blanc en dark mode
+          color: Colors.white, 
         ),
         headlineMedium: TextStyle(
           fontSize: 24,

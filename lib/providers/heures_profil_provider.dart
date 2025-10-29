@@ -29,10 +29,11 @@ class HeureProfilProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   HeureProfilProvider() {
-    _loadData();
+    loadData();
   }
 
-  Future<void> _loadData() async {
+  Future<void> loadData() async {
+    print("🫟LOAD DATA");
     _isLoading = true;
     notifyListeners();
 
@@ -88,7 +89,7 @@ class HeureProfilProvider extends ChangeNotifier {
   }
 
   Future<void> _scheduleNotificationsWithLoadedHours() async {
-    try{
+    try {
       bool hasPermissions =
           await AndroidNotificationHandler.hasAllPermissions();
 
@@ -105,8 +106,6 @@ class HeureProfilProvider extends ChangeNotifier {
         soirHour: _hours['soir']!,
         coucherHour: _hours['coucher']!,
       );
-
-    
     } catch (e) {
       if (kDebugMode) {
         // print('❌ Erreur lors de la programmation des notifications : $e');
@@ -128,7 +127,6 @@ class HeureProfilProvider extends ChangeNotifier {
       );
 
       if (!success) {
-
         // Rollback complet
         _hours = oldHours;
         return false;

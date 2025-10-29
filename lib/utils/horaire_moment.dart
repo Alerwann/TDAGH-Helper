@@ -9,13 +9,13 @@ class HoraireMoment {
 
     switch (moment.toLowerCase()) {
       case 'matin':
-        return now.hour <= profil.midiHours + 1 &&
+        return now.hour < profil.midiHours + 1 &&
             now.hour >= profil.reveilHours - 1;
       case 'midi':
-        return now.hour <= profil.soirHours + 1 &&
+        return now.hour < profil.soirHours + 1 &&
             now.hour >= profil.midiHours - 1;
       case 'soir':
-        return now.hour <= profil.coucherHours + 1 &&
+        return now.hour < profil.coucherHours + 1 &&
             now.hour >= profil.soirHours - 1;
       case 'coucher':
         int heureDebut = profil.coucherHours - 1;
@@ -23,10 +23,10 @@ class HoraireMoment {
 
         if (heureDebut + dureeAcces >= 24) {
           int heureFin = (heureDebut + dureeAcces) - 24;
-          return (now.hour >= heureDebut) || (now.hour <= heureFin);
+          return (now.hour >= heureDebut) || (now.hour < heureFin);
         } else {
-          return now.hour >= heureDebut &&
-              now.hour <= (heureDebut + dureeAcces);
+          return now.hour > heureDebut &&
+              now.hour < (heureDebut + dureeAcces);
         }
 
       default:

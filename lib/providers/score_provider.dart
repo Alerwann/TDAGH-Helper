@@ -133,8 +133,6 @@ class ScoreProvider extends ChangeNotifier {
             // Sauvegarder l'XP avant reset
             _xpGlobal = _xpGlobal + globalScore;
             await ScoreStorageService.saveXpGlobal(_xpGlobal);
-
-            // ✅ Reset tous les scores en une boucle !
             _scores = {
               'matin': 0,
               'midi': 0,
@@ -152,7 +150,7 @@ class ScoreProvider extends ChangeNotifier {
             nombreTirage = await TachesStorageService.getNombreT();
             _isChecked = List.generate(nombreTirage, (index) => false);
 
-            // ✅ Sauvegarder tous les scores en une boucle !
+         
             for (var entry in _scores.entries) {
               await ScoreStorageService.saveScore(entry.key, entry.value);
             }
@@ -297,7 +295,6 @@ class ScoreProvider extends ChangeNotifier {
     final success = await ScoreStorageService.saveTacheState(_isChecked);
 
     if (!success) {
-      // Rollback
       _isChecked = oldIsChecked;
       _currentStep = oldCurrentStep;
 
@@ -346,17 +343,14 @@ class ScoreProvider extends ChangeNotifier {
     if (_defouleScore >= 20) {
       return true;
     }
-
     final oldDefouleScore = _defouleScore;
     _defouleScore += 5;
-
     final success = await ScoreStorageService.saveDefouleScore(_defouleScore);
 
     if (!success) {
       _defouleScore = oldDefouleScore;
       return false;
     }
-
     notifyListeners();
     return true;
   }

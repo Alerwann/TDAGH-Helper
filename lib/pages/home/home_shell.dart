@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:tdahelpe/core/startup/notification_handler.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
+import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/services/notifications/notification_service.dart';
 import 'package:tdahelpe/utils/permission_state.dart';
@@ -30,12 +33,13 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    print("🤯 notificaiton init home shell");
+    print("🤯 notificaiton init home shel alarme 50");
     // Observer le cycle de vie
     WidgetsBinding.instance.addObserver(this);
 
     // Configuration du canal Android
     _methodChannel.setMethodCallHandler(_handleMethodCall);
+    print("🪶 methode handle passée");
 
     // Initialisation post-frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,7 +65,10 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
 
     if (isFirstLaunch) {
       await prefs.setBool('first_launch', false);
-
+      if (Platform.isAndroid) {
+        await NotificationService.checkAllPermission();
+        print("Verif si baner : ${prefs.getBool('needs_permission_warning')}");
+      }
       // Afficher le dialog explicatif
       if (mounted) {
         ShowPermissionExplanationDialog.firstTextApparition(context);
@@ -77,6 +84,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       print('📱 App est au premier plan - Vérification des permissions');
 
       final scoreP = Provider.of<ScoreProvider>(context, listen: false);
+      final momentP = Provider.of<HeureProfilProvider>(context, listen: false);
 
       bool resumePermission = await NotificationService.checkAllPermission();
       PermissionState.notifyPermissionChanged(!resumePermission);
@@ -86,12 +94,14 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       }
       if (mounted) {
         scoreP.checkAndReset();
+        momentP.loadData();
       }
     }
   }
 
   /// Gère les appels depuis le code natif (Android)
   Future<void> _handleMethodCall(MethodCall call) async {
+    print("🪶 _handle début");
     if (call.method == 'onNotificationTapped') {
       if (kDebugMode) {
         print('🔔 Notification tapée (depuis Kotlin)');

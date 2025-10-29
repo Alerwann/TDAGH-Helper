@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class ScoreStorageService {
-  // ✅ Map pour associer les moments aux clés
+
   static const Map<String, String> _scoreKeys = {
     'matin': 'morning_score',
     'midi': 'midi_score',

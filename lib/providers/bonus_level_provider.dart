@@ -6,7 +6,6 @@ import 'package:tdahelpe/utils/error_handler.dart';
 class BonusLevelProvider extends ChangeNotifier {
   List<BonusLevel> _levels = [];
   bool _isLoading = true;
-
   List<BonusLevel> get levels => _levels;
   bool get isLoading => _isLoading;
 
@@ -25,7 +24,6 @@ class BonusLevelProvider extends ChangeNotifier {
           defaultValue: [],
         ) ??
         [];
-
 
     _isLoading = false;
     notifyListeners();
@@ -55,7 +53,7 @@ class BonusLevelProvider extends ChangeNotifier {
         if (kDebugMode) {
           print('⚠️ getCurrentGrade: Grade index $gradeIndex non trouvé');
         }
-   
+
         return _levels.first;
       },
     );
@@ -67,9 +65,8 @@ class BonusLevelProvider extends ChangeNotifier {
     return grade;
   }
 
-BonusLevel? getGradeByIndex(int index) {
+  BonusLevel? getGradeByIndex(int index) {
     if (_levels.isEmpty) {
- 
       return null;
     }
 
@@ -77,7 +74,6 @@ BonusLevel? getGradeByIndex(int index) {
     final grade = _levels.firstWhere(
       (level) => level.declancheLevel == index,
       orElse: () {
-    
         return _levels.first; // Valeur par défaut
       },
     );
@@ -87,7 +83,6 @@ BonusLevel? getGradeByIndex(int index) {
 
   BonusLevel? getNextGrade(int currentLevel) {
     if (_levels.isEmpty) {
-
       return null;
     }
 
@@ -95,20 +90,16 @@ BonusLevel? getGradeByIndex(int index) {
     int nextIndex = currentIndex + 1;
 
     if (nextIndex >= _levels.length) {
-
       return null; // Plus de grades
     }
 
     final nextGrade = getGradeByIndex(nextIndex);
 
-
     return nextGrade;
   }
 
-  
-int? getNextGradeLevel(int currentLevel) {
+  int? getNextGradeLevel(int currentLevel) {
     if (_levels.isEmpty) {
-
       return null;
     }
 
@@ -116,12 +107,10 @@ int? getNextGradeLevel(int currentLevel) {
     int nextIndex = currentIndex + 1;
 
     if (nextIndex >= _levels.length) {
-    
       return null;
     }
 
     final nextLevel = nextIndex * 5;
-
 
     return nextLevel;
   }

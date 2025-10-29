@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/app.dart';
 import 'package:tdahelpe/pages/Bingo/homepage.dart';
@@ -9,27 +10,37 @@ class NotificationHandler {
   static StreamSubscription<String>? _subscription;
   static bool _isNavigating = false;
 
-  static Future<void> initialize() async {
-    print('👂 Initialisation du gestionnaire de notifications');
+static Future<void> initialize() async {
+    try {
+      print('👂 Initialisation du gestionnaire de notifications');
 
-    // Écouter les notifications
-    _subscription = NotificationService.notificationStream.listen((moment) {
-      print('🎯 Notification reçue: $moment');
+      _subscription = NotificationService.notificationStream.listen(
+        (moment) {
+          print('🎯 Notification reçue: $moment');
+          _navigateToBingo('stream', moment);
+        },
+        onError: (error) {
+          if (kDebugMode) {
+            print('❌ Erreur stream notification: $error');
+          }
+        },
+      );
 
-      _navigateToBingo('stream', moment);
-    });
+      await Future.delayed(Duration(milliseconds: 500));
+      final isFromNotification =
+          await NotificationService.isOpenedFromNotification();
 
-    // Vérifier si lancé depuis notification (pour Android surtout)
-    await Future.delayed(Duration(milliseconds: 500));
-    print("❓ apres délais");
-    final isFromNotification =
-        await NotificationService.isOpenedFromNotification();
-
-    if (isFromNotification) {
-      _navigateToBingo('lancement', null);
+      if (isFromNotification) {
+        _navigateToBingo('lancement', null);
+      }
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('❌ Erreur initialisation notification handler: $e');
+        print('Stack: $stackTrace');
+      }
     }
   }
-
+  
   static void _navigateToBingo(String source, String? moment) {
     if (_isNavigating) return;
     _isNavigating = true;
@@ -41,7 +52,7 @@ class NotificationHandler {
         print('🚀 Navigation vers Bingo (source: $source)');
 
         navigator
-            .push(MaterialPageRoute(builder: (context) => HomeBingoPage()))
+            .pushReplacement(MaterialPageRoute(builder: (context) => HomeBingoPage()))
             .then((_) => _isNavigating = false);
       } else {
         _isNavigating = false;

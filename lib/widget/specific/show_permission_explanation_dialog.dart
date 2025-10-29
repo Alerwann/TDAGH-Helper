@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
+import 'package:tdahelpe/utils/device_utils.dart';
 
 class ShowPermissionExplanationDialog {
   static void showdial(BuildContext context, mounted) async {
@@ -48,12 +49,20 @@ class ShowPermissionExplanationDialog {
     );
   }
 
-  static void _showOpenSettingsDialog(BuildContext context) {
+  static void showOpenSettingsDialog(BuildContext context) async {
+    bool isAndroidOther = await DeviceUtils.isBatteryOptimizationNeeded();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('⚠️ Permissions manquantes'),
-        content: Text(
+        content: 
+        isAndroidOther?
+        Text(   'Pour que les notifications fonctionnent, tu dois :\n\n'
+              "1. Dans les paramètres de l'application, puis batterie choisir : Pas de restriction\n"
+              '2. Décoché interrompre l\'activité \n'
+              '3. Autoriser les notifications\n\n'
+              'Clique sur "Ouvrir" pour accéder aux paramètres.')
+        :Text(
           'Pour que les notifications fonctionnent, tu dois les activer dans les paramètres.\n\n'
           'Veux-tu ouvrir les paramètres maintenant ?',
         ),
@@ -99,11 +108,12 @@ class ShowPermissionExplanationDialog {
             ),
             SizedBox(height: 10),
             _buildBulletPoint('📅 Te rappeler tes tâches quotidiennes'),
-            _buildBulletPoint('🎯 Ne rien oublier dans ta routine'),
+            _buildBulletPoint('🎯 Ne rien oublier dans ta routine '),
             Text('Tu recevras au maximum 4 notifications par jour.'),
             Text(
               "L'acception ou non des notifications est disponible dans les paramètres.",
             ),
+
           ],
         ),
         actions: [
@@ -176,7 +186,7 @@ class ShowPermissionExplanationDialog {
 
                 if (!hasPermissions) {
                   // Proposer d'ouvrir les paramètres
-                  _showOpenSettingsDialog(context);
+                  showOpenSettingsDialog(context);
                 }
               }
             },

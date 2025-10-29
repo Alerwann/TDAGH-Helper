@@ -28,7 +28,7 @@ class ActivityList {
     ),
 
     ActivityCard(
-      activityName: 'Défoulage',
+      activityName: 'Défoule-Toi',
       imagePath: 'assets/images/rageux.png',
       destination: HomeDefouleToi(),
       backColor: Color.fromARGB(255, 96, 189, 20),

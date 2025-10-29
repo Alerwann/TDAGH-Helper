@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,29 +9,27 @@ import 'package:tdahelpe/services/notifications/notification_service.dart';
 /// Gère la programmation automatique des alarmes au démarrage
 class AlarmScheduler {
   /// Programme toutes les alarmes en fonction des heures du profil
-  static Future<void> scheduleOnStartup(BuildContext context) async {
+ static Future<void> scheduleOnStartup(BuildContext context) async {
     try {
       final profil = Provider.of<HeureProfilProvider>(context, listen: false);
 
-      // Attendre que le provider soit chargé
-      if (profil.isLoading) {
-     
-          print('⏳ Attente du chargement du profil...');
-      
-
-        await Future.doWhile(() async {
-          await Future.delayed(Duration(milliseconds: 100));
-          return profil.isLoading;
-        });
+      // ✅ Timeout pour éviter boucle infinie
+      int attempts = 0;
+      while (profil.isLoading && attempts < 50) {
+        // Max 5 secondes
+        await Future.delayed(Duration(milliseconds: 100));
+        attempts++;
       }
 
+      if (profil.isLoading) {
+        throw TimeoutException('Profil non chargé après 5 secondes');
+      }
 
-        print('🔔 Programmation des alarmes automatiques');
-        print('   Réveil: ${profil.reveilHours}h');
-        print('   Midi: ${profil.midiHours}h');
-        print('   Soir: ${profil.soirHours}h');
-        print('   Coucher: ${profil.coucherHours}h');
-    
+      // if (kDebugMode) {
+      //   print('🔔 Programmation des alarmes automatiques');
+      //   print('   Réveil: ${profil.reveilHours}h');
+      //   // ...
+      // }
 
       await NotificationService.scheduleAllNotifications(
         reveilHour: profil.reveilHours,
@@ -39,11 +39,21 @@ class AlarmScheduler {
       );
 
       if (kDebugMode) {
-        // print('✅ Alarmes programmées avec succès');
+        print('✅ Alarmes programmées avec succès');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       if (kDebugMode) {
-        // print('❌ Erreur programmation alarmes: $e');
+        print('❌ Erreur programmation alarmes: $e');
+        print('Stack: $stackTrace');
+      }
+      // ✅ Optionnel : informer l'utilisateur
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('⚠️ Les rappels n\'ont pas pu être programmés'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     }
   }

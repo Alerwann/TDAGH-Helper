@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:tdahelpe/services/profil_storage_service.dart';
 
 class ProfilProvider extends ChangeNotifier {
@@ -18,25 +19,38 @@ class ProfilProvider extends ChangeNotifier {
     _loadData();
   }
 
-  Future<void> _loadData() async {
-    _pseudo = await ProfilStorageService.getPseudo();
-    String savedPath = await ProfilStorageService.getImagePath();
+Future<void> _loadData() async {
+    try {
+      _pseudo = await ProfilStorageService.getPseudo();
+      String savedPath = await ProfilStorageService.getImagePath();
 
-    // Vérifier si le fichier existe pour les chemins non-assets
-    if (!savedPath.startsWith('assets/')) {
-      File file = File(savedPath);
-      if (await file.exists()) {
-        _profilImagePath = savedPath;
+      if (!savedPath.startsWith('assets/')) {
+        try {
+          File file = File(savedPath);
+          if (await file.exists()) {
+            _profilImagePath = savedPath;
+          } else {
+            _profilImagePath = 'assets/images/defaultprofilimage.png';
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print('⚠️ Erreur vérification fichier image: $e');
+          }
+          _profilImagePath = 'assets/images/defaultprofilimage.png';
+        }
       } else {
-        _profilImagePath = 'assets/images/defaultprofilimage.png';
+        _profilImagePath = savedPath;
       }
-    } else {
-      _profilImagePath = savedPath;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Erreur chargement profil: $e');
+      }
+      _pseudo = 'Inconnu';
+      _profilImagePath = 'assets/images/defaultprofilimage.png';
+    } finally {
+      notifyListeners();
     }
-
-    notifyListeners();
   }
-
   Future<bool> setProfilImagePath(String profilPath) async {
     final oldProfilImage = _profilImagePath;
     _profilImagePath = profilPath;
