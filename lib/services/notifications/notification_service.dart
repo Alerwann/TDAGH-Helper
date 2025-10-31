@@ -115,9 +115,10 @@ class NotificationService {
       title: NotificationConstants.getTitle(2),
       body: NotificationConstants.getBody(2),
       hour: midiHour,
-      // minute: 59,
-      // hour: DateTime.now().hour,
       minute: 0,
+
+      // minute: 49,
+      // hour: DateTime.now().hour,
     );
 
     // Planifier notification du soir
@@ -127,6 +128,8 @@ class NotificationService {
       body: NotificationConstants.getBody(3),
       hour: soirHour,
       minute: 0,
+      //  minute: 52,
+      // hour: DateTime.now().hour,
     );
 
     // Planifier notification du coucher

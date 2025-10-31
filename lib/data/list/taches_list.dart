@@ -1,25 +1,34 @@
 import 'package:tdahelpe/data/schema/taches_shema.dart';
 
 class TachesList {
-  // Liste par défaut (immuable)
+
   static final List<TachesSchema> _defaultTaches = [
     TachesSchema(tacheName: 'Vaisselle', tacheDuration: TacheDuration.court),
     TachesSchema(
-      tacheName: 'Poussière dans la chambre',
+      tacheName: 'Nettoyer la douche/ baignoire',
       tacheDuration: TacheDuration.moyen,
     ),
     TachesSchema(
-      tacheName: 'Poussière dans la salle',
+      tacheName: 'Faire la poussière dans une pièce',
       tacheDuration: TacheDuration.tresLong,
     ),
     TachesSchema(
-      tacheName: 'Trier le courrier',
+      tacheName: 'Préparer une liste de course',
       tacheDuration: TacheDuration.moyen,
     ),
     TachesSchema(
-      tacheName: 'Vérifier et régler les factures en retard',
+      tacheName: 'Faire ses comptes',
       tacheDuration: TacheDuration.long,
     ),
+     TachesSchema(
+      tacheName: 'Nettoyer les WC',
+      tacheDuration: TacheDuration.moyen,
+    ),
+     TachesSchema(
+      tacheName: 'Sortir les poubelles',
+      tacheDuration: TacheDuration.court,
+    ),
+
   ];
 
   static List<TachesSchema> getDefaultCards() {

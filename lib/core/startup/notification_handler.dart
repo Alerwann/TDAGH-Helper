@@ -52,7 +52,7 @@ static Future<void> initialize() async {
         print('🚀 Navigation vers Bingo (source: $source)');
 
         navigator
-            .pushReplacement(MaterialPageRoute(builder: (context) => HomeBingoPage()))
+            .push(MaterialPageRoute(builder: (context) => HomeBingoPage()))
             .then((_) => _isNavigating = false);
       } else {
         _isNavigating = false;

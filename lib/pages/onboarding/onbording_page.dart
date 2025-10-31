@@ -1,6 +1,5 @@
 // Onboarding d'accueil qui explique l'application
-// il ne s'affiche qu'une fois à la première ouverture 
-
+// il ne s'affiche qu'une fois à la première ouverture
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,14 +17,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   final List<OnboardingStep> _steps = [
     OnboardingStep(
-      title: 'Bienvenue sur TDAH\'elpe ! 👋',
+      title: 'Bienvenue sur TDAH\'elp ! 👋',
       description: 'Une application pour t\'aider à organiser ta journée',
       icon: Icons.home,
+    ),
+    OnboardingStep(
+      title: 'Personnalise ton avatar 👤',
+      description: 'Configure ta photo et ton pseudo pour une personnalisation de l\'expérience.',
+      icon: Icons.settings,
     ),
     OnboardingStep(
       title: 'Bingo quotidien 🎯',
       description: 'Valide toutes le bingo au fil de la journée',
       icon: Icons.check_circle,
+    ),
+    OnboardingStep(
+      title: 'Tire Tache quotidien 🎰',
+      description:
+          'Tire le nombre que tu veux de tache au hasard et réalise les',
+      icon: Icons.shuffle_on_rounded,
     ),
     OnboardingStep(
       title: 'Notifications 🔔',
