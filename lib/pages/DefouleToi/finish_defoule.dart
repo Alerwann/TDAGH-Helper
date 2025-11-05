@@ -27,7 +27,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final defouleP = Provider.of<DefouleProvider>(context, listen: false);
       final scoreP = Provider.of<ScoreProvider>(context, listen: false);
-      if (defouleP.scoreDefoule <= widget.score) {
+      if (defouleP.scoreDefoule < widget.score) {
         if (defouleP.scoreDefoule != 0) {
           scoreP.incrementDefouleScore();
         }

@@ -1,15 +1,10 @@
-// import 'dart:io';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/data/list/activity_list.dart';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
-// import 'package:tdahelpe/utils/device_utils.dart';
 import 'package:tdahelpe/utils/permission_banner.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/loader_widget.dart';

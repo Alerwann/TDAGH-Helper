@@ -8,7 +8,7 @@ class MessageRecord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   if (recordTape <= scoreTape) {
+   if (recordTape < scoreTape) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: Column(
@@ -23,7 +23,7 @@ class MessageRecord extends StatelessWidget {
       );
     } 
     // Message si record non battu
-    else {
+    else if(recordTape>scoreTape){
       return Container(
         margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
         child: Column(
@@ -33,6 +33,19 @@ class MessageRecord extends StatelessWidget {
               Theme.of(context).textTheme.headlineMedium,
             ),
             Text("😭", style: TextStyle(fontSize: 40)),
+          ],
+        ),
+      );
+    }else{
+       return Container(
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: Column(
+          children: [
+            CustomText.center(
+              "Tu as égalé le record!",
+              Theme.of(context).textTheme.headlineMedium,
+            ),
+            Text("😉", style: TextStyle(fontSize: 40)),
           ],
         ),
       );
