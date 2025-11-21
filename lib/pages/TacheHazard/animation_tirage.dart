@@ -38,6 +38,8 @@ class _TirageFinalState extends State<TirageFinal>
   void initState() {
     super.initState();
 
+
+
     controllerAnimation = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 100),
@@ -107,9 +109,9 @@ class _TirageFinalState extends State<TirageFinal>
   void _initialisation() {
     final tacheP = Provider.of<TachesProvider>(context, listen: false);
     final scoreP = Provider.of<ScoreProvider>(context, listen: false);
-    listIndex = tabIndice(tacheP.nombreT, tacheP.taches.length );
+    listIndex = tabIndice(tacheP.nombreT, tacheP.taches.length);
     nbCycles = tacheP.nombreT;
-
+    
     for (int i = 0; i < tacheP.nombreT; i++) {
       int convertInt = (listIndex[i]);
 

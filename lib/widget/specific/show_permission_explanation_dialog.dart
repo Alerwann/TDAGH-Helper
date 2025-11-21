@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
+import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/utils/device_utils.dart';
 
 class ShowPermissionExplanationDialog {
@@ -55,17 +56,18 @@ class ShowPermissionExplanationDialog {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('⚠️ Permissions manquantes'),
-        content: 
-        isAndroidOther?
-        Text(   'Pour que les notifications fonctionnent, tu dois :\n\n'
-              "1. Dans les paramètres de l'application, puis batterie choisir : Pas de restriction\n"
-              '2. Décoché interrompre l\'activité \n'
-              '3. Autoriser les notifications\n\n'
-              'Clique sur "Ouvrir" pour accéder aux paramètres.')
-        :Text(
-          'Pour que les notifications fonctionnent, tu dois les activer dans les paramètres.\n\n'
-          'Veux-tu ouvrir les paramètres maintenant ?',
-        ),
+        content: isAndroidOther
+            ? Text(
+                'Pour que les notifications fonctionnent, tu dois :\n\n'
+                "1. Dans les paramètres de l'application, puis batterie choisir : Pas de restriction\n"
+                '2. Décoché interrompre l\'activité \n'
+                '3. Autoriser les notifications\n\n'
+                'Clique sur "Ouvrir" pour accéder aux paramètres.',
+              )
+            : Text(
+                'Pour que les notifications fonctionnent, tu dois les activer dans les paramètres.\n\n'
+                'Veux-tu ouvrir les paramètres maintenant ?',
+              ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -76,7 +78,10 @@ class ShowPermissionExplanationDialog {
               Navigator.pop(context);
               if (Platform.isAndroid) {
                 AndroidNotificationHandler.openSettingsAndroid();
-              } else if (Platform.isIOS) {}
+              } else if (Platform.isIOS) {
+                print("👻 iphone");
+                IosNotificationHandler.openSettingsIos();
+              }
             },
             child: Text('Ouvrir les paramètres'),
           ),
@@ -113,7 +118,6 @@ class ShowPermissionExplanationDialog {
             Text(
               "L'acception ou non des notifications est disponible dans les paramètres.",
             ),
-
           ],
         ),
         actions: [
@@ -188,7 +192,10 @@ class ShowPermissionExplanationDialog {
                   // Proposer d'ouvrir les paramètres
                   showOpenSettingsDialog(context);
                 }
+              } else if (Platform.isIOS) {
+                IosNotificationHandler.openSettingsIos();
               }
+              _markDialogShown();
             },
             child: Text('Autoriser'),
           ),

@@ -84,7 +84,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
                         momentController: coucherController,
                       ),
                       HoraireChamps(
-                        moment: "reinit ",
+                        moment: "reinit",
                         momentController: reinitController,
                       ),
                       SizedBox(

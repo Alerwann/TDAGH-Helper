@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/pages/TacheHazard/animation_tirage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
@@ -133,8 +132,14 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                             SizedBox(height: 10),
                             ElevatedButton(
                               onPressed: () async {
-                                await AppNavigator.push(context, TirageFinal());
+                                await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TirageFinal(),
+                                  ),
+                                );
 
+                       
                                 final tacheProvider =
                                     Provider.of<TachesProvider>(
                                       context,

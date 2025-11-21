@@ -44,7 +44,7 @@ class AlarmReceiver : BroadcastReceiver() {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-             .setSmallIcon(R.mipmap.ic_launcher)  // Obligatoire
+            .setSmallIcon(R.mipmap.ic_launcher)  
             .setLargeIcon(BitmapFactory.decodeResource(
                 context.resources, 
                 R.mipmap.ic_launcher

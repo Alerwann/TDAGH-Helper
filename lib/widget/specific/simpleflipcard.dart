@@ -97,7 +97,7 @@ class _SimpleFlipCardState extends State<SimpleFlipCard>
           widget.cardData.frontImagePath,
           height: 110,
           width: 135,
-        ), // Remplace par ton image
+        ), 
         SizedBox(height: 8),
         Text(
           widget.cardData.frontText,

@@ -40,11 +40,11 @@ class AboutPage extends StatelessWidget {
             ),
             _InfoRow(
               label: 'Politique de confidentialité',
-              value: 'Voir sur GitHub',
+              value: 'Voir sur le site',
               isLink: true,
               onTap: () {
                 // 🔗 Remplace ce lien par ton vrai lien GitHub quand prêt
-                _launchUrl('https://github.com/tonpseudo/tdahelpe-privacy');
+                _launchUrl('https://alerwanndev.vercel.app/legalinformation');
               },
             ),
 

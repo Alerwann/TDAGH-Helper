@@ -20,7 +20,7 @@ class MainActivity : FlutterActivity() {
 
     private val CHANNEL = "alarm_channel"
     private var notificationData: Map<String, Any>? = null
-    private var flutterMethodChannel: MethodChannel? = null // ← Renommé pour éviter confusion
+    private var flutterMethodChannel: MethodChannel? = null 
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

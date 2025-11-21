@@ -23,7 +23,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     ),
     OnboardingStep(
       title: 'Personnalise ton avatar 👤',
-      description: 'Configure ta photo et ton pseudo pour une personnalisation de l\'expérience.',
+      description:
+          'Configure ta photo et ton pseudo pour une personnalisation de l\'expérience.',
+      icon: Icons.settings,
+    ),
+    OnboardingStep(
+      title: 'Personnalise ton profil ⚙️',
+      description: 'Configure tes heures préférées dans les paramètres',
       icon: Icons.settings,
     ),
     OnboardingStep(
@@ -41,11 +47,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
       title: 'Notifications 🔔',
       description: 'Reçois des rappels pour ne rien oublier',
       icon: Icons.notifications,
-    ),
-    OnboardingStep(
-      title: 'Personnalise ton profil ⚙️',
-      description: 'Configure tes heures préférées dans les paramètres',
-      icon: Icons.settings,
     ),
   ];
 
