@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,7 @@ class _ParametretirageState extends State<Parametretirage> {
 
       child: Scaffold(
         appBar: CustomHeightApBcar.customApp(
-          'Nombre de tirage',
+          AppLocalizations.of(context)!.nombreTirage,
           context,
           "parametre",
           true,
@@ -46,11 +47,11 @@ class _ParametretirageState extends State<Parametretirage> {
                   spacing: 15,
                   children: [
                     CustomText.center(
-                      'Actuellement ${tachesTime.nombreT} tâches sont piochées.',
+                      AppLocalizations.of(context)!.actuelNombreTache(tachesTime.nombreT),
                       Theme.of(context).textTheme.bodyLarge,
                     ),
                     CustomText.center(
-                      "Combien de Tâches tu veux piocher?",
+                     AppLocalizations.of(context)!.nombrePiocheDemande,
                       Theme.of(context).textTheme.bodyLarge,
                     ),
 
@@ -81,21 +82,25 @@ class _ParametretirageState extends State<Parametretirage> {
                                 ),
                               ),
 
-                              label: Text("Nombre de pioches"),
+                              label: Text(AppLocalizations.of(context)!.nombrePioche),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer un nombre';
+                                return AppLocalizations.of(context)!.saisieNombre;
                               }
                               if (int.tryParse(value) == null) {
-                                return 'Veuillez entrer un nombre valide';
+                                return AppLocalizations.of(context)!.saisienombreInvalide;
                               }
                               if (int.tryParse(value)! >
                                   tachesTime.taches.length) {
-                                return "Nombre de tache maximal => ${tachesTime.taches.length}";
+                                return AppLocalizations.of(
+                                  context,
+                                )!.nombrePiocheSupMax(tachesTime.taches.length);
                               }
                               if (int.parse(value) > 10) {
-                                return "Nombre maximal de tâches quotidiennes est de 10";
+                                return AppLocalizations.of(
+                                  context,
+                                )!.nombreTacheMax;
                               }
                               return null;
                             },
@@ -119,7 +124,7 @@ class _ParametretirageState extends State<Parametretirage> {
                                 Navigator.pop(context);
                               }
                             },
-                            child: Text("Valider"),
+                            child: Text(AppLocalizations.of(context)!.valider),
                           ),
                         ],
                       ),

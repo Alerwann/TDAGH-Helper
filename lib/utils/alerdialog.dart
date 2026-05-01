@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class PersoAlertDialog {
@@ -15,7 +16,7 @@ static void showInfoDialog(BuildContext context ,String title, String message  )
         actions: [
           TextButton(
             onPressed: Navigator.of(context).pop,
-            child: Text('Fermer', style: TextStyle(color: Color(0xFF00CC44))),
+            child: Text(AppLocalizations.of(context)!.ferme, style: TextStyle(color: Color(0xFF00CC44))),
           ),
         ],
       ),

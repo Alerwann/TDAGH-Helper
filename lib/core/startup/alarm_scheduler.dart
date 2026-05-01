@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/services/notifications/notification_service.dart';
 
@@ -50,7 +51,7 @@ class AlarmScheduler {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('⚠️ Les rappels n\'ont pas pu être programmés'),
+            content: Text(AppLocalizations.of(context)!.erreurMajRappel),
             duration: Duration(seconds: 3),
           ),
         );

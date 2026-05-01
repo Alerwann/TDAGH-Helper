@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/data/schema/taches_shema.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
@@ -38,7 +39,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
       },
       child: Scaffold(
         appBar: CustomHeightApBcar.customApp(
-          "Modifications de la tache",
+          AppLocalizations.of(context)!.modifTache,
           context,
           "parametre",
           true,
@@ -58,7 +59,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomText.center(
-                          "Nom de la nouvelle tache ",
+                         AppLocalizations.of(context)!.newTaskName,
                           Theme.of(context).textTheme.headlineLarge,
                         ),
 
@@ -66,9 +67,9 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                           controller: _textController,
                           maxLines: null,
                           decoration: InputDecoration(
-                            hintText: "Nom de l'activité",
+                            hintText: AppLocalizations.of(context)!.activityName,
                             prefixIcon: Icon(Icons.person),
-                            labelText: "Nom de l'activité",
+                            labelText: AppLocalizations.of(context)!.activityName,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -76,7 +77,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                         ),
 
                         CustomText.center(
-                          "Estimation de la durée ",
+                          AppLocalizations.of(context)!.estimationDuree,
                           Theme.of(context).textTheme.headlineLarge,
                         ),
 
@@ -103,25 +104,33 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                                 children: [
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
-                                      title: Text('Court'),
+                                      title: Text(
+                                        AppLocalizations.of(context)!.court,
+                                      ),
                                       value: TacheDuration.court,
                                     ),
                                   ),
 
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
-                                      title: Text('Moyen'),
+                                      title: Text(
+                                        AppLocalizations.of(context)!.moyen,
+                                      ),
                                       value: TacheDuration.moyen,
                                     ),
                                   ),
 
                                   RadioListTile<TacheDuration>(
-                                    title: Text('Long'),
+                                    title: Text(
+                                      AppLocalizations.of(context)!.long,
+                                    ),
                                     value: TacheDuration.long,
                                   ),
 
                                   RadioListTile<TacheDuration>(
-                                    title: Text('Très long'),
+                                    title: Text(
+                                      AppLocalizations.of(context)!.tresLong,
+                                    ),
                                     value: TacheDuration.tresLong,
                                   ),
                                 ],
@@ -136,7 +145,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Veuillez saisir un nom d\'activité',
+                                    AppLocalizations.of(context)!.saisiNomAct,
                                   ),
                                 ),
                               );
@@ -146,6 +155,7 @@ class _ModifcationTacheState extends State<ModifcationTache> {
                             TachesSchema tacheNew = TachesSchema(
                               tacheName: _textController.text.trim(),
                               tacheDuration: dureeSelectionnee,
+                              isCustom: true
                             );
 
                             tacheP.modifierTache(
@@ -157,20 +167,22 @@ class _ModifcationTacheState extends State<ModifcationTache> {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Tâche modifiée avec succès !'),
+                                content: Text(
+                                  AppLocalizations.of(context)!.succesModif,
+                                ),
                               ),
                             );
                             tacheP.reinitTache();
 
                             Navigator.pop(context);
                           },
-                          child: Text("Valider"),
+                          child: Text(AppLocalizations.of(context)!.valider),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text('Retour'),
+                          child: Text(AppLocalizations.of(context)!.retour),
                         ),
                       ],
                     ),

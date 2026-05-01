@@ -1,0 +1,484 @@
+{
+    "@@locale" : "en",
+    "language":"English",
+    "@language":{
+        "description" : "Language choice"
+    },
+    "momentAff" : "Reset time",
+    "momentRepas" : "{moment} time",
+    "@momentRepas":{
+        "description": "Message based on the time of day",
+        "placeholders": {
+            "moment":{
+                "type": "String",
+                "example": "Morning"
+            }
+        }
+    },
+    "hour": "hour",
+    "decidHour" : "Scheduled time",
+    
+    "enterNumber" : "Please enter a number",
+
+    "errorTypeNumber" : "Please enter a valid number",
+    "errorHourToHeight" : "Invalid hour, it must be less than 24",
+    "errorHourNegative" : "Invalid hour, it must be positive",
+     
+    "bestRecord" :"You beat the record!",
+    "egalRecord" :"You matched the record!",
+   
+    "recordMessage": "The record is {recordTape} taps.",
+    "@recordMessage": {
+        "description": "Message displaying the tap record",
+        "placeholders": {
+        "recordTape": {
+            "type": "int",
+            "example": "10"
+        }
+        }
+    },
+    "labelFinAcces": "Access ends at {heure}H",
+    "@labelFinAcces": {
+        "placeholders": {
+            "heure": {
+                "type": "int",
+                "example": "18"
+            }
+        }
+    },
+    "labelOuverture": "Opens at {heure}H",
+    "@labelOuverture": {
+        "placeholders": {
+            "heure": {
+                "type": "int",
+                "example": "08"
+            }
+        }
+    },
+
+    "matin":"Morning",
+    "reveilMoment":"wake up",
+    "midi": "Noon",
+    "soir": "Evening",
+    "coucher":"Bedtime",
+
+    "defouleToi":"Let it out",
+    "@defouleToi":{"description": "task name"},
+    "tireTache":"Task Draw",
+    "@tireTache":{"description": "task name"},
+    "bingoQuot": "Daily Bingo",
+    "@bingoQuot":{
+        "description": "task name"
+    },
+    "aideDents":"Brushing aid",
+    "@aideDents":{
+        "description": "task name"
+    },
+
+    "scoreMoment":  "Score for {moment}: {scoreByMoment}/4",
+    "@scoreMoment": {
+        "placeholders": {
+            "moment":{
+                "type": "String",
+                "example": "Morning"
+            },
+            "scoreByMoment":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+
+    "permissionMiss": "⚠️ Missing permissions",
+ 
+    "instructionsAndroidNotifications": "For notifications to work, you must:\n\n1. In app settings, then battery, choose: No restrictions\n2. Uncheck pause app activity\n3. Allow notifications\n\nClick 'Open' to access settings.",
+    "@instructionsAndroidNotifications": {
+        "description": "Help text for Android notification settings"
+    },
+    "instructionsIOSNotifications":"For notifications to work, you must enable them in settings.\n\nDo you want to open settings now?",
+    "@instructionsIOSNotifications":{
+        "description": "Text for iOS notification validation"
+    },
+    "later":"Later",
+    "ouvrirParam":"Open Settings",
+    "notifications": "Notifications",
+    "decriptionNotif": "TDAHelpe uses notifications to:",
+    "rappelTask": "📅 Remind you of your daily tasks",
+    "routineHelp":"🎯 Help you remember your routine",
+    "nombreNotif":"You will receive a maximum of 4 notifications per day.",
+    "notifChoix":"Accepting notifications can be toggled in settings",
+    "modifNotifChoix":"Changing notification preferences is available in settings.",
+    "refusNotif":"The app will work without notifications, but you won't get automatic reminders.",
+    "notNow": "Not now",
+    "autorise":"Allow",
+    "ferme":"Close",
+    "aucun":"none",
+
+    "terminer":"Finish!",
+    "valider": "Validate",
+    "confirmer":"Confirm",
+    "reinit":"Reset",
+    "retour":"Back",
+    "oui":"yes",
+    "non":"no",
+    "annuler":"Cancel",
+    "commencer":"Start",
+    "suivant":"Next",
+    "retry":"Retry",
+    "ouvrir":"Open",
+    "activer":"Enable",
+
+    "parametre":"Settings",
+    "accueil": "Home",
+    "bienvenue": "Welcome",
+    "score":"Score",
+
+    "formatErrorMusic": "Unsupported audio format. Please choose an MP3, M4A, WAV, or AAC file.",
+    "noAccessFichier":"Cannot access the file. Please choose a local file.",
+    "importImpossible":"⚠️ Unable to import music",
+    "error":"❌ An error occurred",
+
+    "pauseAll":"Global Pause",
+    "finValidation":"Finish and validate",
+    "pause":"Pause",
+    "play": "Start",
+    "selectMusique":"Select music",
+    "iosErrorImport":"Sound import only from Files, iCloud, or Downloads",
+    "musiceEcoute":"Currently playing",
+
+    "addTache": "Add activities",
+    "newTaskName": "New task name:",
+    "activityName":"Activity name",
+
+    "estimationDuree": "Estimated duration:",
+    "court":"short",
+    "moyen": "Medium",
+    "long":"Long",
+    "tresLong":"Very long",
+
+    "saisiNomAct":"Please enter an activity name",
+    "dureeAct":"Please select a duration",
+    "succesAjoutAct":"Task added successfully!",
+    "modifTache":"Modify task",
+    "succesModif":"Task modified successfully!",
+    "nombreTirage":"Number of draws",
+
+    "actuelNombreTirage":"Currently, {tachesTimenombreT} tasks are drawn.",
+    "@actuelNombreTirage":{
+        "placeholders": {
+            "tachesTimenombreT":{
+                "type": "int",
+                "example": "3"
+            }
+        }
+    },
+    "nombrePiocheDemande": "How many tasks do you want to draw?",
+    "nombrePioche":"Number of draws",
+    "saisieNombre":"Please enter a number",
+    "saisienombreInvalide":"Please enter a valid number",
+    "nombreTacheMax":"Maximum number of daily tasks is 10",
+    "nombrePiocheSupMax":"Max number of tasks => {tachesTimetaches}",
+    "@nombrePiocheSupMax":{
+        "placeholders": {
+            "tachesTimetaches":{
+                "type": "int",
+                "example": "3"
+            }
+        }
+    },
+
+    "listeEnregistre":"List saved",
+    "explicationCouleur":"Modify the task by tapping it.\nColor guide:\nGreen -> short\nYellow -> medium\nOrange -> long\nRed -> very long",
+    "supprimeTache":"Delete: {tacheName}?",
+    "@supprimeTache":{
+        "placeholders": {
+            "tacheName":{
+                "type": "String",
+                "example": "Kitchen"
+            }
+        }
+    },
+
+    "ajouterTache":"Add a task",
+    "modifierNombreTirage":"Modify draw count",
+    "listeTAche":"Task list",
+    "explicationRefairTAche":"You can redraw",
+    "messageAttention":"⚠️ If you have a daily draw in progress, modifying the list will cancel it.\nIf you already earned points, you won't get more XP.",
+    "regleTirage":"Drawing rule",
+    "reset":"reset",
+    "attenteTirage": "Waiting for draw",
+    "actionTirage":"Draw now",
+
+    "avancementQuete":"Quest progress",
+    "xpNiveau" : "XP for level {xpByLevel} / {maxXpByLevel}",
+    "@xpNiveau":{
+        "placeholders": {
+            "xpByLevel":{
+                "type": "int",
+                "example": "0"
+            },
+            "maxXpByLevel":{
+                "type": "int",
+                "example": "6"
+            }
+        }
+    },
+    "taches":"Tasks",
+    "pointBonus":"Bonus Points",
+    "fonctionnement": "How it works",
+
+    "scoreBingo":"Bingo Score",
+    "progressionquot":"Overall daily progress",
+    "allerValidBing":"Go to bingo validation",
+
+    "pointBonusSuivi":"Go to bingo validation",
+    "dentScore": "Brushing score: {toothScore}",
+    "@dentScore":{
+        "placeholders": {
+            "toothScore":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "nbrLavageRestant": "Brush {nbCleantooth} more times to get max XP!",
+    "@nbrLavageRestant":{
+        "placeholders": {
+            "nbCleantooth":{
+                "type": "int",
+                "example": "3"
+            }
+        }
+    },
+    "validNbLavage": "You brushed the recommended number of times! Well done",
+    "redictDent":"Go to brushing",
+    "defouleScore":"Release game record score: {defouleScoreNb}",
+    "@defouleScore":{
+        "placeholders": {
+            "defouleScoreNb":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "resteDefoule":"You have {nbRecord} records left to beat today",
+    "@resteDefoule":{
+        "placeholders": {
+            "nbRecord":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "felicitationRecord":"Congrats! You beat 4 records today. \nYou earned max XP for this bonus.",
+    "redirectDefoul":"Go beat some records",
+
+    "regleNiveau": "Level rules",
+    "explainXp": "Every {maxXpByLevel} XP, your level increases and unlocks spectacular ranks!",
+    "@explainXp":{
+        "placeholders": {
+            "maxXpByLevel":{
+                "type": "int",
+                "example": "4"
+            }
+        }
+    },
+    "regleReinitialisation": "Reset rules",
+    "reinitHeure": "Daily scores reset at {reinitHours}:00.",
+    "@reinitHeure":{
+        "placeholders": {
+            "reinitHours":{
+                "type": "int",
+                "example": "6"
+            }
+        }
+    },
+    "explainReinit": "This can be configured in app settings 🤓",
+    "bingoExplainPoint": "Earn points with bingo",
+    "bingoCount": "4 tasks completed = 5 XP points 🏆",
+    "explainTache":"Earn points with task draws",
+    "countTAchePoint": "Complete drawn tasks to earn 5 points 🏆.",
+    "explainDefoule": "Earn points with bonus games",
+    "explainDent": "Brushing aid and the release game can grant bonus points.",
+    "dentPoint":"You earn 5 points per bonus task completion 🏆",
+    "maxPontAct": "You can accumulate up to 15 points per bonus activity per day.",
+
+    "scoreTacheCount":"Task score",
+    "actuelNombreTache": "Currently, you have completed {numberOfTrue} tasks.",
+    "@actuelNombreTache":{
+        "placeholders": {
+            "numberOfTrue":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "nbTacheRestantes":"{numberOfTrue} left to complete the quest.",
+    "@nbTacheRestantes":{
+        "placeholders": {
+            "numberOfTrue":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+    "redirectTaches":"Go validate tasks",
+
+    "modifHoraire":"Modify schedule",
+
+    "validMajAlarm":"Alarms updated.",
+    "attentionPerteDonnee":"⚠️ All your data will be lost.",
+
+    "configProfil": "Profile configuration",
+    "pseudo":"Username",
+    "warningPseudoVide":"Username field is empty",
+    "validMajPseudo":"Username updated successfully!",
+    "enregistrePseudo":"Save username",
+
+    "gestionProfil": "Profile management",
+    "choixHeure":"Time settings",
+    "modifChoixNotif":"Modify notifications",
+    "aPropos":"About",
+
+    "bienvenuOnboarding":"Welcome to TDAH'elp! 👋",
+    "explainApp":"An app to help you organize your day",
+    "persoAvatar":"Customize your avatar 👤",
+    "explainPersoAvatar":"Set your photo and username for a personalized experience.",
+    "persoProfil":"Customize your profile ⚙️",
+    "explainPersoProfil":"Set your preferred times in the settings",
+    "bingoQuotOnBoard":"Daily Bingo 🎯",
+    "explainBingoQuot":"Complete the bingo throughout the day",
+    "tacheQuot":"Daily Draw 🎰",
+    "explainTacheQuot":"Draw any number of random tasks and complete them",
+    "notificationTitre":"Notifications 🔔",
+    "explainNotificationTitre":"Get reminders so you don't forget anything",
+
+    "descriptionApp":"An app designed to support people with ADHD in their daily routines.",
+    "developBy":"Developed by",
+    "politiqueConf":"Privacy Policy",
+    "redirectSite":"View on website",
+    "errorRedirect":"Unable to open {url}",
+    "@errorRedirect":{
+        "placeholders": {
+            "url":{
+                "type": "String",
+                "example": "https://alerwanndev.vercel.app/legalinformation"
+            }
+        }
+    },
+
+    "modifTimer":"Modify timer",
+    "saisieTimerSecond":"Enter desired timer duration in seconds.",
+    "nbSecondMax":"Maximum seconds: 600",
+    "warningSupRecord": "⚠️ Modifying this will delete the saved record ⚠️",
+    "temps":"Time",
+    "tempsSecond":"Time in seconds",
+    "tempsMax":"Max tasks => 600",
+    "succesMajTime":"✅ Timer updated successfully!",
+    "errorMajtime":"⚠️ Error during update",
+
+    "scorePerso":"Your score: {score}",
+    "@scorePerso":{
+        "placeholders": {
+            "score":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+
+    "resultats":"Results",
+    "messageFinScore":"Your score is: {score} taps!",
+    "@messageFinScore":{
+        "placeholders": {
+            "score":{
+                "type": "int",
+                "example": "0"
+            }
+        }
+    },
+
+    "erreurReinitScore":"⚠️ Unable to reset score",
+    "remiseAzero":"Reset to 0",
+
+    "lerecord":"The record:",
+    "tempsPartie":"Game duration:",
+    "modifierTimer":"Modify timer",
+    "scoreReinitValid":"✅ Score reset",
+
+    "erreurAccesBingo":"⏰ The {titleMoment} period is no longer accessible",
+    "@erreurAccesBingo":{
+        "placeholders": {
+            "titleMoment":{
+                "type": "String",
+                "example": "Morning"
+            }
+        }
+    },
+  
+    "erreurInitCarte":"Sorry, bingo cards could not be initialized",
+    "erreurMajRappel":"⚠️ Reminders could not be scheduled",
+    "erreurChargeNiveau":"⚠️ Unable to load level",
+    "erreurChargeScore":"⚠️ Unable to load score",
+    "erreurChargeTime": "⚠️ Unable to load game duration",
+    "erreurReinit": "⚠️ Game duration could not be reset",
+    "erreurMajHeur":"⚠️ Time could not be updated",
+    "erreurChargerHeure":"⚠️ Reset time could not be loaded",
+    "erreurReinitTimer":"⚠️ Game duration could not be reset",
+    "erreurChargeXP":"⚠️ Unable to load global XP",
+    "erreurChargeEtatTache":"⚠️ Unable to load task state",
+    "erreurCritiqueCharge":"⚠️ Critical error during daily reset",
+
+    "faireLit":"Make your bed",
+    "laverDent":"Brush teeth",
+    "prendreTraitement":"Take medication",
+    "douche":"Shower",
+    "boire":"Drink water",
+    "manger":"Eat",
+    "soin":"Take care of yourself",
+    "chosePositive":"Find 3 positive things",
+    "faisLaVaisselle":"Do the dishes",
+    "prepaDemain": "Prepare for tomorrow",
+    "finEcran":"No-screen activity",
+    "reveil":"Set alarm",
+
+    "laveDouche":"Clean the shower/bathtub",
+    "poussiere":"Dust a room",
+    "listCourse":"Prepare grocery list",
+    "comptes":"Manage finances",
+    "laveWc":"Clean the toilets",
+    "poubelles":"Take out the trash",
+
+    "permSup":"Additional permissions required",
+    "explainAndPermsup":"For notifications to work, you must:\n\n1. Allow 'Alarms and reminders' \n2. Disable battery optimization \n3. Enable automatic startup\n\nClick 'Open' to access settings.",
+    "demandeActivNotif":"Enable notifications to receive reminders",
+    "notifDesact":"Notifications disabled",
+
+    "tirage":"Draw",
+    "liste":"List",
+
+    "grade_0": "Explorer",
+  "grade_desc_0": "Every journey begins with exploration.",
+  "grade_1": "Enduring",
+  "grade_desc_1": "Your journey is taking shape, you're holding on well.",
+  "grade_2": "Obstinate",
+  "grade_desc_2": "You want to reach the end, it shows.",
+  "grade_3": "Stubborn",
+  "grade_desc_3": "Usually not a compliment, but here it's more than that.",
+  "grade_4": "Routine Master",
+  "grade_desc_4": "You are the Yoda of habits: wise and constant.",
+  "grade_5": "Lord of Tasks",
+  "grade_desc_5": "Your reputation is starting to make some noise.",
+  "grade_6": "King of Organization",
+  "grade_desc_6": "Your daily management has no limits.",
+  "grade_7": "Dominator of Obstacles",
+  "grade_desc_7": "Everyone kneels as you pass.",
+  "grade_8": "Habit Angel",
+  "grade_desc_8": "You fly above difficulties.",
+  "grade_9": "Supreme Being of Daily Life",
+  "grade_desc_9": "Daily life holds no more secrets for you.",
+  "grade_10": "God of the Everyday",
+  "grade_10_desc": "Nothing can stop you now, you dominate us all.",
+  "grad_error": "Error",
+  "grad_error_desc":"Unable to load grade"
+}

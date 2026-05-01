@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/TacheHazard/animation_tirage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:tdahelpe/utils/alerdialog.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 import 'package:tdahelpe/widget/utils/loader_widget.dart';
+import 'package:tdahelpe/widget/utils/translate_key_task.dart';
 
 class Quetesfinales extends StatefulWidget {
   const Quetesfinales({super.key});
@@ -39,7 +41,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
               spacing: 25,
               children: [
                 CustomText.center(
-                  "Liste des tâches",
+                  AppLocalizations.of(context)!.listeTAche,
                   Theme.of(context).textTheme.titleMedium,
                 ),
 
@@ -83,7 +85,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                       ),
                                       Expanded(
                                         child: CustomText.left(
-                                          tacheP.choixTaches[index],
+                                          translateKey(tacheP.choixTaches[index],context),
                                           Theme.of(
                                             context,
                                           ).textTheme.bodyMedium,
@@ -97,12 +99,20 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Tu peux refaire le tirage"),
+                                Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.explicationRefairTAche,
+                                ),
                                 IconButton(
                                   onPressed: () => PersoAlertDialog.showInfoDialog(
                                     context,
-                                    'Règle de tirage',
-                                    "⚠️ Si tu as déjà un tirage quotidien en cours, en modifiant la liste celui-ci sera annulé.\n Si tu as déjà tes points tu n'auras pas plus d'XP",
+                                     AppLocalizations.of(
+                                          context,
+                                        )!.regleTirage,
+                                    AppLocalizations.of(
+                                          context,
+                                        )!.messageAttention,
                                   ),
                                   icon: Icon(Icons.warning_amber_rounded),
                                 ),
@@ -115,7 +125,9 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                 scoreP.decrementglobal('taches');
                                 afficheButton = true;
                               },
-                              child: Text("Reset"),
+                              child: Text(
+                                AppLocalizations.of(context)!.reset,
+                              ),
                             ),
                           ],
                         ),
@@ -126,7 +138,7 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                           spacing: 10,
                           children: [
                             CustomText.center(
-                              "En attente d'un tirage",
+                               AppLocalizations.of(context)!.attenteTirage,
                               TextTheme.of(context).bodyLarge,
                             ),
                             SizedBox(height: 10),
@@ -162,7 +174,11 @@ class _QuetesfinalesState extends State<Quetesfinales> {
                                   afficheButton = false;
                                 });
                               },
-                              child: Text('Faire le tirage'),
+                              child: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.actionTirage,
+                              ),
                             ),
                           ],
                         ),

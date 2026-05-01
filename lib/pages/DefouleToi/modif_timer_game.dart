@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
@@ -32,7 +33,7 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Modification du timer",
+         AppLocalizations.of(context)!.modifTimer,
         context,
         "parametre",
         true,
@@ -49,16 +50,16 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomText.center(
-                      "Saisie la durée souhaité du timer en seconde.",
+                       AppLocalizations.of(context)!.saisieTimerSecond,
                       Theme.of(context).textTheme.bodyLarge,
                     ),
                     CustomText.center(
-                      "Nombre maximal de seconde : 600",
+                       AppLocalizations.of(context)!.tempsMax,
                       Theme.of(context).textTheme.bodyLarge,
                     ),
                     SizedBox(height: 20),
                     CustomText.center(
-                      "⚠️ La modification va supprimer le record enregistré ⚠️",
+                      AppLocalizations.of(context)!.warningSupRecord,
                       TextStyle(
                         fontSize: 15,
                         color: Colors.red,
@@ -76,22 +77,22 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
                               FilteringTextInputFormatter.digitsOnly,
                             ],
                             decoration: InputDecoration(
-                              hintText: "Temps",
+                              hintText:  AppLocalizations.of(context)!.temps,
                               prefixIcon: Icon(Icons.timer),
-                              labelText: 'Temps en second',
+                              labelText:  AppLocalizations.of(context)!.tempsSecond,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Veuillez entrer un nombre';
+                                return  AppLocalizations.of(context)!.saisieNombre;
                               }
                               if (int.tryParse(value) == null) {
-                                return 'Veuillez entrer un nombre valide';
+                                return  AppLocalizations.of(context)!.saisienombreInvalide;
                               }
                               if (int.tryParse(value)! > 600) {
-                                return "Nombre de tache maximal => 600";
+                                return  AppLocalizations.of(context)!.nombreTacheMax;
                               }
                               return null;
                             },
@@ -120,8 +121,12 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
                                   SnackBar(
                                     content: Text(
                                       success
-                                          ? '✅ Timer mis à jour avec succès !'
-                                          : '⚠️ Erreur lors de la mise à jour',
+                                          ?  AppLocalizations.of(
+                                              context,
+                                            )!.succesMajTime 
+                                          :  AppLocalizations.of(
+                                              context,
+                                            )!.errorMajtime,
                                     ),
                                     backgroundColor: success
                                         ? Colors.green
@@ -139,7 +144,7 @@ class _ModifTimerGameState extends State<ModifTimerGame> {
                                 }
                               }
                             },
-                            child: Text("Valider"),
+                            child: Text(AppLocalizations.of(context)!.valider),
                           ),
                         ],
                       ),

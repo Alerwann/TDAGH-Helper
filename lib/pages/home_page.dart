@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
 import 'package:tdahelpe/data/list/activity_list.dart';
 import 'package:tdahelpe/data/schema/activity_card_schema.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class HomeGlobalPage extends StatefulWidget {
 
 class _HomeGlobalPageState extends State<HomeGlobalPage> {
 
-  late List<ActivityCard> activityCard = ActivityList.getDefaultCards();
+  late List<ActivityCard> activityCard = ActivityList.getCards(context);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
       builder: (context, profil, audioProvider, child) {
         return Scaffold(
           appBar: CustomHeightApBcar.customApp(
-            "Bienvenue ${profil.pseudo}",
+            "${AppLocalizations.of(context)!.bienvenue} ${profil.pseudo}",
             context,
             "accueil",
             false,
@@ -49,7 +50,7 @@ class _HomeGlobalPageState extends State<HomeGlobalPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.error, color: Colors.red, size: 50),
-                            Text('Erreur d\'initialisation audio'),
+                            Text(AppLocalizations.of(context)!.error),
                           ],
                         ),
                       );

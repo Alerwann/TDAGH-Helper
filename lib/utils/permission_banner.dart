@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/utils/permission_state.dart';
@@ -84,14 +85,14 @@ class _PermissionBannerState extends State<PermissionBanner> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Notifications désactivées',
+                  AppLocalizations.of(context)!.notifDesact,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.orange.shade900,
                   ),
                 ),
                 Text(
-                  'Active les notifications pour recevoir les rappels',
+                  AppLocalizations.of(context)!.demandeActivNotif,
                   style: TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ],
@@ -106,7 +107,7 @@ class _PermissionBannerState extends State<PermissionBanner> {
               }
               _dismissBanner();
             },
-            child: Text('Activer'),
+            child: Text(AppLocalizations.of(context)!.activer),
           ),
           IconButton(
             icon: Icon(Icons.close, size: 20),

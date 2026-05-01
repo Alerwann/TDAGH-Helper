@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 import 'package:tdahelpe/services/notifications/ios_notification_handler.dart';
 import 'package:tdahelpe/utils/device_utils.dart';
@@ -55,18 +56,13 @@ class ShowPermissionExplanationDialog {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('⚠️ Permissions manquantes'),
+        title: Text(AppLocalizations.of(context)!.permissionMiss),
         content: isAndroidOther
             ? Text(
-                'Pour que les notifications fonctionnent, tu dois :\n\n'
-                "1. Dans les paramètres de l'application, puis batterie choisir : Pas de restriction\n"
-                '2. Décoché interrompre l\'activité \n'
-                '3. Autoriser les notifications\n\n'
-                'Clique sur "Ouvrir" pour accéder aux paramètres.',
+                AppLocalizations.of(context)!.instructionsAndroidNotifications,
               )
             : Text(
-                'Pour que les notifications fonctionnent, tu dois les activer dans les paramètres.\n\n'
-                'Veux-tu ouvrir les paramètres maintenant ?',
+               AppLocalizations.of(context)!.instructionsIOSNotifications,
               ),
         actions: [
           TextButton(
@@ -83,7 +79,7 @@ class ShowPermissionExplanationDialog {
                 IosNotificationHandler.openSettingsIos();
               }
             },
-            child: Text('Ouvrir les paramètres'),
+            child: Text(AppLocalizations.of(context)!.ouvrirParam),
           ),
         ],
       ),
@@ -100,7 +96,7 @@ class ShowPermissionExplanationDialog {
           children: [
             Icon(Icons.notifications_active, color: Colors.orange),
             SizedBox(width: 10),
-            Text('Notifications'),
+            Text(AppLocalizations.of(context)!.notifications),
           ],
         ),
         content: Column(
@@ -108,16 +104,14 @@ class ShowPermissionExplanationDialog {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'TDAHelpe utilise des notifications pour :',
+              AppLocalizations.of(context)!.decriptionNotif,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            _buildBulletPoint('📅 Te rappeler tes tâches quotidiennes'),
-            _buildBulletPoint('🎯 Ne rien oublier dans ta routine '),
-            Text('Tu recevras au maximum 4 notifications par jour.'),
-            Text(
-              "L'acception ou non des notifications est disponible dans les paramètres.",
-            ),
+            _buildBulletPoint(AppLocalizations.of(context)!.rappelTask),
+            _buildBulletPoint(AppLocalizations.of(context)!.routineHelp),
+            Text(AppLocalizations.of(context)!.nombreNotif),
+            Text(AppLocalizations.of(context)!.notifChoix),
           ],
         ),
         actions: [
@@ -142,7 +136,7 @@ class ShowPermissionExplanationDialog {
           children: [
             Icon(Icons.notifications_active, color: Colors.orange),
             SizedBox(width: 10),
-            Text('Notifications'),
+            Text(AppLocalizations.of(context)!.notifications),
           ],
         ),
         content: Column(
@@ -150,19 +144,17 @@ class ShowPermissionExplanationDialog {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'TDAHelpe utilise des notifications pour :',
+              AppLocalizations.of(context)!.decriptionNotif,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            _buildBulletPoint('📅 Te rappeler tes tâches quotidiennes'),
-            _buildBulletPoint('🎯 Ne rien oublier dans ta routine'),
-            Text('Tu recevras au maximum 4 notifications par jour.'),
-            Text(
-              "La modification de l'acception ou non des notifications est disponible dans les paramètres.",
-            ),
+            _buildBulletPoint(AppLocalizations.of(context)!.rappelTask),
+            _buildBulletPoint(AppLocalizations.of(context)!.routineHelp),
+            Text(AppLocalizations.of(context)!.nombreNotif),
+            Text(AppLocalizations.of(context)!.modifNotifChoix),
             SizedBox(height: 15),
             Text(
-              'Sans les notifications, l\'app fonctionnera, mais tu n\'auras pas de rappels automatiques.',
+              AppLocalizations.of(context)!.refusNotif,
               style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
             ),
           ],
@@ -174,7 +166,7 @@ class ShowPermissionExplanationDialog {
               Navigator.pop(context);
               _markDialogShown();
             },
-            child: Text('Pas maintenant'),
+            child: Text(AppLocalizations.of(context)!.notNow),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -197,7 +189,7 @@ class ShowPermissionExplanationDialog {
               }
               _markDialogShown();
             },
-            child: Text('Autoriser'),
+            child: Text(AppLocalizations.of(context)!.autorise),
           ),
         ],
       ),

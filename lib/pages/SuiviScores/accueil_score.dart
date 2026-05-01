@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:tdahelpe/data/schema/bonus_level_schema.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/SuiviScores/bingo_score.dart';
 import 'package:tdahelpe/pages/SuiviScores/bonus_score.dart';
 import 'package:tdahelpe/pages/SuiviScores/fonctionnement_score.dart';
@@ -11,6 +13,7 @@ import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/widget/utils/buton_theme.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/translate_key_task.dart';
 
 class AccueilScore extends StatefulWidget {
   const AccueilScore({super.key});
@@ -24,7 +27,7 @@ class _AccueilScoreState extends State<AccueilScore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Avancement des quêtes",
+        AppLocalizations.of(context)!.avancementQuete,
         context,
         "accueil",
         false,
@@ -35,17 +38,21 @@ class _AccueilScoreState extends State<AccueilScore> {
         child: Center(
           child: Consumer3<ScoreProvider, BonusLevelProvider, ProfilProvider>(
             builder: (context, scoreP, bonusP, profilP, child) {
+              final grade =
+                  bonusP.getGradeByIndex(scoreP.niveauPersonnal)?? BonusLevel(declancheLevel: 123, gradeName: "Error", description: "Impossible de charger");
               return Column(
                 spacing: 15,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText.center(
-                    "${bonusP.getGradeByIndex(scoreP.niveauPersonnal)?.gradeName ?? 'Aucun'} ${profilP.pseudo.toUpperCase()}",
+                    "${translateGrade(grade, context)} ${profilP.pseudo.toUpperCase()}",
                     Theme.of(context).textTheme.titleMedium,
                   ),
 
                   CustomText.center(
-                    "Xp pour le niveau  ${scoreP.xpByLevel} / ${scoreP.maxXpByLevel}",
+                    AppLocalizations.of(
+                      context,
+                    )!.xpNiveau(scoreP.xpByLevel, scoreP.maxXpByLevel),
                     Theme.of(context).textTheme.bodyLarge,
                   ),
 
@@ -66,17 +73,21 @@ class _AccueilScoreState extends State<AccueilScore> {
                   SizedBox(height: 30),
                   ButonTheme.standardButton(BingoScore(), "Bingo", context),
 
-                  ButonTheme.standardButton(TacheScore(), "Tâches", context),
+                  ButonTheme.standardButton(
+                    TacheScore(),
+                    AppLocalizations.of(context)!.taches,
+                    context,
+                  ),
 
                   ButonTheme.standardButton(
                     BonusScore(),
-                    "Points Bonus",
+                    AppLocalizations.of(context)!.pointBonus,
                     context,
                   ),
 
                   ButonTheme.standardButton(
                     FonctionnementScore(),
-                    "Fonctionnement",
+                    AppLocalizations.of(context)!.fonctionnement,
                     context,
                   ),
                 ],
@@ -87,5 +98,4 @@ class _AccueilScoreState extends State<AccueilScore> {
       ),
     );
   }
-
 }

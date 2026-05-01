@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/widget/specific/horaire_champs.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
@@ -48,7 +49,7 @@ class _ModifHoraireState extends State<ModifHoraire> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Modification d'horaires",
+        AppLocalizations.of(context)!.modifHoraire,
         context,
         "parametre",
         true,
@@ -68,19 +69,25 @@ class _ModifHoraireState extends State<ModifHoraire> {
                     spacing: 15,
                     children: [
                       HoraireChamps(
-                        moment: "matin",
+                        moment: AppLocalizations.of(
+                          context,
+                        )!.matin,
                         momentController: matinController,
                       ),
                       HoraireChamps(
-                        moment: "midi",
+                        moment: AppLocalizations.of(context)!.midi,
                         momentController: midiController,
                       ),
                       HoraireChamps(
-                        moment: "soir",
+                        moment: AppLocalizations.of(
+                          context,
+                        )!.soir,
                         momentController: soirController,
                       ),
                       HoraireChamps(
-                        moment: "coucher ",
+                        moment: AppLocalizations.of(
+                          context,
+                        )!.coucher,
                         momentController: coucherController,
                       ),
                       HoraireChamps(
@@ -115,16 +122,16 @@ class _ModifHoraireState extends State<ModifHoraire> {
                               );
                               FocusScope.of(context).requestFocus(FocusNode());
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                 SnackBar(
                                   content: Text(
-                                    'Les alarmes sont mises à jour.',
+                                    AppLocalizations.of(context)!.validMajAlarm,
                                   ),
                                   duration: Duration(milliseconds: 1000),
                                 ),
                               );
                             }
                           },
-                          child: Text("Valider"),
+                          child: Text(AppLocalizations.of(context)!.valider),
                         ),
                       ),
                       SizedBox(
@@ -135,14 +142,18 @@ class _ModifHoraireState extends State<ModifHoraire> {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: Text('Réinitialiser ?'),
+                                title: Text(
+                                  AppLocalizations.of(context)!.reinit,
+                                ),
                                 content: Text(
-                                  'Toutes tes données seront perdues.',
+                                  AppLocalizations.of(context)!.attentionPerteDonnee,
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: Navigator.of(context).pop,
-                                    child: Text('Annuler'),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.annuler,
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: () {
@@ -163,14 +174,16 @@ class _ModifHoraireState extends State<ModifHoraire> {
                                             .toString();
                                       });
                                     },
-                                    child: Text('Confirmer'),
+                                    child: Text(
+                                      AppLocalizations.of(context)!.confirmer,
+                                    ),
                                   ),
                                 ],
                               ),
                             );
                           },
                           icon: Icon(Icons.delete, color: Colors.red),
-                          label: Text('Réinitialiser'),
+                          label: Text(AppLocalizations.of(context)!.reinit),
                         ),
                       ),
                     ],

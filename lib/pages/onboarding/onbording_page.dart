@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -15,43 +16,42 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingStep> _steps = [
-    OnboardingStep(
-      title: 'Bienvenue sur TDAH\'elp ! 👋',
-      description: 'Une application pour t\'aider à organiser ta journée',
-      icon: Icons.home,
-    ),
-    OnboardingStep(
-      title: 'Personnalise ton avatar 👤',
-      description:
-          'Configure ta photo et ton pseudo pour une personnalisation de l\'expérience.',
-      icon: Icons.settings,
-    ),
-    OnboardingStep(
-      title: 'Personnalise ton profil ⚙️',
-      description: 'Configure tes heures préférées dans les paramètres',
-      icon: Icons.settings,
-    ),
-    OnboardingStep(
-      title: 'Bingo quotidien 🎯',
-      description: 'Valide toutes le bingo au fil de la journée',
-      icon: Icons.check_circle,
-    ),
-    OnboardingStep(
-      title: 'Tire Tache quotidien 🎰',
-      description:
-          'Tire le nombre que tu veux de tache au hasard et réalise les',
-      icon: Icons.shuffle_on_rounded,
-    ),
-    OnboardingStep(
-      title: 'Notifications 🔔',
-      description: 'Reçois des rappels pour ne rien oublier',
-      icon: Icons.notifications,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<OnboardingStep> steps = [
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.bienvenuOnboarding,
+        description: AppLocalizations.of(context)!.explainApp,
+        icon: Icons.home,
+      ),
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.persoAvatar,
+        description:
+            AppLocalizations.of(context)!.explainPersoAvatar,
+        icon: Icons.settings,
+      ),
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.persoProfil,
+        description: AppLocalizations.of(context)!.explainPersoProfil,
+        icon: Icons.settings,
+      ),
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.bingoQuot,
+        description: AppLocalizations.of(context)!.explainBingoQuot,
+        icon: Icons.check_circle,
+      ),
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.tacheQuot,
+        description:
+            AppLocalizations.of(context)!.explainTacheQuot,
+        icon: Icons.shuffle_on_rounded,
+      ),
+      OnboardingStep(
+        title: AppLocalizations.of(context)!.notificationTitre,
+        description: AppLocalizations.of(context)!.explainNotificationTitre,
+        icon: Icons.notifications,
+      ),
+    ];
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -59,19 +59,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _steps.length,
+                itemCount: steps.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPage = index;
                   });
                 },
                 itemBuilder: (context, index) {
-                  return _buildPage(_steps[index]);
+                  return _buildPage(steps[index]);
                 },
               ),
             ),
-            _buildIndicator(),
-            _buildButtons(),
+            _buildIndicator(steps.length),
+            _buildButtons(steps.length),
           ],
         ),
       ),
@@ -102,11 +102,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  Widget _buildIndicator() {
+  Widget _buildIndicator(int sizeStep) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
-        _steps.length,
+        sizeStep,
         (index) => Container(
           margin: EdgeInsets.symmetric(horizontal: 4),
           width: _currentPage == index ? 24 : 8,
@@ -122,7 +122,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  Widget _buildButtons() {
+  Widget _buildButtons(int sizeSteps) {
     return Padding(
       padding: EdgeInsets.all(20),
       child: Row(
@@ -136,13 +136,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   curve: Curves.easeInOut,
                 );
               },
-              child: Text('Retour'),
+              child: Text(AppLocalizations.of(context)!.retour),
             )
           else
             SizedBox(width: 80),
           ElevatedButton(
             onPressed: () async {
-              if (_currentPage == _steps.length - 1) {
+              if (_currentPage == sizeSteps - 1) {
                 // Marquer l'onboarding comme vu
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setBool('onboarding_completed', true);
@@ -158,7 +158,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
               }
             },
             child: Text(
-              _currentPage == _steps.length - 1 ? 'Commencer' : 'Suivant',
+              _currentPage == sizeSteps - 1
+                  ? AppLocalizations.of(context)!.commencer
+                  : AppLocalizations.of(context)!.suivant,
             ),
           ),
         ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/DefouleToi/defoule_toi.dart';
 import 'package:tdahelpe/pages/TimerTooth/home_timer_tooth.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
@@ -21,7 +22,7 @@ class _BonusScoreState extends State<BonusScore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Suivi des points bonus",
+        AppLocalizations.of(context)!.pointBonusSuivi,
         context,
         'accueil',
         true,
@@ -40,7 +41,7 @@ class _BonusScoreState extends State<BonusScore> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText.center(
-                    "Score de lavage de dents : ${scoreP.toothScore}",
+                    AppLocalizations.of(context)!.dentScore(scoreP.toothScore),
                     Theme.of(context).textTheme.headlineMedium,
                   ),
 
@@ -75,11 +76,14 @@ class _BonusScoreState extends State<BonusScore> {
 
                   nbCleantooth != 3
                       ? CustomText.center(
-                          "Lave toi encore ${3 - nbCleantooth} les dents pour avoir l'Xp maximal!",
+                         
+                          AppLocalizations.of(
+                            context,
+                          )!.nbrLavageRestant(3 - nbCleantooth),
                           Theme.of(context).textTheme.headlineSmall,
                         )
                       : CustomText.center(
-                          "Tu t'es lavé le nombre recommandé de fois! Bravo",
+                          AppLocalizations.of(context)!.validNbLavage,
                           Theme.of(context).textTheme.headlineSmall,
                         ),
 
@@ -87,13 +91,15 @@ class _BonusScoreState extends State<BonusScore> {
                     onPressed: () {
                       AppNavigator.replaceTo(context, HomeTimertooth());
                     },
-                    child: Text("Aller vers le lavage de dent"),
+                    child: Text(AppLocalizations.of(context)!.redictDent),
                   ),
                   SizedBox(height: 20),
                   SizedBox(
                     width: 300,
                     child: CustomText.center(
-                      "Score de record de tappe défoule ${scoreP.defouleScore}",
+                      AppLocalizations.of(
+                        context,
+                      )!.defouleScore(scoreP.defouleScore),
                       Theme.of(context).textTheme.headlineMedium,
                     ),
                   ),
@@ -128,18 +134,20 @@ class _BonusScoreState extends State<BonusScore> {
 
                   nbRecord < 4
                       ? CustomText.center(
-                          "Il te reste ${4 - nbRecord} records à battre pour aujourd'hui",
+                          AppLocalizations.of(
+                            context,
+                          )!.resteDefoule(4 - nbRecord),
                           Theme.of(context).textTheme.headlineSmall,
                         )
                       : CustomText.center(
-                          "Bravo tu as battu 4 records aujourdhui. \n Tu as gagné l'XP maximal pour ce bonus",
+                          AppLocalizations.of(context)!.felicitationRecord,
                           Theme.of(context).textTheme.headlineSmall,
                         ),
                   OutlinedButton(
                     onPressed: () {
                       AppNavigator.replaceTo(context, HomeDefouleToi());
                     },
-                    child: Text("Va battre des records"),
+                    child: Text(AppLocalizations.of(context)!.redirectDefoul),
                   ),
                 ],
               ),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tdahelpe/data/schema/taches_shema.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _AjoutTacheState extends State<AjoutTache> {
       },
       child: Scaffold(
         appBar: CustomHeightApBcar.customApp(
-          "Ajout d'activités",
+         AppLocalizations.of(context)!.addTache,
           context,
           'parametre',
           true,
@@ -47,16 +48,18 @@ class _AjoutTacheState extends State<AjoutTache> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomText.center(
-                          "Nom de la nouvelle tache :",
+                          AppLocalizations.of(context)!.newTaskName,
                           Theme.of(context).textTheme.headlineMedium,
                         ),
 
                         TextFormField(
                           controller: _TextController,
                           decoration: InputDecoration(
-                            hintText: "Nom de l'activité",
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.activityName,
                             prefixIcon: Icon(Icons.person),
-                            labelText: "Nom de l'activité",
+                            labelText: AppLocalizations.of(context)!.activityName,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -65,7 +68,7 @@ class _AjoutTacheState extends State<AjoutTache> {
 
                         SizedBox(height: 10),
                         CustomText.center(
-                          "Estimation de la durée :",
+                          AppLocalizations.of(context)!.estimationDuree,
                           Theme.of(context).textTheme.headlineMedium,
                         ),
 
@@ -90,25 +93,33 @@ class _AjoutTacheState extends State<AjoutTache> {
                                 children: [
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
-                                      title: Text('Court'),
+                                      title: Text(
+                                        AppLocalizations.of(context)!.court,
+                                      ),
                                       value: TacheDuration.court,
                                     ),
                                   ),
 
                                   SizedBox(
                                     child: RadioListTile<TacheDuration>(
-                                      title: Text('Moyen'),
+                                      title: Text(
+                                        AppLocalizations.of(context)!.moyen,
+                                      ),
                                       value: TacheDuration.moyen,
                                     ),
                                   ),
 
                                   RadioListTile<TacheDuration>(
-                                    title: Text('Long'),
+                                    title: Text(
+                                      AppLocalizations.of(context)!.long,
+                                    ),
                                     value: TacheDuration.long,
                                   ),
 
                                   RadioListTile<TacheDuration>(
-                                    title: Text('Très long'),
+                                    title: Text(
+                                      AppLocalizations.of(context)!.tresLong,
+                                    ),
                                     value: TacheDuration.tresLong,
                                   ),
                                 ],
@@ -125,7 +136,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Veuillez saisir un nom d\'activité',
+                                   AppLocalizations.of(context)!.saisiNomAct,
                                   ),
                                 ),
                               );
@@ -136,7 +147,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Veuillez sélectionner une durée',
+                                    AppLocalizations.of(context)!.dureeAct,
                                   ),
                                 ),
                               );
@@ -146,6 +157,7 @@ class _AjoutTacheState extends State<AjoutTache> {
                             TachesSchema tacheNew = TachesSchema(
                               tacheName: _TextController.text.trim(),
                               tacheDuration: dureeSelectionnee!,
+                              isCustom: true,
                             );
 
                             tache.ajouterTache(tacheNew);
@@ -157,7 +169,9 @@ class _AjoutTacheState extends State<AjoutTache> {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Tâche ajoutée avec succès !'),
+                                content: Text(
+                                  AppLocalizations.of(context)!.succesAjoutAct,
+                                ),
                               ),
                             );
                             tache.reinitTache();
@@ -165,7 +179,7 @@ class _AjoutTacheState extends State<AjoutTache> {
 
                             Navigator.pop(context);
                           },
-                          child: Text("Valider"),
+                          child: Text(AppLocalizations.of(context)!.valider),
                         ),
                       ],
                     ),

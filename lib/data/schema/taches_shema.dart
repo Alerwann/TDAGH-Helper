@@ -1,13 +1,15 @@
 class TachesSchema {
   final String tacheName;
   final TacheDuration tacheDuration;
+  final bool isCustom ;
 
-  TachesSchema({required this.tacheName, required this.tacheDuration});
+  TachesSchema({required this.tacheName, required this.tacheDuration,required this.isCustom});
 
   Map<String, dynamic> toJson() {
     return {
       'tacheName': tacheName,
-      'tacheDuration': tacheDuration.name, 
+      'tacheDuration': tacheDuration.name,
+      'isCustom': isCustom,
     };
   }
 
@@ -16,6 +18,7 @@ class TachesSchema {
     return TachesSchema(
       tacheName: json['tacheName'],
       tacheDuration: TacheDuration.values.byName(json['tacheDuration']),
+      isCustom: json['isCustom'] ?? false,
     );
   }
 }

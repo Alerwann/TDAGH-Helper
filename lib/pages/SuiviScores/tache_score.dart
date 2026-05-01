@@ -3,6 +3,7 @@ import 'package:hugeicons_pro/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/TacheHazard/accueil_taches.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -40,7 +41,7 @@ class _TacheScoreState extends State<TacheScore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        'Score des taches',
+        AppLocalizations.of(context)!.scoreTacheCount,
         context,
         'accueil',
         true,
@@ -68,15 +69,16 @@ class _TacheScoreState extends State<TacheScore> {
                       child: Icon(HugeIconsSolid.assignments),
                     ),
                     CustomText.center(
-                      "Progression global pour la journée",
+                      AppLocalizations.of(context)!.progressionquot,
                       Theme.of(context).textTheme.headlineMedium,
                     ),
                     CustomText.center(
-                      "Actuellement tu as fais $numberOfTrue tâches.",
+                     AppLocalizations.of(context)!.actuelNombreTache(numberOfTrue),
                       Theme.of(context).textTheme.headlineMedium,
                     ),
                     CustomText.center(
-                      "Il te reste ${tacheP.nombreT - numberOfTrue} pour valider la quête.",
+                      // "Il te reste ${tacheP.nombreT - numberOfTrue} pour valider la quête."
+                      AppLocalizations.of(context)!.nbTacheRestantes(tacheP.nombreT - numberOfTrue),
                       Theme.of(context).textTheme.headlineMedium,
                     ),
 
@@ -84,7 +86,7 @@ class _TacheScoreState extends State<TacheScore> {
                       onPressed: () {
                         AppNavigator.replaceTo(context, AccueilTaches());
                       },
-                      child: Text("Aller valider ses tâches"),
+                      child: Text(AppLocalizations.of(context)!.redirectTaches),
                     ),
                   ],
                 ),

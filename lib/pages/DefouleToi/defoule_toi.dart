@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/DefouleToi/game_page.dart';
 import 'package:tdahelpe/pages/DefouleToi/modif_timer_game.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -20,7 +21,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Défoule toi",
+        AppLocalizations.of(context)!.defouleToi,
         context,
         "accueil",
         true,
@@ -34,7 +35,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomText.center(
-                  "Le record :",
+                  AppLocalizations.of(context)!.lerecord ,
                   Theme.of(context).textTheme.titleMedium,
                 ),
                 CustomText.center(
@@ -43,7 +44,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                 ),
 
                 CustomText.center(
-                  "Temps d'une partie :",
+                  AppLocalizations.of(context)!.tempsPartie  ,
                   Theme.of(context).textTheme.titleMedium,
                 ),
                 CustomText.center(
@@ -73,7 +74,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                     onPressed: () async {
                       await AppNavigator.push(context, ModifTimerGame());
                     },
-                    child: Text("Modifier timer"),
+                    child: Text(AppLocalizations.of(context)!.modifTimer),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -89,7 +90,9 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('✅ Score réinitialisé'),
+                            content: Text(
+                              AppLocalizations.of(context)!.scoreReinitValid,
+                            ),
                             backgroundColor: Colors.green,
                             duration: Duration(seconds: 2),
                           ),
@@ -98,7 +101,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '⚠️ Impossible de réinitialiser le score',
+                              AppLocalizations.of(context)!.erreurReinitScore,
                             ),
                             backgroundColor: Colors.orange,
                             duration: Duration(seconds: 3),
@@ -108,7 +111,7 @@ class _HomeDefouleToiState extends State<HomeDefouleToi> {
 
                       setState(() {});
                     },
-                    child: Text("Remise à 0"),
+                    child: Text(AppLocalizations.of(context)!.remiseAzero),
                   ),
                 ),
               ],

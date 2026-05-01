@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
@@ -19,9 +20,9 @@ class HoraireChamps extends StatelessWidget {
 
     if (moment == "reinit") {
       print("✅ je suis dans le if");
-      momentAff = "Heure de réinitialisation";
+      momentAff = AppLocalizations.of(context)!.momentAff;
     } else {
-      momentAff = "Heure du repas du $moment";
+      momentAff = AppLocalizations.of(context)!.momentRepas(moment);
     }
 
     return Consumer<HeureProfilProvider>(
@@ -40,25 +41,37 @@ class HoraireChamps extends StatelessWidget {
                 keyboardType: TextInputType.numberWithOptions(),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
-                  hintText: "Heure",
+                  hintText: AppLocalizations.of(
+                    context,
+                  )!.hour,
                   prefixIcon: Icon(Icons.timer),
-                  labelText: 'Horaire désiré',
+                  labelText: AppLocalizations.of(
+                    context,
+                  )!.decidHour,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer un nombre';
+                    return AppLocalizations.of(
+                      context,
+                    )!.enterNumber;
                   }
                   if (int.tryParse(value) == null) {
-                    return 'Veuillez entrer un nombre valide';
+                    return AppLocalizations.of(
+                      context,
+                    )!.errorTypeNumber;
                   }
                   if (int.tryParse(value)! > 24) {
-                    return "Heure invalide, elle doit être inférieur à 24";
+                    return AppLocalizations.of(
+                      context,
+                    )!.errorHourToHeight;
                   }
                   if (int.tryParse(value)! < 0) {
-                    return "Heure invalide, elle doit être positive";
+                    return AppLocalizations.of(
+                      context,
+                    )!.errorHourNegative;
                   }
                   return null;
                 },

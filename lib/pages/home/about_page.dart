@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -8,7 +8,7 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('À propos')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.aPropos)),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -25,26 +25,31 @@ class AboutPage extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            const Text(
-              'Une application conçue pour accompagner les personnes atteintes de TDAH dans leurs routines quotidiennes.',
-              style: TextStyle(fontSize: 16),
+            Text(
+              AppLocalizations.of(context)!.descriptionApp,
+              style: const TextStyle(fontSize: 16),
             ),
 
             const SizedBox(height: 32),
 
-            _InfoRow(label: 'Développé par', value: 'Alerwann'),
+            _InfoRow(
+              label: AppLocalizations.of(context)!.developBy,
+              value: 'Alerwann',
+            ),
             _InfoRow(
               label: 'Contact',
-              value: 'Alerwann411@gmail.com',
+              value: 'alerwann411@gmail.com',
               isEmail: true,
             ),
             _InfoRow(
-              label: 'Politique de confidentialité',
-              value: 'Voir sur le site',
+              label: AppLocalizations.of(context)!.politiqueConf,
+              value: AppLocalizations.of(context)!.redirectSite,
               isLink: true,
               onTap: () {
-                // 🔗 Remplace ce lien par ton vrai lien GitHub quand prêt
-                _launchUrl('https://alerwanndev.vercel.app/legalinformation');
+                _launchUrl(
+                  'https://alerwanndev.vercel.app/legalinformation',
+                  context,
+                );
               },
             ),
 
@@ -64,7 +69,6 @@ class AboutPage extends StatelessWidget {
   }
 
   String _getAppVersion() {
-    // Tu peux remplacer par une constante ou lire depuis pubspec.yaml si tu veux
     return '1.0.0';
   }
 }
@@ -100,7 +104,7 @@ class _InfoRow extends StatelessWidget {
           onTap:
               onTap ??
               (isEmail
-                  ? () => _launchUrl('mailto:Alerwann411@gmail.com')
+                  ? () => _launchUrl('mailto:Alerwann411@gmail.com', context)
                   : null),
           child: Text(
             value,
@@ -118,12 +122,12 @@ class _InfoRow extends StatelessWidget {
   }
 }
 
-Future<void> _launchUrl(String url) async {
+Future<void> _launchUrl(String url, BuildContext context) async {
   final uri = Uri.parse(url);
   if (await canLaunchUrl(uri)) {
-    await launchUrl(uri);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   } else {
     // En cas d'erreur, tu peux afficher une SnackBar si tu veux
-    throw 'Impossible d’ouvrir $url';
+    throw AppLocalizations.of(context)!.errorRedirect(url);
   }
 }

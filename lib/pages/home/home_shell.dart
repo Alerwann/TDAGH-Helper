@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/core/startup/alarm_scheduler.dart';
 import 'package:tdahelpe/core/startup/notification_handler.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil.dart';
 import 'package:tdahelpe/pages/SuiviScores/accueil_score.dart';
 import 'package:tdahelpe/pages/home_page.dart';
@@ -132,7 +133,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
         items: [
           TabItem(
             icon: Icon(Icons.home, size: 25, color: Colors.white),
-            title: 'Accueil',
+            title: AppLocalizations.of(context)!.accueil,
           ),
           TabItem(
             icon: Icon(
@@ -140,7 +141,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               size: 25,
               color: Colors.white,
             ),
-            title: 'Scores',
+            title: AppLocalizations.of(context)!.score,
           ),
           TabItem(
             icon: Icon(
@@ -148,7 +149,7 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
               size: 25,
               color: Colors.white,
             ),
-            title: 'Paramètre',
+            title: AppLocalizations.of(context)!.parametre,
           ),
         ],
         onTap: (int index) {

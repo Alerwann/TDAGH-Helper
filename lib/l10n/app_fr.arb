@@ -1,0 +1,496 @@
+{
+    "@@locale" : "fr",
+    "language":"Français",
+    "@language":{
+        "description" : "Choix de la langue"
+    },
+    "momentAff" : "Heure de réinitialisation",
+    "momentRepas" : "Heure du {moment}",
+    "@momentRepas":{
+        "description": "Message en fonction du moment de la journée",
+        "placeholders": {
+            "moment":{
+                "type": "String",
+                "example": "Matin"
+            }
+        }
+    },
+    "hour": "hour",
+    "decidHour" : "Horaire décidé",
+    
+    "enterNumber" : "Veuillez entrer un nombre",
+
+    "errorTypeNumber" : "Veuillez entrer un nombre valide",
+    "errorHourToHeight" : "Heure invalide, elle doit être inférieur à 24",
+    "errorHourNegative" : "Heure invalide, elle doit être positive",
+     
+    "bestRecord" :"Tu as batut le record",
+     "egalRecord" :"Tu as égalé le record!",
+   
+    "recordMessage": "Le record est de {recordTape} tapes.",
+    "@recordMessage": {
+        "description": "Message affichant le record de tapes",
+        "placeholders": {
+        "recordTape": {
+            "type": "int",
+            "example": "10"
+        }
+        }
+    },
+    "labelFinAcces": "Fin d'accès à {heure}H",
+  "@labelFinAcces": {
+    "placeholders": {
+      "heure": {
+        "type": "int",
+        "example": "18"
+      }
+    }
+  },
+  "labelOuverture": "Ouverture à {heure}H",
+  "@labelOuverture": {
+    "placeholders": {
+      "heure": {
+        "type": "int",
+        "example": "08"
+      }
+    }
+  },
+
+  "matin":"Matin",
+  "reveilMoment":"Réveil",
+  "midi": "Midi",
+  "soir": "Soir",
+  "coucher":"Coucher",
+
+    "defouleToi":"Défoule toi",
+    "@defouleToi":{"description": "nom de la tache"},
+    "tireTache":"Fais pas Tâche",
+    "@tireTache":{"description": "nom de la tache"},
+     "bingoQuot": "Bingo Quotidien",
+     "@bingoQuot":{
+        "description": "nom de la tache"
+     },
+       "aideDents":"Aide des dents",
+       "@aideDents":{
+        "description": "nom de la tache"
+     },
+
+
+  "scoreMoment":  " Le score pour le {moment} : {scoreByMoment}/4",
+  "@scoreMoment": {
+    "placeholders": {
+        "moment":{
+            "type": "String",
+            "example": "Matin"
+        },
+        "scoreByMoment":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+
+
+  "permissionMiss": "⚠️ Permissions manquantes",
+ 
+  "instructionsAndroidNotifications": "Pour que les notifications fonctionnent, tu dois :\n\n1. Dans les paramètres de l'application, puis batterie choisir : Pas de restriction\n2. Décocher interrompre l'activité\n3. Autoriser les notifications\n\nClique sur \"Ouvrir\" pour accéder aux paramètres.",
+  "@instructionsAndroidNotifications": {
+    "description": "Texte d'aide pour la configuration des notifications système Android"
+  },
+  "instructionsIOSNotifications":"Pour que les notifications fonctionnent, tu dois les activer dans les paramètres.\n\nVeux-tu ouvrir les paramètres maintenant ?",
+  "@instructionsIOSNotifications":{
+    "description": "Texte pour valides les notifications système IOS"
+  },
+  "later":"Plus tard",
+  "ouvrirParam":"Ouvrir les paramètres",
+  "notifications": "Notifications",
+  "decriptionNotif": "TDAHelpe utilise des notifications pour :",
+  "rappelTask": "📅 Te rappeler tes tâches quotidiennes",
+  "routineHelp":"🎯 Ne rien oublier dans ta routine",
+  "nombreNotif":"Tu recevras au maximum 4 notifications par jour.",
+  "notifChoix":"L'acception ou non des notifications est disponible dans les paramètres",
+  "modifNotifChoix":"La modification de l'acception ou non des notifications est disponible dans les paramètres.",
+  "refusNotif":"Sans les notifications, l'app fonctionnera, mais tu n'auras pas de rappels automatiques.",
+  "notNow": "Pas maintenant",
+  "autorise":"Autoriser",
+
+  "terminer":"Terminer !",
+  "valider": "Valider",
+  "confirmer":"Confirmer",
+  "reinit":"Réinitialiser",
+  "retour":"Retour",
+  "oui":"oui",
+  "non":"non",
+  "annuler":"Annuler",
+  "commencer":"Commencer",
+  "suivant":"Suivant",
+  "retry":"Réessayer",
+  "ferme":"Fermer",
+  "ouvrir":"Open",
+  "activer":"Activer",
+  "aucun":"aucun",
+
+  "parametre":"Paramètre",
+  "accueil": "Accueil",
+  "bienvenue": "Bienvenue",
+  "score":"Score",
+
+
+
+  "formatErrorMusic": "Format audio non supporté. Veuillez choisir un fichier MP3, M4A, WAV ou AAC.",
+  "noAccessFichier":"Impossible d’accéder au fichier. Veuillez choisir un fichier local.",
+  "importImpossible":"⚠️ Impossible d'importer la musique",
+  "error":"❌ Une erreur est survenue",
+
+  "pauseAll":"Pause Globale",
+  "finValidation":"Fin et validation",
+  "pause":"Pause",
+  "play": "Lancer",
+  "selectMusique":"Selectionner une musique",
+  "iosErrorImport":"Importation de son uniquement depuis Fichiers, iCloud ou Téléchargements",
+  "musiceEcoute":"Musique à l'écoute",
+
+
+
+  "addTache": "Ajout d'activités",
+  "newTaskName": "Nom de la nouvelle tache :",
+  "activityName":"Nom de l'activité",
+
+  "estimationDuree": "Estimation de la durée :",
+  "court":"court",
+  "moyen": "moyen",
+  "long":"Long",
+  "tresLong":"Très long",
+
+  "saisiNomAct":"Veuillez saisir un nom d'activité",
+  "dureeAct":"Veuillez sélectionner une durée",
+  "succesAjoutAct":"Tâche ajoutée avec succès !",
+  "modifTache":"Modifications de la tache",
+  "succesModif":"Tâche modifiée avec succès !",
+  "nombreTirage":"Nombre de tirage",
+
+  "actuelNombreTirage":"Actuellement {tachesTimenombreT} tâches sont piochées.",
+  "@actuelNombreTirage":{
+    "placeholders": {
+        "tachesTimenombreT":{
+            "type": "int",
+            "example": "3"
+        }
+    }
+  },
+  "nombrePiocheDemande": "Combien de Tâches tu veux piocher?",
+  "nombrePioche":"Nombre de pioches",
+  "saisieNombre":"Veuillez entrer un nombre",
+  "saisienombreInvalide":"Veuillez entrer un nombre valide",
+  "nombreTacheMax":"Nombre maximal de tâches quotidiennes est de 10",
+  "nombrePiocheSupMax":"Nombre de tache maximal => {tachesTimetaches}",
+  "@nombrePiocheSupMax":{
+    "placeholders": {
+        "tachesTimetaches":{
+            "type": "int",
+            "example": "3"
+        }
+    }
+  },
+
+  "listeEnregistre":"Liste enregistrée",
+  "explicationCouleur":"Modificaiton de la tâche en appuyant dessus.\nExplication des couleurs \nVert-> court \nJaune -> moyen \nOrange ->long \nRouge -> Très long",
+  "supprimeTache":"Supprimer : {tacheName} ?",
+  "@supprimeTache":{
+    "placeholders": {
+        "tacheName":{
+            "type": "String",
+            "example": "Cuisine"
+        }
+    }
+  },
+
+  "ajouterTache":"Ajouter une tâche",
+  "modifierNombreTirage":"Modifier le nombre de tirage",
+  "listeTAche":"Liste des tâches",
+  "explicationRefairTAche":"Tu peux refaire le tirage",
+  "regleTirage":"Règle de tirage",
+  "messageAttention":"⚠️ Si tu as déjà un tirage quotidien en cours, en modifiant la liste celui-ci sera annulé.\n Si tu as déjà tes points tu n'auras pas plus d'XP",
+  "reset":"reset",
+  "attenteTirage": "En attente d'un tirage",
+  "actionTirage":"Faire le tirage",
+
+  "avancementQuete":"Avancement des quêtes",
+  "xpNiveau" : "Xp pour le niveau  {xpByLevel} / {maxXpByLevel}",
+  "@xpNiveau":{
+    "placeholders": {
+        "xpByLevel":{
+            "type": "int",
+            "example": "0"
+        },
+        "maxXpByLevel":{
+            "type": "int",
+            "example": "6"
+        }
+    }
+  },
+  "taches":"Tâches",
+  "pointBonus":"Points Bonus",
+  "fonctionnement": "Fonctionnement",
+
+  "scoreBingo":"Score du Bingo",
+  "progressionquot":"Progression global pour la journée",
+  "allerValidBing":"Aller valider le bingo",
+
+  "pointBonusSuivi":"Aller valider le bingo",
+  "dentScore": "Score de lavage de dents : {toothScore}",
+  "@dentScore":{
+    "placeholders": {
+        "toothScore":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+  "nbrLavageRestant": "Lave toi encore {nbCleantooth} les dents pour avoir l'Xp maximal!",
+  "@nbrLavageRestant":{
+    "placeholders": {
+        "nbCleantooth":{
+            "type": "int",
+            "example": "3"
+        }
+    }
+  },
+  "validNbLavage": "Tu t'es lavé le nombre recommandé de fois! Bravo",
+  "redictDent":"Aller vers le lavage de dent",
+  "defouleScore":"Score de record de tappe défoule {defouleScoreNb}",
+  "@defouleScore":{
+    "placeholders": {
+        "defouleScoreNb":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+  "resteDefoule":"Il te reste {nbRecord} records à battre pour aujourd'hui",
+  "@resteDefoule":{
+    "placeholders": {
+        "nbRecord":{
+            "type": "int",
+            "example": "0"
+            
+        }
+    }
+  },
+  "felicitationRecord":"Bravo tu as battu 4 records aujourdhui. \n Tu as gagné l'XP maximal pour ce bonus",
+  "redirectDefoul":"Va battre des records",
+
+  "regleNiveau": "Règle des niveaux ",
+  "explainXp":  "Tous les {maxXpByLevel} d'Xp le niveau augmente et cela débloque des grades spectaculaires !",
+  "@explainXp":{
+    "placeholders": {
+        "maxXpByLevel":{
+            "type": "int",
+            "example": "4"
+        }
+    }
+  },
+  "regleReinitialisation": "Règle de réinitialisation ",
+  "reinitHeure": "L'heure de réinitialisation des scores quotidien est {reinitHours} H.",
+  "@reinitHeure":{
+    "placeholders": {
+        "reinitHours":{
+            "type": "int",
+            "example": "6"
+        }
+    }
+  },
+  "explainReinit": "Elle configurable dans les paramètres de l'application 🤓",
+  "bingoExplainPoint": "Obternir des points avec le bingo ",
+  "bingoCount": "4 tâches remplis = 5 points d'Xp 🏆",
+  "explainTache":"Obternir des points avec le tirage des tâches ",
+  "countTAchePoint": "Réalise les tâches piochées pour gagner 5 points 🏆.",
+  "explainDefoule": "Obternir des points avec les jeux bonus ",
+  "explainDent": "L'aide au brossage de dent et le jeu pour défouler peut apporter des points bonus.",
+  "dentPoint":"Tu auras 5 points par réalisation de tâches bonus 🏆 ",
+  "maxPontAct": "Tu peux accumuler au maximum 15 points par activité bonus et par jour. ",
+
+  "scoreTacheCount":"Score des taches",
+  "actuelNombreTache": "Actuellement tu as fais {numberOfTrue} tâches.",
+  "@actuelNombreTache":{
+    "placeholders": {
+        "numberOfTrue":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+  "nbTacheRestantes":"Il te reste {numberOfTrue} pour valider la quête.",
+  "@nbTacheRestantes":{
+    "placeholders": {
+        "numberOfTrue":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+  "redirectTaches":"Aller valider ses tâches",
+
+
+  "modifHoraire":"Modification d'horaires",
+
+  "validMajAlarm":"Les alarmes sont mises à jour.",
+  "attentionPerteDonnee":"⚠️ Toutes tes données seront perdues.",
+
+  "configProfil": "Configuration du profil",
+  "pseudo":"Pseudo",
+  "warningPseudoVide":"Champs du pseudo vide",
+  "validMajPseudo":"Pseudo mis à jour avec succès !",
+  "enregistrePseudo":"Enregistrer le pseudo",
+
+  "gestionProfil": "Gestion du profil",
+  "choixHeure":"Choix des heures",
+  "modifChoixNotif":"Modifier les notifications",
+  "aPropos":"À propos",
+
+
+  "bienvenuOnboarding":"Bienvenue sur TDAH'elp ! 👋",
+  "explainApp":"Une application pour t'aider à organiser ta journée",
+  "persoAvatar":"Personnalise ton avatar 👤",
+  "explainPersoAvatar":"Configure ta photo et ton pseudo pour une personnalisation de l'expérience.",
+  "persoProfil":"Personnalise ton profil ⚙️",
+  "explainPersoProfil":"Configure tes heures préférées dans les paramètres",
+  "bingoQuotOnBoard":"Bingo quotidien 🎯",
+  "explainBingoQuot":"Valide toutes le bingo au fil de la journée",
+  "tacheQuot":"Tire Tache quotidien 🎰",
+  "explainTacheQuot":"Tire le nombre que tu veux de tache au hasard et réalise les",
+  "notificationTitre":"Notifications 🔔",
+  "explainNotificationTitre":"Reçois des rappels pour ne rien oublier",
+
+  "descriptionApp":"Une application conçue pour accompagner les personnes atteintes de TDAH dans leurs routines quotidiennes.",
+  "developBy":"Développé par",
+  "politiqueConf":"Politique de confidentialité",
+  "redirectSite":"Voir sur le site",
+  "errorRedirect":"Impossible d’ouvrir {url}",
+  "@errorRedirect":{
+    "placeholders": {
+        "url":{
+            "type": "String",
+            "example": "https://alerwanndev.vercel.app/legalinformation"
+        }
+    }
+  },
+
+  "modifTimer":"Modification du timer",
+  "saisieTimerSecond":"Saisie la durée souhaité du timer en seconde.",
+  "nbSecondMax":"Nombre maximal de seconde : 600",
+  "warningSupRecord": "⚠️ La modification va supprimer le record enregistré ⚠️",
+  "temps":"Temps",
+  "tempsSecond":"Temps en second",
+  "tempsMax":"Nombre de tache maximal => 600",
+  "succesMajTime":"✅ Timer mis à jour avec succès !",
+  "errorMajtime":"⚠️ Erreur lors de la mise à jour",
+
+  "scorePerso":"Ton score :{score}",
+  "@scorePerso":{
+    "placeholders": {
+        "score":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+
+  "resultats":"Résultats",
+  "messageFinScore":"Tu as  un score de : {score} tapes !",
+  "@messageFinScore":{
+    "placeholders": {
+        "score":{
+            "type": "int",
+            "example": "0"
+        }
+    }
+  },
+
+  "erreurReinitScore":"⚠️ Impossible de réinitialiser le score",
+  "remiseAzero":"Remise à 0",
+
+
+  "lerecord":"Le record :",
+  "tempsPartie":"Temps d'une partie :",
+  "modifierTimer":"Modifier timer",
+  "scoreReinitValid":"✅ Score réinitialisé",
+
+  "erreurAccesBingo":"⏰ La période {titleMoment} n'est plus accessible",
+  "@erreurAccesBingo":{
+    "placeholders": {
+        "titleMoment":{
+            "type": "String",
+            "example": "Matin"
+        }
+    }
+  },
+  
+  "erreurInitCarte":"Désolé les cartes du bingo n'ont pas pu être initialisées",
+  "erreurMajRappel":"⚠️ Les rappels n'ont pas pu être programmés",
+  "erreurChargeNiveau":"⚠️ Impossible de charger le niveau",
+  "erreurChargeScore":"⚠️ Impossible de charger le score ",
+  "erreurChargeTime": "⚠️ Impossible de charger la durée du jeu",
+  "erreurReinit": "⚠️ La durée du jeu n'a pas pu être réinitialisé",
+  "erreurMajHeur":"⚠️ L'heure n'a pas pu être mis à jour",
+  "erreurChargerHeure":"⚠️L'heure de réinitialisation n'a pas pu être chargée",
+  "erreurReinitTimer":"⚠️ La durée du jeu n'a pas pu être réinitialisé",
+  "erreurChargeXP":"⚠️ Impossible de charger l'XP global",
+  "erreurChargeEtatTache":"⚠️ Impossible de charger l'état des tâches",
+  "erreurCritiqueCharge":"⚠️ Erreur critique lors de la réinitialisation quotidienne",
+  
+
+
+  "faireLit":"Faire ton lit",
+  "laverDent":"Laver les dents",
+  "prendreTraitement":"Prendre le traitement",
+  "douche":"Douche",
+  "boire":"Boire",
+  "manger":"Manger",
+  "soin":"Prends soin de toi",
+  "chosePositive":"Trouve 3 choses positives",
+  "faisLaVaisselle":"Fais la vaisselle",
+  "prepaDemain": "Prépare tes affaires pour demain",
+  "finEcran":"Occupe toi sans écran",
+  "reveil":"Règle le réveil",
+
+
+  "laveDouche":"Nettoyer la douche/ baignoire",
+  "poussiere":"Faire la poussiere dans une pièce",
+  "listCourse":"Préparer une liste de course",
+  "comptes":"Faire ses comptes",
+  "laveWc":"Nettoyer les WC",
+  "poubelles":"Sortir les poubelles",
+
+  "permSup":"Permissions supplémentaires requises",
+  "explainAndPermsup":"Pour que les notifications fonctionnent, tu dois :\n\n1. Autoriser les 'Alarmes et rappels'\n2. Désactiver l'optimisation batterie\n3. Activer le démarrage automatique\n\nClique sur 'Ouvrir' pour accéder aux paramètres.",
+  "demandeActivNotif":"Active les notifications pour recevoir les rappels",
+  "notifDesact":"Notifications désactivées",
+
+  "tirage":"tirage",
+  "liste":"liste",
+  "grade_0": "Explorateur",
+  "grade_desc_0": "Tout voyage commence par une exploration.",
+  "grade_1": "Endurant",
+  "grade_desc_1": "Ton voyage commence à prendre forme tu tiens bien.",
+  "grade_2": "Obstiné",
+  "grade_desc_2": "Tu veux aller au bout, ça se sent.",
+  "grade_3": "Têtu",
+  "grade_desc_3": "D’habitude c’est pas un compliment mais là c’est plus que ça.",
+  "grade_4": "Maitre de la Routine",
+  "grade_desc_4": "Tu es le Yoda des habitudes : sage et constant.",
+  "grade_5": "Seigneur des Tâches",
+  "grade_desc_5": "Ta notoriété commence à faire du bruit.",
+  "grade_6": "Roi de l’organisation",
+  "grade_desc_6": "Ta gestion du quotidien n’a plus de limite.",
+  "grade_7": "Dominateur des entraves",
+  "grade_desc_7": "Tout le monde s’agenouille à ton passage.",
+  "grade_8": "Ange de l’habitude",
+  "grade_desc_8": "Tu voles au dessus des difficultés.",
+  "grade_9": "Être suprême de la vie quotidienne",
+  "grade_desc_9": "La vie quotidienne n’a plus de secret.",
+  "grade_10": "Dieu du quotidien",
+  "grade_10_desc": "On ne peut t’arrêter maintenant, tu nous domines tous.",
+  "grad_error": "Erreur",
+  "grad_error_desc":"Impossible de charger le grade"
+}

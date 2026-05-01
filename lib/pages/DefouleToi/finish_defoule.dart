@@ -1,4 +1,5 @@
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/DefouleToi/game_page.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
               icon: Icon(Icons.home),
             ),
             automaticallyImplyLeading: false,
-            title: TextDegrade(title: "Résultats", choicetype: 'accueil'),
+            title: TextDegrade(title:  AppLocalizations.of(context)!.resultats, choicetype: 'accueil'),
           ),
           body: Center(
             child: Column(
@@ -58,7 +59,7 @@ class _FinishDefouleState extends State<FinishDefoule> {
                 Container(
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 10),
                   child: CustomText.center(
-                    "Tu as  un score de : ${widget.score} tapes !",
+                     AppLocalizations.of(context)!.messageFinScore(widget.score),
                     Theme.of(context).textTheme.headlineLarge,
                   ),
                 ),
@@ -75,7 +76,8 @@ class _FinishDefouleState extends State<FinishDefoule> {
                     onPressed: () {
                       AppNavigator.replaceTo(context,GamePage());
                     },
-                    child: Text("Réessayer", style: TextStyle(fontSize: 20)),
+                    child: Text(
+                      AppLocalizations.of(context)!.retry, style: TextStyle(fontSize: 20)),
                   ),
                 ),
 
@@ -92,14 +94,15 @@ class _FinishDefouleState extends State<FinishDefoule> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              '⚠️ Impossible de réinitialiser le score',
+                               AppLocalizations.of(context)!.erreurReinitScore,
                             ),
                             backgroundColor: Colors.orange,
                           ),
                         );
                       }
                     },
-                    child: Text("Remise à 0", style: TextStyle(fontSize: 20)),
+                    child: Text(
+                      AppLocalizations.of(context)!.remiseAzero, style: TextStyle(fontSize: 20)),
                   ),
                 ),
               ],

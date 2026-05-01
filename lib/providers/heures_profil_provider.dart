@@ -40,7 +40,7 @@ class HeureProfilProvider extends ChangeNotifier {
     _hours['reveil'] =
         await ErrorHandler.handleAsync(
           () => HoraireStorageService.getHours('reveil'),
-          errorMessage: "L'heure du réveil n'a pas pu être chargée",
+          errorMessage: "L'heure n'a pas pu être mis à jour",
           defaultValue: 7,
         ) ??
         7;
@@ -48,7 +48,7 @@ class HeureProfilProvider extends ChangeNotifier {
     _hours['midi'] =
         await ErrorHandler.handleAsync(
           () => HoraireStorageService.getHours('midi'),
-          errorMessage: "L'heure de midi n'a pas pu être chargée",
+          errorMessage: "L'heure n'a pas pu être mis à jour",
           defaultValue: 12,
         ) ??
         12;
@@ -56,7 +56,7 @@ class HeureProfilProvider extends ChangeNotifier {
     _hours["soir"] =
         await ErrorHandler.handleAsync(
           () => HoraireStorageService.getHours('soir'),
-          errorMessage: "L'heure du soir n'a pas pu être chargée",
+          errorMessage: "L'heure n'a pas pu être mis à jour",
           defaultValue: 19,
         ) ??
         19;
@@ -64,7 +64,7 @@ class HeureProfilProvider extends ChangeNotifier {
     _hours["coucher"] =
         await ErrorHandler.handleAsync(
           () => HoraireStorageService.getHours('coucher'),
-          errorMessage: "L'heure du coucher n'a pas pu être chargée",
+          errorMessage: "L'heure n'a pas pu être mis à jour",
           defaultValue: 21,
         ) ??
         21;

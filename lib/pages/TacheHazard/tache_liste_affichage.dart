@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/TacheHazard/ajout_tache.dart';
 import 'package:tdahelpe/pages/TacheHazard/modifcation_tache.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:tdahelpe/widget/specific/change_enum_to_string.dart';
 import 'package:tdahelpe/utils/alerdialog.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
+import 'package:tdahelpe/widget/utils/translate_key_task.dart';
 
 class TacheListeAffichage extends StatefulWidget {
   const TacheListeAffichage({super.key});
@@ -27,14 +29,14 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomText.center(
-                  "Liste enregistrée",
+                  AppLocalizations.of(context)!.listeEnregistre,
                   Theme.of(context).textTheme.headlineMedium,
                 ),
                 IconButton(
                   onPressed: () => PersoAlertDialog.showInfoDialog(
                     context,
                     'Informations',
-                    "Modificaiton de la tâche en appuyant dessus.\nExplication des couleurs \nVert-> court \nJaune -> moyen \nOrange ->long \nRouge -> Très long",
+                    AppLocalizations.of(context)!.explicationCouleur,
                   ),
                   icon: Icon(Icons.info_outline_rounded),
                 ),
@@ -51,6 +53,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                     itemCount: tacheP.taches.length,
                     itemBuilder: (context, index) {
                       final tache = tacheP.taches[index];
+                      final nameTache = translateKey(tache.tacheName, context);
                       return Card(
                         elevation: 0,
                         margin: EdgeInsets.all(2),
@@ -62,7 +65,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                             );
                           },
                           title: Text(
-                            "${tache.tacheName} ",
+                            nameTache,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
@@ -81,21 +84,27 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: Text(
-                                      'Supprimer " ${tache.tacheName} "?',
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.supprimeTache(nameTache),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: Navigator.of(context).pop,
-                                        child: Text('Non'),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.non,
+                                        ),
                                       ),
                                       TextButton(
                                         onPressed: () {
                                           tacheP.supprimerTache(
-                                            tache.tacheName,
+                                            nameTache,
                                           );
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('Oui'),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.oui,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -117,7 +126,10 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                 onPressed: () {
                   AppNavigator.push(context, AjoutTache());
                 },
-                child: Text("Ajouter une tâche", textAlign: TextAlign.center),
+                child: Text(
+                  AppLocalizations.of(context)!.ajouterTache,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -127,7 +139,7 @@ class _TacheListeAffichageState extends State<TacheListeAffichage> {
                 onPressed: () async {
                   await AppNavigator.push(context, Parametretirage());
                 },
-                child: Text("Modifier le nombre de tirage"),
+                child: Text(AppLocalizations.of(context)!.modifierNombreTirage),
               ),
             ),
             SizedBox(height: 30),

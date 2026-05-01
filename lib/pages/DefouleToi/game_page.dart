@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/DefouleToi/finish_defoule.dart';
 
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -62,7 +63,14 @@ class _GamePageState extends State<GamePage> {
                       ),
                   interval: Duration(milliseconds: 100),
                   onFinished: () {
-                    AppNavigator.replaceTo(context,FinishDefoule(score: _score));
+                    print("⚠️ onfinish");
+                  
+                      print("Navigation déclenchée");
+                      AppNavigator.replaceTo(
+                        context,
+                        FinishDefoule(score: _score),
+                      );
+                   
                   },
                 ),
                 !_compteurActive
@@ -74,7 +82,7 @@ class _GamePageState extends State<GamePage> {
                             _score = 0;
                           });
                         },
-                        child: Text("Début"),
+                        child: Text(AppLocalizations.of(context)!.commencer),
                       )
                     : Expanded(
                         child: Column(
@@ -83,7 +91,7 @@ class _GamePageState extends State<GamePage> {
 
                           children: [
                             Text(
-                              "Ton score :$_score",
+                              AppLocalizations.of(context)!.scorePerso(_score),
                               style: TextStyle(fontSize: 40),
                             ),
 

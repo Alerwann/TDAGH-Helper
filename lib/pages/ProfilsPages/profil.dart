@@ -3,6 +3,7 @@
 // Donne accès à "A propos"
 
 import 'dart:io';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/ProfilsPages/modif_horaire.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
 import 'package:tdahelpe/pages/home/about_page.dart';
@@ -44,7 +45,7 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Gestion du profil",
+       AppLocalizations.of(context)!.gestionProfil,
         context,
         "parametre",
         false,
@@ -69,14 +70,14 @@ class _ProfilPageState extends State<ProfilPage> {
                     Theme.of(context).textTheme.headlineMedium,
                   ),
                   ButonTheme.boutonOfParametre(
-                    "Gestion du profil",
+                    AppLocalizations.of(context)!.gestionProfil,
                     HugeIconsStroke.manWoman,
                     ProfilParametreConfig(),
                     context,
                   ),
 
                   ButonTheme.boutonOfParametre(
-                    'Choix des heures',
+                    AppLocalizations.of(context)!.choixHeure,
                     HugeIconsStroke.hourglass,
                     ModifHoraire(),
                     context,
@@ -101,14 +102,14 @@ class _ProfilPageState extends State<ProfilPage> {
                         color: Color.fromARGB(225, 1, 112, 81),
                       ),
                       label: Text(
-                        "Modifier les notifications",
+                        AppLocalizations.of(context)!.modifChoixNotif,
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
 
                   ButonTheme.boutonOfParametre(
-                    "À propos",
+                   AppLocalizations.of(context)!.aPropos,
                     Icons.app_shortcut_rounded,
                     AboutPage(),
                     context,

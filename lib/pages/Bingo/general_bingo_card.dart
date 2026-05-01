@@ -4,6 +4,7 @@
 
 import 'dart:ui' as ui;
 import 'package:tdahelpe/data/list/bingocard_list.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/services/score_storage_service.dart';
 import 'package:tdahelpe/utils/horaire_moment.dart';
@@ -52,7 +53,8 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '⏰ La période ${widget.titleMoment} n\'est plus accessible',
+            AppLocalizations.of(context)!.erreurAccesBingo(widget.titleMoment)
+     
           ),
           backgroundColor: Colors.orange,
           duration: Duration(seconds: 3),
@@ -70,19 +72,19 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     try {
       switch (widget.titleMoment) {
         case 'Matin':
-          bingoCards = BingoDataMorning.getDefaultCards();
+          bingoCards = BingoDataMorning.getCards(context);
           break;
         case 'Midi':
-          bingoCards = BingoDataMidi.getDefaultCards();
+          bingoCards = BingoDataMidi.getCards(context);
           break;
         case 'Soir':
-          bingoCards = BingoDataSoir.getDefaultCards();
+          bingoCards = BingoDataSoir.getCards(context);
           break;
         case 'Coucher':
-          bingoCards = BingoDatacoucher.getDefaultCards();
+          bingoCards = BingoDatacoucher.getCards(context);
           break;
         default:
-          bingoCards = BingoDataMorning.getDefaultCards();
+          bingoCards = BingoDataMorning.getCards(context);
       }
       // Charger l'état sauvegardé des cartes
       final savedStates = await ScoreStorageService.getCardsState(
@@ -112,7 +114,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Désolé les cartes du bingo n\'ont pas pu être initialisées')));
+      ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.erreurInitCarte)));
       Navigator.pop(context);
     }
   }
@@ -129,7 +131,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: Text('Retour')),
+        appBar: AppBar(title: Text(AppLocalizations.of(context)!.retour)),
         body: Center(child: CircularProgressIndicator()),
       );
     }
@@ -157,7 +159,7 @@ class _BingoGamePreviewState extends State<BingoGamePreview>
               break;
             case 'Coucher':
               momentScore = scoreP.eveningScore;
-              // momentScore = 0;
+   
               break;
             default:
               momentScore = 0;

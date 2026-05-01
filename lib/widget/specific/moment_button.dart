@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/Bingo/general_bingo_card.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
@@ -8,6 +9,7 @@ import 'package:tdahelpe/utils/horaire_moment.dart';
 
 class MomentButton extends StatelessWidget {
   final String moment;
+  final String afficheMoment;
   final IconData icon;
   final Color iconColor;
 
@@ -17,6 +19,7 @@ class MomentButton extends StatelessWidget {
     required this.icon,
     required this.iconColor,
     required this.moment,
+    required this.afficheMoment
   });
 
   @override
@@ -40,7 +43,7 @@ class MomentButton extends StatelessWidget {
               spacing: 10,
               children: [
                 Icon(icon, color: iconColor),
-                Text(moment, style: Theme.of(context).textTheme.headlineLarge),
+                Text(afficheMoment, style: Theme.of(context).textTheme.headlineLarge),
                 Icon(icon, color: iconColor),
               ],
             ),
@@ -48,8 +51,16 @@ class MomentButton extends StatelessWidget {
               builder: (context, profil, child) {
                 final horaires = HoraireMoment.momentPhrase(moment, context);
                 return HoraireMoment.isMomentAccessible(moment, context)
-                    ? Text("Fin d'accès à ${horaires[1]} H")
-                    : Text("Ouverture à ${horaires[0]} H");
+                    ? Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.labelFinAcces(horaires[1]),
+                      )
+                    : Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.labelOuverture(horaires[0]),
+                      );
               },
             ),
 
@@ -70,7 +81,9 @@ class MomentButton extends StatelessWidget {
                     break;
                 }
                 return Text(
-                  " Le score pour le $moment : $scoreByMoment/4",
+                  AppLocalizations.of(
+                    context,
+                  )!.scoreMoment(moment, scoreByMoment),
                   style: Theme.of(context).textTheme.bodyMedium,
                 );
               },

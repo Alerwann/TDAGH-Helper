@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/services/notifications/android_notification_handler.dart';
 
 class DeviceUtils {
@@ -26,25 +27,21 @@ class DeviceUtils {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Permissions supplémentaires requises'),
+        title: Text(AppLocalizations.of(context)!.permSup),
         content: Text(
-          'Pour que les notifications fonctionnent, tu dois :\n\n'
-          '1. Autoriser les "Alarmes et rappels"\n'
-          '2. Désactiver l\'optimisation batterie\n'
-          '3. Activer le démarrage automatique\n\n'
-          'Clique sur "Ouvrir" pour accéder aux paramètres.',
+          AppLocalizations.of(context)!.explainAndPermsup
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Annuler'),
+            child: Text(AppLocalizations.of(context)!.annuler),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               AndroidNotificationHandler.openSettingsAndroid();
             },
-            child: Text('Ouvrir'),
+            child: Text(AppLocalizations.of(context)!.ouvrir),
           ),
         ],
       ),

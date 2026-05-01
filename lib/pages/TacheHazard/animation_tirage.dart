@@ -4,6 +4,7 @@ import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/taches_provider.dart';
 
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/widget/utils/translate_key_task.dart';
 
 class TirageFinal extends StatefulWidget {
   const TirageFinal({super.key});
@@ -37,8 +38,6 @@ class _TirageFinalState extends State<TirageFinal>
   @override
   void initState() {
     super.initState();
-
-
 
     controllerAnimation = AnimationController(
       vsync: this,
@@ -111,9 +110,14 @@ class _TirageFinalState extends State<TirageFinal>
     final scoreP = Provider.of<ScoreProvider>(context, listen: false);
     listIndex = tabIndice(tacheP.nombreT, tacheP.taches.length);
     nbCycles = tacheP.nombreT;
-    
+
     for (int i = 0; i < tacheP.nombreT; i++) {
       int convertInt = (listIndex[i]);
+
+      // final nomTache = _translateKey(
+      //   tacheP.taches[convertInt].tacheName,
+      //   context,
+      // );
 
       listFinale.add(tacheP.taches[convertInt].tacheName);
     }
@@ -122,8 +126,11 @@ class _TirageFinalState extends State<TirageFinal>
     controllerAnimation.forward();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+     
     return Scaffold(
       body: Center(
         child: Consumer2<TachesProvider, ScoreProvider>(
@@ -162,7 +169,7 @@ class _TirageFinalState extends State<TirageFinal>
                           1.0,
                           1.0,
                         ), // Scale
-                      child: Text(tacheP.taches[indfinal].tacheName),
+                      child: Text(translateKey(tacheP.taches[indfinal].tacheName,context)),
                     );
                   },
                 ),

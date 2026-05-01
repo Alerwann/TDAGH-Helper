@@ -1,3 +1,4 @@
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -61,7 +62,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
       },
       child: Scaffold(
         appBar: CustomHeightApBcar.customApp(
-          "Configuration du profil",
+          AppLocalizations.of(context)!.configProfil,
           context,
           "parametre",
           true,
@@ -114,7 +115,7 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return "Champs du pseudo vide";
+                                    return AppLocalizations.of(context)!.warningPseudoVide;
                                   }
                                   return null;
                                 },
@@ -140,13 +141,13 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
-                                          'Pseudo mis à jour avec succès !',
+                                          AppLocalizations.of(context)!.validMajPseudo,
                                         ),
                                       ),
                                     );
                                   },
                                   label: Text(
-                                    'Enregistrer le pseudo',
+                                    AppLocalizations.of(context)!.enregistrePseudo,
                                     textAlign: TextAlign.center,
                                   ),
                                   icon: Icon(
@@ -164,16 +165,20 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                     showDialog(
                                       context: context,
                                       builder: (context) => AlertDialog(
-                                        title: Text('Réinitialiser ?'),
+                                        title: Text('${AppLocalizations.of(context)!.reinit}?'),
                                         content: Text(
-                                          'Toutes tes données seront perdues.',
+                                          AppLocalizations.of(context)!.attentionPerteDonnee,
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: Navigator.of(
                                               context,
                                             ).pop,
-                                            child: Text('Annuler'),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.annuler,
+                                            ),
                                           ),
                                           TextButton(
                                             onPressed: () {
@@ -186,14 +191,18 @@ class _ProfilParametreConfigState extends State<ProfilParametreConfig> {
                                                     'Inconnu';
                                               });
                                             },
-                                            child: Text('Confirmer'),
+                                            child: Text(
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.confirmer,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     );
                                   },
                                   icon: Icon(Icons.delete, color: Colors.red),
-                                  label: Text('Réinitialiser'),
+                                  label: Text(AppLocalizations.of(context)!.reinit),
                                 ),
                               ),
                             ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/heures_profil_provider.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
@@ -12,7 +13,7 @@ class FonctionnementScore extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Fonctionnement",
+        AppLocalizations.of(context)!.fonctionnement,
         context,
         "parametre",
         true,
@@ -31,56 +32,56 @@ class FonctionnementScore extends StatelessWidget {
                     spacing: 10,
                     children: [
                       CustomText.center(
-                        "Règle des niveaux ",
+                        AppLocalizations.of(context)!.regleNiveau,
                         Theme.of(context).textTheme.titleSmall,
                       ),
                       CustomText.center(
-                        "Tous les ${scoreP.maxXpByLevel} d'Xp le niveau augmente et cela débloque des grades spectaculaires !",
+                        AppLocalizations.of(context)!.explainXp(scoreP.maxXpByLevel),
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Règle de réinitialisation ",
+                        AppLocalizations.of(context)!.regleReinitialisation,
                         Theme.of(context).textTheme.titleSmall,
                       ),
                       CustomText.center(
-                        "L'heure de réinitialisation des scores quotidien est ${heurP.reinitHours} H.",
+                        AppLocalizations.of(context)!.reinitHeure(heurP.reinitHours),
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Elle configurable dans les paramètres de l'application 🤓",
+                        AppLocalizations.of(context)!.explainReinit,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Obternir des points avec le bingo ",
+                       AppLocalizations.of(context)!.bingoExplainPoint,
                         Theme.of(context).textTheme.titleSmall,
                       ),
                       CustomText.center(
-                        "4 tâches remplis = 5 points d'Xp 🏆",
+                        AppLocalizations.of(context)!.bingoCount,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Obternir des points avec le tirage des tâches ",
+                       AppLocalizations.of(context)!.explainTache,
                         Theme.of(context).textTheme.titleSmall,
                       ),
 
                       CustomText.center(
-                        "Réalise les tâches piochées pour gagner 5 points 🏆.",
+                        AppLocalizations.of(context)!.countTAchePoint,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Obternir des points avec les jeux bonus ",
+                        AppLocalizations.of(context)!.explainDefoule,
                         Theme.of(context).textTheme.titleSmall,
                       ),
                       CustomText.center(
-                        "L'aide au brossage de dent et le jeu pour défouler peut apporter des points bonus.",
+                        AppLocalizations.of(context)!.explainDent,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Tu auras 5 points par réalisation de tâches bonus 🏆 ",
+                        AppLocalizations.of(context)!.dentPoint,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                       CustomText.center(
-                        "Tu peux accumuler au maximum 15 points par activité bonus et par jour. ",
+                       AppLocalizations.of(context)!.maxPontAct,
                         Theme.of(context).textTheme.bodyLarge,
                       ),
                     ],

@@ -3,6 +3,7 @@ import 'dart:io' show Platform, File;
 import 'package:flutter/foundation.dart';
 import 'package:tdahelpe/data/list/music_list.dart';
 import 'package:tdahelpe/data/schema/music_schema.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/providers/sound_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
@@ -74,7 +75,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Format audio non supporté. Veuillez choisir un fichier MP3, M4A, WAV ou AAC.',
+                 AppLocalizations.of(context)!.formatErrorMusic,
               ),
               duration: Duration(seconds: 3),
             ),
@@ -88,7 +89,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Impossible d’accéder au fichier. Veuillez choisir un fichier local.',
+                 AppLocalizations.of(context)!.noAccessFichier,
               ),
               duration: Duration(seconds: 3),
             ),
@@ -128,7 +129,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('⚠️ Impossible d\'importer la musique'),
+                  content: Text(AppLocalizations.of(context)!.importImpossible),
                   duration: Duration(seconds: 3),
                 ),
               );
@@ -143,7 +144,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ Une erreur est survenue'),
+            content: Text(AppLocalizations.of(context)!.error),
             duration: Duration(seconds: 3),
           ),
         );
@@ -208,7 +209,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
       },
       child: Scaffold(
         appBar: AppBar(
-          title: TextDegrade(title: 'Aide des dents', choicetype: 'accueil'),
+          title: TextDegrade(title:  AppLocalizations.of(context)!.aideDents, choicetype: 'accueil'),
           leading: IconButton(
             onPressed: () async {
               final audioProvider = Provider.of<SoundProvider>(
@@ -273,7 +274,9 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                                 controllerAnimation.stop();
                                 audioProvider.pauseSound();
                               },
-                              child: Text("Pause Globale"),
+                              child: Text(
+                                AppLocalizations.of(context)!.pauseAll,
+                              ),
                             ),
                           ),
 
@@ -290,7 +293,9 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                                 scoreP.incrementToothScore();
                                 Navigator.pop(context);
                               },
-                              child: Text("Fin et validation"),
+                              child: Text(
+                                AppLocalizations.of(context)!.finValidation,
+                              ),
                             ),
                           ),
 
@@ -324,7 +329,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                       child: DropdownButton<MusicSchema>(
                         value: selectedMusic,
                         hint: CustomText.center(
-                          "Selectionner une musique",
+                           AppLocalizations.of(context)!.selectMusique,
                           Theme.of(context).textTheme.headlineSmall,
                         ),
                         items: musicList.map<DropdownMenuItem<MusicSchema>>((
@@ -343,7 +348,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Importation de son uniquement depuis Fichiers, iCloud ou Téléchargements',
+                                   AppLocalizations.of(context)!.iosErrorImport,
                                 ),
                                 duration: Duration(seconds: 3),
                               ),
@@ -397,7 +402,7 @@ class _HomeTimertoothState extends State<HomeTimertooth>
                         child: Column(
                           children: [
                             CustomText.center(
-                              "Musique à l'écoute",
+                              AppLocalizations.of(context)!.musiceEcoute,
                               Theme.of(context).textTheme.headlineSmall,
                             ),
                             CustomText.center(

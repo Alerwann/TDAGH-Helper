@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/TacheHazard/tirage_taches.dart';
 import 'package:tdahelpe/pages/TacheHazard/tache_liste_affichage.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
@@ -24,7 +25,7 @@ class _AccueilTachesState extends State<AccueilTaches> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Fais pas tâche",
+         AppLocalizations.of(context)!.tireTache,
         context,
         "accueil",
         true,
@@ -38,9 +39,11 @@ class _AccueilTachesState extends State<AccueilTaches> {
         activeColor: Colors.white,
         initialActiveIndex: _currentindex,
         items: [
-          TabItem(icon: Icons.casino_rounded, title: 'Tirage'),
+          TabItem(icon: Icons.casino_rounded, title: AppLocalizations.of(context)!.tirage,
+          ),
 
-          TabItem(icon: Icons.list_alt_rounded, title: 'Liste'),
+          TabItem(icon: Icons.list_alt_rounded, title: AppLocalizations.of(context)!.liste,
+          ),
         ],
         onTap: (int i) => setCurrentIndex(i),
       ),

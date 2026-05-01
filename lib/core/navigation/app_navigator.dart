@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:tdahelpe/app.dart';
-
 
 /// Gestionnaire centralisé de la navigation de l'application
 ///
@@ -13,8 +11,7 @@ import 'package:tdahelpe/app.dart';
 /// - Éviter les navigations multiples
 class AppNavigator {
   // Clé de navigation globale
-    static  final navigator = TDAHelpeApp.navigatorKey.currentState;
- 
+  static final navigator = TDAHelpeApp.navigatorKey.currentState;
 
   /// Navigue vers n'importe quelle page
   ///
@@ -44,8 +41,7 @@ class AppNavigator {
 
   /// Remplace la page actuelle
   static Future<T?> replaceTo<T>(BuildContext context, Widget page) async {
-
-    if (navigator != null) {
+   
       if (Platform.isIOS) {
         // iOS : Animation native avec swipe back automatique ✅
         return Navigator.pushReplacement<T, void>(
@@ -56,6 +52,7 @@ class AppNavigator {
           ),
         );
       } else {
+        print("⚠️ push remplacement");
         return Navigator.pushReplacement<T, void>(
           context,
           PageRouteBuilder<T>(
@@ -64,25 +61,11 @@ class AppNavigator {
           ),
         );
       }
-    }
-    return null;
-  }
-
-  /// Remplace toute la pile de navigation
-  static Future<T?> replaceAll<T>(Widget page) async {
-
-    if (navigator != null) {
-      return navigator!.pushAndRemoveUntil<T>(
-        MaterialPageRoute(builder: (context) => page),
-        (route) => false,
-      );
-    }
-    return null;
+   
   }
 
   /// Retour à la page précédente
   static void goBack<T>([T? result]) {
-
     if (navigator != null && navigator!.canPop()) {
       navigator!.pop(result);
     }
@@ -90,7 +73,6 @@ class AppNavigator {
 
   /// Retour à la racine (équivalent de pushAndRemoveUntil)
   static void goToRoot() {
-
     if (navigator != null) {
       navigator!.popUntil((route) => route.isFirst);
     }

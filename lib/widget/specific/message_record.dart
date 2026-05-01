@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/widget/utils/custom_text.dart';
 
 class MessageRecord extends StatelessWidget {
@@ -14,7 +15,7 @@ class MessageRecord extends StatelessWidget {
         child: Column(
           children: [
             CustomText.center(
-              "Tu as batut le record",
+              AppLocalizations.of(context)!.bestRecord,
               Theme.of(context).textTheme.headlineMedium,
             ),
             Text("🤗", style: TextStyle(fontSize: 60)),
@@ -29,7 +30,7 @@ class MessageRecord extends StatelessWidget {
         child: Column(
           children: [
             CustomText.center(
-              "Le record est de $recordTape tapes.",
+              AppLocalizations.of(context)!.recordMessage(recordTape),
               Theme.of(context).textTheme.headlineMedium,
             ),
             Text("😭", style: TextStyle(fontSize: 40)),
@@ -42,7 +43,7 @@ class MessageRecord extends StatelessWidget {
         child: Column(
           children: [
             CustomText.center(
-              "Tu as égalé le record!",
+             AppLocalizations.of(context)!.egalRecord,
               Theme.of(context).textTheme.headlineMedium,
             ),
             Text("😉", style: TextStyle(fontSize: 40)),

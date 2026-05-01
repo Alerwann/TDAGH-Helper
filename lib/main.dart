@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tdahelpe/app.dart';
+import 'package:tdahelpe/Theme/app_theme.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
+import 'package:tdahelpe/pages/home/home_shell.dart';
 import 'package:tdahelpe/pages/onboarding/onbording_page.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
 import 'package:tdahelpe/providers/defoule_provider.dart';
@@ -31,7 +34,8 @@ void main() async {
   } catch (e) {
     if (kDebugMode) print('⚠️ Erreur init notifications: $e');
   }
-
+ final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
   // Lancement app
   runApp(
     MultiProvider(
@@ -51,9 +55,30 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BonusLevelProvider()),
       ],
       child: MaterialApp(
+             // Configuration de la navigation
+        navigatorKey: navigatorKey,
+
+        // Configuration de base
         debugShowCheckedModeBanner: false,
-        home: onboardingCompleted ? TDAHelpeApp() : OnboardingPage(),
-        routes: {'/home': (context) => TDAHelpeApp()},
+        title: 'TDAHelpe',
+      
+           localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        
+        supportedLocales: const [Locale('en'), Locale('fr')],
+           // Thèmes
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+
+        // Page d'accueil
+     
+        home: onboardingCompleted ? HomeShell() : OnboardingPage(),
+        routes: {'/home': (context) => HomeShell()},
       ),
     ),
   );

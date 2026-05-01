@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:tdahelpe/core/navigation/app_navigator.dart';
+import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/Bingo/homepage.dart';
 import 'package:tdahelpe/providers/score_provider.dart';
 import 'package:tdahelpe/widget/utils/custom_height_appbar.dart';
@@ -19,7 +20,7 @@ class _BingoScoreState extends State<BingoScore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-        "Score du Bingo",
+         AppLocalizations.of(context)!.scoreBingo,
         context,
         "accueil",
         true,
@@ -39,7 +40,7 @@ class _BingoScoreState extends State<BingoScore> {
                     spacing: 15,
                     children: [
                       CustomText.center(
-                        "Progression global pour la journée",
+                        AppLocalizations.of(context)!.progressionquot,
                         Theme.of(context).textTheme.headlineMedium,
                       ),
 
@@ -54,16 +55,20 @@ class _BingoScoreState extends State<BingoScore> {
                     ],
                   ),
                 ),
-                sousQuete("Matin", scoreP.morningScore),
-                sousQuete("Midi", scoreP.midiScore),
-                sousQuete("Soir", scoreP.afternoonScore),
-                sousQuete("Coucher", scoreP.eveningScore),
+                sousQuete(
+                  AppLocalizations.of(context)!.matin, scoreP.morningScore),
+                sousQuete(
+                  AppLocalizations.of(context)!.midi, scoreP.midiScore),
+                sousQuete(
+                  AppLocalizations.of(context)!.soir, scoreP.afternoonScore),
+                sousQuete(
+                  AppLocalizations.of(context)!.coucher, scoreP.eveningScore),
                 SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () {
                     AppNavigator.replaceTo(context, HomeBingoPage());
                   },
-                  child: Text("Aller valider le bingo"),
+                  child: Text(AppLocalizations.of(context)!.allerValidBing),
                 ),
               ],
             );

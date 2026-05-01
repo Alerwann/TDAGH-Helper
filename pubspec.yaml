@@ -44,6 +44,12 @@ dependencies:
   app_settings: ^5.1.1 
   url_launcher: ^6.3.2
 
+  flutter_localization: ^0.3.3
+  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
+  flutter_gen: ^5.14.1
+
 
 dev_dependencies:
   flutter_test:
@@ -57,8 +63,9 @@ dev_dependencies:
 
 
 flutter:
-
+  generate: true
   uses-material-design: true
+  
 
   assets:
     - assets/images/
