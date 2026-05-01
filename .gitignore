@@ -80,3 +80,8 @@ Thumbs.db
 *.key
 *.cer
 *.crt
+
+# Ne pas indexer les builds iOS
+ios/build/
+ios/DerivedData/
+*.moved-aside
