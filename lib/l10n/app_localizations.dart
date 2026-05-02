@@ -5,7 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
 
 // ignore_for_file: type=lint
@@ -94,7 +96,9 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
     Locale('fr'),
   ];
 
@@ -1561,6 +1565,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to load grade'**
   String get grad_error_desc;
+
+  /// No description provided for @langue.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get langue;
+
+  /// No description provided for @french.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get french;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get spanish;
+
+  /// No description provided for @deutsche.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get deutsche;
+
+  /// No description provided for @choisiLangue.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a language'**
+  String get choisiLangue;
+
+  /// No description provided for @succesLangue.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Language updated successfully'**
+  String get succesLangue;
+
+  /// No description provided for @erreurLangue.
+  ///
+  /// In en, this message translates to:
+  /// **'⛔️ Language could not be updated'**
+  String get erreurLangue;
 }
 
 class _AppLocalizationsDelegate
@@ -1574,7 +1626,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['de', 'en', 'es', 'fr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1583,8 +1635,12 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
   }

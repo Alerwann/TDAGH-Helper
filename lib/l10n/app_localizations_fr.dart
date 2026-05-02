@@ -818,4 +818,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get grad_error_desc => 'Impossible de charger le grade';
+
+  @override
+  String get langue => 'Langue';
+
+  @override
+  String get french => 'Français';
+
+  @override
+  String get english => 'Anglais';
+
+  @override
+  String get spanish => 'Espagnol';
+
+  @override
+  String get deutsche => 'Allemand';
+
+  @override
+  String get choisiLangue => 'Merci de sélectionner une langue';
+
+  @override
+  String get succesLangue => '✅ La langue a bien été mise à jour';
+
+  @override
+  String get erreurLangue => '⛔️ La langue n\'a pas pu être mise à jour';
 }

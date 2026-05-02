@@ -803,4 +803,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get grad_error_desc => 'Unable to load grade';
+
+  @override
+  String get langue => 'Language';
+
+  @override
+  String get french => 'French';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get spanish => 'Spanish';
+
+  @override
+  String get deutsche => 'German';
+
+  @override
+  String get choisiLangue => 'Please select a language';
+
+  @override
+  String get succesLangue => '✅ Language updated successfully';
+
+  @override
+  String get erreurLangue => '⛔️ Language could not be updated';
 }

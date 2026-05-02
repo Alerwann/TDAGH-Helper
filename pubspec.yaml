@@ -3,7 +3,7 @@ description: "Application qui permet d'aider la gestion du quotidient pour les n
 
 publish_to: "none" 
 
-version: 1.0.0+2
+version: 1.0.1+3
 
 environment:
   sdk: ^3.9.2
@@ -44,7 +44,7 @@ dependencies:
   app_settings: ^5.1.1 
   url_launcher: ^6.3.2
 
-  flutter_localization: ^0.3.3
+ 
   intl: ^0.20.2
   flutter_localizations:
     sdk: flutter

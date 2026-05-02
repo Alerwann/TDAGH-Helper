@@ -492,5 +492,13 @@
   "grade_10": "Dieu du quotidien",
   "grade_10_desc": "On ne peut t’arrêter maintenant, tu nous domines tous.",
   "grad_error": "Erreur",
-  "grad_error_desc":"Impossible de charger le grade"
+  "grad_error_desc":"Impossible de charger le grade",
+  "langue": "Langue",
+  "french": "Français",
+  "english": "Anglais",
+  "spanish": "Espagnol",
+  "deutsche": "Allemand",
+"choisiLangue" :"Merci de sélectionner une langue",
+"succesLangue" : "✅ La langue a bien été mise à jour",
+"erreurLangue" : "⛔️ La langue n'a pas pu être mise à jour"
 }

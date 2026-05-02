@@ -8,7 +8,7 @@ import 'package:tdahelpe/pages/home/home_shell.dart';
 /// - La configuration du thème (light/dark)
 /// - La navigation globale
 /// - Le titre de l'app
-class TDAHelpeApp extends StatelessWidget {
+class TDAHelpeApp extends StatelessWidget  {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
@@ -24,10 +24,10 @@ class TDAHelpeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TDAHelpe',
 
-      // Thèmes
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+        // Thèmes
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
 
       // Page d'accueil
       home: HomeShell(),

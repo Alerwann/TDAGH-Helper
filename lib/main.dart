@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tdahelpe/Theme/app_theme.dart';
 import 'package:tdahelpe/l10n/app_localizations.dart';
+import 'package:tdahelpe/l10n/l10n.dart';
 import 'package:tdahelpe/pages/home/home_shell.dart';
 import 'package:tdahelpe/pages/onboarding/onbording_page.dart';
 import 'package:tdahelpe/providers/bonus_level_provider.dart';
@@ -21,28 +22,33 @@ void main() async {
   print("🤙 main lancement gouzi");
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configuration orientation
+  // 1. Configuration orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  // 2. Initialisation des préférences et du Provider de profil
   final prefs = await SharedPreferences.getInstance();
   final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-  // Initialisation notifications
+
+  // On crée le ProfilProvider et on attend que _loadData soit terminé
+  final profilProvider = ProfilProvider();
+
   try {
+    print("🤩 try entrer main");
     await NotificationService.initialize();
   } catch (e) {
     if (kDebugMode) print('⚠️ Erreur init notifications: $e');
   }
- final GlobalKey<NavigatorState> navigatorKey =
-      GlobalKey<NavigatorState>();
-  // Lancement app
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ScoreProvider()),
         ChangeNotifierProvider(create: (_) => HeureProfilProvider()),
-        ChangeNotifierProvider(create: (_) => ProfilProvider()),
+        // On utilise .value car profilProvider est déjà créé et initialisé
+        ChangeNotifierProvider.value(value: profilProvider),
         ChangeNotifierProvider(
           create: (_) {
             final soundProvider = SoundProvider();
@@ -54,32 +60,43 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DefouleProvider()),
         ChangeNotifierProvider(create: (_) => BonusLevelProvider()),
       ],
-      child: MaterialApp(
-             // Configuration de la navigation
-        navigatorKey: navigatorKey,
-
-        // Configuration de base
-        debugShowCheckedModeBanner: false,
-        title: 'TDAHelpe',
-      
-           localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        
-        supportedLocales: const [Locale('en'), Locale('fr')],
-           // Thèmes
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-
-        // Page d'accueil
-     
-        home: onboardingCompleted ? HomeShell() : OnboardingPage(),
-        routes: {'/home': (context) => HomeShell()},
-      ),
+      child: MyApp(onboardingCompleted: onboardingCompleted),
     ),
   );
+}
+
+class MyApp extends StatelessWidget {
+
+  final bool onboardingCompleted;
+  const MyApp({super.key, required this.onboardingCompleted});
+
+  @override
+  Widget build(BuildContext context) {
+    
+    // 4. Ecouter le ProfilProvider pour la langue
+    final profil = context.watch<ProfilProvider>();
+    print("⚠️ ${profil.locale}");
+    return MaterialApp(
+      // Configuration de la langue dynamique
+      locale: profil.locale,
+
+      debugShowCheckedModeBanner: false,
+      title: 'TDAHelpe',
+
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: L10n.locals,
+
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+
+      home: onboardingCompleted ? const HomeShell() : const OnboardingPage(),
+      routes: {'/home': (context) => const HomeShell()},
+    );
+  }
 }

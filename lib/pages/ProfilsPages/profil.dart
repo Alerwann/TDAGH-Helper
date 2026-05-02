@@ -5,6 +5,7 @@
 import 'dart:io';
 import 'package:tdahelpe/l10n/app_localizations.dart';
 import 'package:tdahelpe/pages/ProfilsPages/modif_horaire.dart';
+import 'package:tdahelpe/pages/ProfilsPages/modif_langue.dart';
 import 'package:tdahelpe/pages/ProfilsPages/profil_parametre.dart';
 import 'package:tdahelpe/pages/home/about_page.dart';
 import 'package:tdahelpe/providers/profil_provider.dart';
@@ -45,7 +46,7 @@ class _ProfilPageState extends State<ProfilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeightApBcar.customApp(
-       AppLocalizations.of(context)!.gestionProfil,
+        AppLocalizations.of(context)!.gestionProfil,
         context,
         "parametre",
         false,
@@ -83,6 +84,13 @@ class _ProfilPageState extends State<ProfilPage> {
                     context,
                   ),
 
+                  ButonTheme.boutonOfParametre(
+                    AppLocalizations.of(context)!.langue,
+                    HugeIconsStroke.globe02,
+                    ModifLangue(),
+                    context,
+                  ),
+
                   SizedBox(
                     width: 300,
                     child: ElevatedButton.icon(
@@ -109,7 +117,7 @@ class _ProfilPageState extends State<ProfilPage> {
                   ),
 
                   ButonTheme.boutonOfParametre(
-                   AppLocalizations.of(context)!.aPropos,
+                    AppLocalizations.of(context)!.aPropos,
                     Icons.app_shortcut_rounded,
                     AboutPage(),
                     context,

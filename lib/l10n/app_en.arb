@@ -480,5 +480,13 @@
   "grade_10": "God of the Everyday",
   "grade_10_desc": "Nothing can stop you now, you dominate us all.",
   "grad_error": "Error",
-  "grad_error_desc":"Unable to load grade"
+  "grad_error_desc":"Unable to load grade",
+  "langue": "Language",
+  "french": "French",
+  "english": "English",
+  "spanish": "Spanish",
+  "deutsche": "German",
+  "choisiLangue": "Please select a language",
+"succesLangue": "✅ Language updated successfully",
+"erreurLangue": "⛔️ Language could not be updated"
 }
