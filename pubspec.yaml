@@ -3,7 +3,7 @@ description: "Application qui permet d'aider la gestion du quotidient pour les n
 
 publish_to: "none" 
 
-version: 1.0.1+4
+version: 1.0.2+5
 
 environment:
   sdk: ^3.9.2
